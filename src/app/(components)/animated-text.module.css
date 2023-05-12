@@ -1,0 +1,61 @@
+.text-anim__word {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.text-anim__word--in {
+    position: relative;
+    z-index: 2;
+}
+
+/* slide */
+.text-anim--slide {
+    --text-anim-duration: 0.5s;
+    --text-anim-pause: 2.5s;
+}
+
+.text-anim--slide .text-anim__wrapper {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.text-anim--slide .text-anim__word {
+    height: 100%;
+    transform: translateY(-100%);
+}
+
+.text-anim--slide .text-anim__word--in,
+.text-anim--slide .text-anim__word--out {
+    animation-duration: var(--text-anim-duration);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.text-anim--slide .text-anim__word--in {
+    animation-name: text-anim-slide-in;
+    animation-fill-mode: forwards;
+}
+
+.text-anim--slide .text-anim__word--out {
+    animation-name: text-anim-slide-out;
+}
+
+@keyframes text-anim-slide-in {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes text-anim-slide-out {
+    from {
+        transform: translateY(0%);
+    }
+    to {
+        transform: translateY(100%);
+    }
+}
