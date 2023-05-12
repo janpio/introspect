@@ -1,8 +1,8 @@
 import { SignInButton } from '@clerk/nextjs';
 import type { JSX } from 'react';
 
-import { Button } from '@/app/(components)/(elements)/button';
-import { AnimatedText } from '@/app/(components)/animated-text';
+import { Button } from './(components)/(elements)/button';
+import { AnimatedText } from './(components)/animated-text';
 
 export default function Home(): JSX.Element {
   return (
