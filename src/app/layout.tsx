@@ -1,6 +1,7 @@
 import './globals.css';
 
 import { ClerkProvider } from '@clerk/nextjs';
+import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
 import type { JSX } from 'react';
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <html lang="en-US">
         <body className={inter.className}>{children}</body>
       </html>
+      <Analytics />
     </ClerkProvider>
   );
 }
