@@ -46,7 +46,7 @@ export function AnimatedText(): JSX.Element {
                 [styles['text-anim__word--in']]: currentWord === index,
               })}
             >
-              {words[currentWord]}
+              {word}
             </i>
           );
         })}
