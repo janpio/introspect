@@ -1,15 +1,22 @@
+import { SignInButton } from '@clerk/nextjs';
 import type { JSX } from 'react';
 
+import { Button } from '@/app/(components)/(elements)/button';
 import { AnimatedText } from '@/app/(components)/animated-text';
 
 export default function Home(): JSX.Element {
   return (
-    <main className="w-full h-screen grid place-items-center">
+    <main className="grid h-96 w-full place-items-center">
       <div className="w-96">
-        <h1 className="text-5xl font-bold my-4 italic text-blue-900">
+        <h1 className="my-4 text-5xl font-bold italic text-blue-900">
           Introspect
         </h1>
         <AnimatedText />
+        <div className="my-4 flex gap-4">
+          <SignInButton>
+            <Button>Learn Now</Button>
+          </SignInButton>
+        </div>
       </div>
     </main>
   );
