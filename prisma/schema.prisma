@@ -51,6 +51,7 @@ model Person {
   updatedAt       DateTime @updatedAt
   username        String?  @unique
   profileImageUrl String?
+  clerkId         String   @unique
 
   favoriteLists LearningList[] @relation("favoriteList")
   learningList  LearningList[] @relation("ownedList")

@@ -12,6 +12,7 @@ import { createCourseFormSchema } from '../../course/course-schema';
 
 type MainFormProperties = {
   user: {
+    id: string | undefined;
     profileImageUrl: string | undefined;
     username: string | null | undefined;
   } | null;
@@ -59,6 +60,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
       body: JSON.stringify({
         ...data,
         user: {
+          id: user?.id,
           profileImage: user?.profileImageUrl,
           username: user?.username,
         },
