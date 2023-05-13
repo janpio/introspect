@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import styles from './animated-text.module.css';
 
-const words = ['Plan', 'Create', 'Share'];
+export const pathWords = ['Plan', 'Create', 'Discover', 'Share'];
 
 export function AnimatedText(): JSX.Element {
   const [currentWord, setCurrentWord] = useState(0);
@@ -36,7 +36,7 @@ export function AnimatedText(): JSX.Element {
           styles['text-anim__wrapper'],
         )}
       >
-        {words.map((word, index) => {
+        {pathWords.map((word, index) => {
           return (
             <i
               key={word}
