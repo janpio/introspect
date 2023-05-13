@@ -11,7 +11,7 @@ export const pathWords = ['Plan', 'Create', 'Discover', 'Share'];
 export function AnimatedText(): JSX.Element {
   const [currentWord, setCurrentWord] = useState(0);
 
-  const handleSetcurrentWord = (): void => {
+  const handleSetCurrentWord = (): void => {
     setCurrentWord(currentWord_ => {
       if (currentWord_ === 3) {
         return 0;
@@ -21,7 +21,7 @@ export function AnimatedText(): JSX.Element {
     });
   };
 
-  useAnimationInterval(2000, handleSetcurrentWord);
+  useAnimationInterval(2000, handleSetCurrentWord);
 
   return (
     <h1
