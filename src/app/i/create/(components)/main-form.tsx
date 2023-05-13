@@ -1,38 +1,16 @@
 'use client';
+import { useUser } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { JSX } from 'react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
+import { createCourseFormSchema } from '../../course/course-schema';
 
-export const formSchema = z.object({
-  courses: z
-    .array(
-      z.object({
-        courseName: z.string().min(1),
-        instructors: z
-          .string()
-          .min(1)
-          .transform(value => {
-            return value.split(',');
-          }),
-        links: z
-          .string()
-          .url()
-          .transform(value => {
-            return value.split(',');
-          }),
-        publisherName: z.string().min(1),
-      }),
-    )
-    .min(1),
-  name: z.string().min(1),
-});
-
-const defaultValues: z.input<typeof formSchema> = {
+const defaultValues: z.input<typeof createCourseFormSchema> = {
   courses: [
     {
       courseName: '',
@@ -45,14 +23,16 @@ const defaultValues: z.input<typeof formSchema> = {
 };
 
 export function MainForm(): JSX.Element {
+  const { user } = useUser();
+
   const {
     formState: { errors },
     register,
     handleSubmit,
     control,
-  } = useForm<z.input<typeof formSchema>>({
+  } = useForm<z.input<typeof createCourseFormSchema>>({
     defaultValues,
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createCourseFormSchema),
   });
 
   const {
@@ -64,8 +44,20 @@ export function MainForm(): JSX.Element {
     name: 'courses',
   });
 
-  const onSubmit = (data: z.input<typeof formSchema>): void => {
-    console.info(data);
+  const onSubmit = async (
+    data: z.input<typeof createCourseFormSchema>,
+  ): Promise<void> => {
+    await fetch('/i/course', {
+      body: JSON.stringify({
+        ...data,
+        user: {
+          fullName: user?.fullName,
+          profileImage: user?.profileImageUrl,
+          username: user?.username,
+        },
+      }),
+      method: 'POST',
+    });
   };
 
   return (
@@ -89,7 +81,7 @@ export function MainForm(): JSX.Element {
               <p>Item {courseIndex + 1}</p>
               <Input
                 error={errors.courses?.[courseIndex]?.courseName?.message}
-                label="Course Name"
+                label=" Name"
                 name={`courses.${courseIndex}.courseName`}
                 properties={{
                   input: {
