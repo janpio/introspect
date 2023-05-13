@@ -16,8 +16,9 @@ model LearningList {
   name      String
 
   createrId         String
-  creator           Person             @relation(fields: [createrId], references: [id])
+  creator           Person             @relation(fields: [createrId], references: [id], "ownedList")
   learningMaterials LearningMaterial[]
+  favoritedBy       Person[]           @relation("favoriteList")
 }
 
 model LearningMaterial {
@@ -51,5 +52,6 @@ model Person {
   username        String?  @unique
   profileImageUrl String?
 
-  learningList LearningList[]
+  favoriteLists LearningList[] @relation("favoriteList")
+  learningList  LearningList[] @relation("ownedList")
 }
