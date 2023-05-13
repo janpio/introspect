@@ -1,5 +1,4 @@
 'use client';
-import type { User } from '@clerk/backend';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { JSX } from 'react';
@@ -12,7 +11,10 @@ import { Input } from '../../../(components)/(elements)/input';
 import { createCourseFormSchema } from '../../course/course-schema';
 
 type MainFormProperties = {
-  user: User | null;
+  user: {
+    profileImageUrl: string | undefined;
+    username: string | null | undefined;
+  } | null;
 };
 
 const defaultValues: z.input<typeof createCourseFormSchema> = {

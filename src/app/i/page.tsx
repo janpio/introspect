@@ -8,7 +8,7 @@ import { prisma } from '../../prisma/database';
 // eslint-disable-next-line unicorn/numeric-separators-style
 export const revalidate = 86400;
 
-export default async function Hello(): Promise<JSX.Element> {
+export default async function ListPage(): Promise<JSX.Element> {
   const lists = await prisma.learningList.findMany({
     select: {
       createdAt: true,
