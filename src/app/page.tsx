@@ -1,7 +1,5 @@
-import { SignInButton } from '@clerk/nextjs';
 import type { JSX } from 'react';
 
-import { Button } from './(components)/(elements)/button';
 import { AnimatedText } from './(components)/animated-text';
 
 export default function Home(): JSX.Element {
@@ -12,11 +10,11 @@ export default function Home(): JSX.Element {
           Introspect
         </h1>
         <AnimatedText />
-        <div className="my-4 flex gap-4">
-          <SignInButton>
-            <Button>Learn Now</Button>
-          </SignInButton>
-        </div>
+        {/* <div className="my-4 flex gap-4"> */}
+        {/*  <SignInButton> */}
+        {/*    <Button>Learn Now</Button> */}
+        {/*  </SignInButton> */}
+        {/* </div> */}
       </div>
     </main>
   );
