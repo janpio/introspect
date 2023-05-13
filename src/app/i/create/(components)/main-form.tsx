@@ -1,6 +1,7 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/router';
 import type { JSX } from 'react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -8,7 +9,8 @@ import type { z } from 'zod';
 
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
-import { createCourseFormSchema } from '../../course/course-schema';
+import { createList } from '../data';
+import { createCourseFormSchema, createCourseSchemaWithUser } from '../schema';
 
 type MainFormProperties = {
   user: {
@@ -31,6 +33,7 @@ const defaultValues: z.input<typeof createCourseFormSchema> = {
 };
 
 export function MainForm({ user }: MainFormProperties): JSX.Element {
+  const router = useRouter();
   const [isLoading, toggleIsLoading] = useToggle(false);
 
   const {
@@ -56,17 +59,19 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
     data: z.input<typeof createCourseFormSchema>,
   ): Promise<void> => {
     toggleIsLoading();
-    await fetch('/i/course', {
-      body: JSON.stringify({
+    if (user?.id) {
+      const parsed = createCourseSchemaWithUser.parse({
         ...data,
         user: {
-          id: user?.id,
-          profileImage: user?.profileImageUrl,
-          username: user?.username,
+          clerkId: user.id,
+          profileImage: user.profileImageUrl,
+          username: user.username ?? undefined,
         },
-      }),
-      method: 'POST',
-    });
+      });
+      await createList(parsed);
+      router.reload();
+    }
+
     toggleIsLoading();
   };
 
@@ -85,6 +90,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
             },
           }}
         />
+        <div>{user?.id}</div>
         <div className="flex flex-wrap gap-4">
           {courses.map((course, courseIndex) => {
             return (
