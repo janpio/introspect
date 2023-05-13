@@ -1,12 +1,15 @@
+import { currentUser } from '@clerk/nextjs';
 import type { JSX } from 'react';
 import React from 'react';
 
 import { MainForm } from './(components)/main-form';
 
-export default function Create(): JSX.Element {
+export default async function Create(): Promise<JSX.Element> {
+  const user = await currentUser();
+
   return (
     <div className="mx-auto my-4 max-w-7xl">
-      <MainForm />
+      <MainForm user={user} />
     </div>
   );
 }

@@ -38,7 +38,6 @@ export const createCourseSchemaWithUser = z.object({
   name: z.string().min(1),
   user: z
     .object({
-      fullName: z.string().optional(),
       profileImage: z.string().optional(),
       username: z.string().optional(),
     })

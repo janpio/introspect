@@ -12,9 +12,9 @@ type LayoutProperties = {
 export default function Layout({ children }: LayoutProperties): JSX.Element {
   return (
     <>
-      <nav className="mx-auto my-2 flex max-w-7xl items-center gap-4 border-b-2 py-2 sm:px-6 lg:px-8">
+      <nav className="mx-auto my-2 flex max-w-7xl items-center gap-4 border-b-2 py-2 shadow-sm sm:px-6 lg:px-8">
         <Link className="text-2xl font-bold text-blue-900" href="/i">
-          Introspect
+          Introspect.dev
         </Link>
         <div className="flex w-full items-center justify-end gap-4">
           <Button className="px-2 py-1">

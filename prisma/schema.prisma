@@ -49,7 +49,6 @@ model Person {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   username        String?  @unique
-  fullName        String?
   profileImageUrl String?
 
   learningList LearningList[]

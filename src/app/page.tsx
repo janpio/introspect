@@ -10,7 +10,7 @@ export default function Home(): JSX.Element {
     <main className="grid h-96 w-full place-items-center">
       <div style={{ width: '30rem' }}>
         <h1 className="my-4 text-5xl font-bold italic text-blue-900">
-          Introspect
+          Introspect.dev
         </h1>
         <AnimatedText />
         {environment.NODE_ENV === 'development' && (

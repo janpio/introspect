@@ -30,12 +30,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       creator: {
         connectOrCreate: {
           create: {
-            fullName: data.user?.fullName,
             profileImageUrl: data.user?.profileImage,
             username: data.user?.username,
           },
           where: {
-            username: data.user?.username,
+            username: data.user?.username ?? '',
           },
         },
       },
