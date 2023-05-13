@@ -9,8 +9,11 @@ import type { z } from 'zod';
 
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
-import { createList } from '../data';
-import { createCourseFormSchema, createCourseSchemaWithUser } from '../schema';
+import { createList } from '../../(actions)/create-list';
+import {
+  createCourseFormSchema,
+  createCourseSchemaWithUser,
+} from '../../(actions)/create-list-schema';
 
 type MainFormProperties = {
   user: {
