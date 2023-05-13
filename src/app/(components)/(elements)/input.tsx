@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import type { JSX } from 'react';
 
 type InputProperties = {
-  error?: string[] | null;
+  error?: string | null;
   label: string;
   name: string;
   properties?: {
@@ -31,7 +31,7 @@ export function Input({
         {...properties?.label}
       >
         {label}
-        {error && <span className="ml-2 text-red-500">{error.join(',')}</span>}
+        <p>{error && <span className="text-red-500">{error}</span>}</p>
       </label>
       <div className="mt-2">
         <input

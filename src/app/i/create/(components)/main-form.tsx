@@ -21,7 +21,6 @@ export const formSchema = z.object({
           }),
         links: z
           .string()
-          .min(1)
           .url()
           .transform(value => {
             return value.split(',');
@@ -46,9 +45,12 @@ const defaultValues: z.input<typeof formSchema> = {
 };
 
 export function MainForm(): JSX.Element {
-  const { register, handleSubmit, control } = useForm<
-    z.input<typeof formSchema>
-  >({
+  const {
+    formState: { errors },
+    register,
+    handleSubmit,
+    control,
+  } = useForm<z.input<typeof formSchema>>({
     defaultValues,
     resolver: zodResolver(formSchema),
   });
@@ -69,6 +71,7 @@ export function MainForm(): JSX.Element {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input
+        error={errors.name?.message}
         label="List Name"
         name="name"
         properties={{
@@ -85,6 +88,7 @@ export function MainForm(): JSX.Element {
             <div className="my-4 w-96 border-2 p-4" key={course.id}>
               <p>Item {courseIndex + 1}</p>
               <Input
+                error={errors.courses?.[courseIndex]?.courseName?.message}
                 label="Course Name"
                 name={`courses.${courseIndex}.courseName`}
                 properties={{
@@ -95,6 +99,7 @@ export function MainForm(): JSX.Element {
                 }}
               />
               <Input
+                error={errors.courses?.[courseIndex]?.publisherName?.message}
                 label="Publisher Name"
                 name={`courses.${courseIndex}.publisherName`}
                 properties={{
@@ -105,6 +110,7 @@ export function MainForm(): JSX.Element {
                 }}
               />
               <Input
+                error={errors.courses?.[courseIndex]?.links?.message}
                 label="Links (comma separated)"
                 name={`courses.${courseIndex}.links`}
                 properties={{
@@ -115,6 +121,7 @@ export function MainForm(): JSX.Element {
                 }}
               />
               <Input
+                error={errors.courses?.[courseIndex]?.instructors?.message}
                 label="Instructors (comma separated)"
                 name={`courses.${courseIndex}.instructors`}
                 properties={{
