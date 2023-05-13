@@ -8,7 +8,7 @@ import { Button } from './(components)/(elements)/button';
 export default function Home(): JSX.Element {
   return (
     <main className="grid h-96 w-full place-items-center">
-      <div className="w-96">
+      <div style={{ width: '30rem' }}>
         <h1 className="my-4 text-5xl font-bold italic text-blue-900">
           Introspect
         </h1>

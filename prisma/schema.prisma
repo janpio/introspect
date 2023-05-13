@@ -27,16 +27,18 @@ model LearningMaterial {
   name          String
   publisherName String
 
-  instructors   Person[]
+  instructors   String[]
   links         LearningMaterialLink[]
   learningLists LearningList[]
+
+  @@unique([name, publisherName])
 }
 
 model LearningMaterialLink {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  url       String
+  url       String   @unique
 
   learningMaterialId String?
   learningMaterial   LearningMaterial? @relation(fields: [learningMaterialId], references: [id])
@@ -46,10 +48,9 @@ model Person {
   id              String   @id @default(uuid())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  username        String?
+  username        String?  @unique
   fullName        String?
   profileImageUrl String?
 
-  learningList      LearningList[]
-  learningMaterials LearningMaterial[]
+  learningList LearningList[]
 }

@@ -13,7 +13,7 @@ export function AnimatedText(): JSX.Element {
 
   const handleSetcurrentWord = (): void => {
     setCurrentWord(currentWord_ => {
-      if (currentWord_ === 2) {
+      if (currentWord_ === 3) {
         return 0;
       }
 
@@ -51,7 +51,7 @@ export function AnimatedText(): JSX.Element {
           );
         })}
       </span>{' '}
-      your path to learn <span className="underline">anything</span>.
+      your path to learn <div className="underline">anything.</div>
     </h1>
   );
 }
