@@ -14,6 +14,7 @@ import {
 } from '../../../(actions)/create-list-schema';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
+import { Textarea } from '../../../(components)/(elements)/textarea';
 
 type MainFormProperties = {
   user: {
@@ -121,7 +122,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
                     },
                   }}
                 />
-                <Input
+                <Textarea
                   error={errors.courses?.[courseIndex]?.links?.message}
                   label="Links (comma separated)"
                   name={`courses.${courseIndex}.links`}
@@ -132,7 +133,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
                     },
                   }}
                 />
-                <Input
+                <Textarea
                   error={errors.courses?.[courseIndex]?.instructors?.message}
                   label="Instructors (comma separated)"
                   name={`courses.${courseIndex}.instructors`}

@@ -8,7 +8,7 @@ export default async function Create(): Promise<JSX.Element> {
   const user = await currentUser();
 
   return (
-    <div className="mx-auto my-4 max-w-7xl">
+    <div className="mx-auto my-4 max-w-7xl px-4">
       <MainForm
         user={{
           id: user?.id,
