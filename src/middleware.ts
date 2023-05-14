@@ -15,7 +15,10 @@ export default withClerkMiddleware((request: NextRequest) => {
   }
 
   // Allow all public paths
-  if (isPublic(request.nextUrl.pathname)) {
+  if (
+    isPublic(request.nextUrl.pathname) &&
+    request.nextUrl.pathname !== '/list'
+  ) {
     return NextResponse.next();
   }
 
@@ -24,6 +27,11 @@ export default withClerkMiddleware((request: NextRequest) => {
     const signInUrl = new URL('/landing', request.url);
     signInUrl.searchParams.set('redirect_url', request.url);
     return NextResponse.redirect(signInUrl);
+  }
+
+  // No /list homepage exist, fallback to home
+  if (request.nextUrl.pathname === '/list') {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   // Fallback

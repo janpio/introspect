@@ -1,5 +1,8 @@
 import { currentUser, SignUpButton, UserButton } from '@clerk/nextjs';
-import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import {
+  ClipboardDocumentListIcon,
+  PlusCircleIcon,
+} from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import type { JSX, ReactNode } from 'react';
 
@@ -22,11 +25,18 @@ export default async function Layout({
         </Link>
         <div className="mx-2 flex w-full items-center gap-4 sm:justify-end">
           {user && (
-            <Button className="px-2 py-1">
-              <Link className="flex items-center gap-1" href="/create">
-                <PlusCircleIcon height={20} width={20} /> Create
-              </Link>
-            </Button>
+            <>
+              <Button>
+                <Link className="flex items-center gap-1" href="/manage">
+                  <ClipboardDocumentListIcon height={20} width={20} /> Manage
+                </Link>
+              </Button>
+              <Button>
+                <Link className="flex items-center gap-1" href="/create">
+                  <PlusCircleIcon height={20} width={20} /> Create
+                </Link>
+              </Button>
+            </>
           )}
           {!user && (
             <Button className="px-2 py-1">
