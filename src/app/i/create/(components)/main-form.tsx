@@ -1,7 +1,7 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -72,7 +72,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
         },
       });
       await createList(parsed);
-      router.reload();
+      router.refresh();
     }
 
     toggleIsLoading();
@@ -93,7 +93,6 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
             },
           }}
         />
-        <div>{user?.id}</div>
         <div className="flex flex-wrap gap-4">
           {courses.map((course, courseIndex) => {
             return (

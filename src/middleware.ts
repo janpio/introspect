@@ -13,21 +13,24 @@ const isPublic = (path: string): string | undefined => {
 export default withClerkMiddleware((request: NextRequest) => {
   const { userId } = getAuth(request);
 
+  // Redirect signed in users from home to /i
   if (userId && request.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/i', request.url));
   }
 
+  // Allow all other public paths
   if (isPublic(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
+  // Redirect not autheticated users to home
   if (!userId) {
-    // redirect the users to /pages/sign-in/[[...index]].ts
     const signInUrl = new URL('/', request.url);
     signInUrl.searchParams.set('redirect_url', request.url);
     return NextResponse.redirect(signInUrl);
   }
 
+  // Fallback
   return NextResponse.next();
 });
 

@@ -51,7 +51,7 @@ export function AnimatedText(): JSX.Element {
           );
         })}
       </span>{' '}
-      your path to learn <div className="underline">anything.</div>
+      your path to <div className="underline">learn anything.</div>
     </h1>
   );
 }
