@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
 
-import { prisma } from '../../../prisma/database';
+import { prisma } from '../../prisma/database';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -66,7 +66,7 @@ export async function ListCard({
     >
       <div className="grid">
         <p className="text-xl font-bold text-blue-900 underline">
-          <Link href={`/i/list/${listId}`}>{listName}</Link>
+          <Link href={`/list/${listId}`}>{listName}</Link>
         </p>
         {listUpdatedAt && <time>Updated: {listUpdatedAt}</time>}
         {listCreatedAt && <time>Created: {listCreatedAt}</time>}

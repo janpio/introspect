@@ -2,7 +2,7 @@
 
 import { isNil } from 'lodash';
 
-import { prisma } from '../../../prisma/database';
+import { prisma } from '../../prisma/database';
 
 export async function favoriteList(
   clerkId: string,

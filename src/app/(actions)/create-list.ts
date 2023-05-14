@@ -1,7 +1,7 @@
 'use server';
 import type { z } from 'zod';
 
-import { prisma } from '../../../prisma/database';
+import { prisma } from '../../prisma/database';
 import type { createCourseSchemaWithUser } from './create-list-schema';
 
 export const createList = async (

@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
 import { prisma } from '../../prisma/database';
-import { ListCard } from './(components)/list-card';
+import { ListCard } from '../(components)/list-card';
 
 // eslint-disable-next-line unicorn/numeric-separators-style
 export const revalidate = 86400;

@@ -7,13 +7,13 @@ import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-import { Button } from '../../../(components)/(elements)/button';
-import { Input } from '../../../(components)/(elements)/input';
-import { createList } from '../../(actions)/create-list';
+import { createList } from '../../../(actions)/create-list';
 import {
   createCourseFormSchema,
   createCourseSchemaWithUser,
-} from '../../(actions)/create-list-schema';
+} from '../../../(actions)/create-list-schema';
+import { Button } from '../../../(components)/(elements)/button';
+import { Input } from '../../../(components)/(elements)/input';
 
 type MainFormProperties = {
   user: {

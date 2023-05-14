@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { JSX } from 'react';
 
 import { prisma } from '../../../../prisma/database';
-import { ListCard } from '../../(components)/list-card';
+import { ListCard } from '../../../(components)/list-card';
 
 type ListPageProperties = {
   params: {
