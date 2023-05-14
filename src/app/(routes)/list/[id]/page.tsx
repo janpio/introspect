@@ -11,9 +11,6 @@ type ListPageProperties = {
   };
 };
 
-// eslint-disable-next-line unicorn/numeric-separators-style
-export const revalidate = 86400;
-
 export default async function ListPage({
   params,
 }: ListPageProperties): Promise<JSX.Element | null> {

@@ -7,6 +7,9 @@ import type { JSX } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// eslint-disable-next-line unicorn/numeric-separators-style
+export const revalidate = 86400;
+
 type RootLayoutProperties = {
   children: React.ReactNode;
 };

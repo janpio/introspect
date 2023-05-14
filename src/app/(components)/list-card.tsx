@@ -18,9 +18,6 @@ type ListCardProperties = {
   listUpdatedAt: string | null;
 };
 
-// eslint-disable-next-line unicorn/numeric-separators-style
-export const revalidate = 86400;
-
 export async function ListCard({
   containerClassname,
   creatorProfileImage,
