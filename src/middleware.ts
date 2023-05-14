@@ -2,18 +2,18 @@ import { getAuth, withClerkMiddleware } from '@clerk/nextjs/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const publicPaths = ['/'];
+const isPublic = (path: string): boolean => {
+  if (path === '/' || path.startsWith('/i/list')) {
+    return true;
+  }
 
-const isPublic = (path: string): string | undefined => {
-  return publicPaths.find(item => {
-    return new RegExp(`^${item}$`.replace('*$', '($|/)')).exec(path);
-  });
+  return false;
 };
 
 export default withClerkMiddleware((request: NextRequest) => {
   const { userId } = getAuth(request);
 
-  // Redirect signed in users from home to /i
+  // Redirect signed-in users from home to /i
   if (userId && request.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/i', request.url));
   }
@@ -23,7 +23,7 @@ export default withClerkMiddleware((request: NextRequest) => {
     return NextResponse.next();
   }
 
-  // Redirect not autheticated users to home
+  // Redirect not authenticated users to home
   if (!userId) {
     const signInUrl = new URL('/', request.url);
     signInUrl.searchParams.set('redirect_url', request.url);

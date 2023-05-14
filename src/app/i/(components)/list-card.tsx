@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs';
+import classNames from 'classnames';
 import { isNil } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,6 +9,7 @@ import { prisma } from '../../../prisma/database';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
+  containerClassname?: string;
   creatorProfileImage: string | null;
   creatorUsername: string | null;
   listCreatedAt: string | null;
@@ -20,6 +22,7 @@ type ListCardProperties = {
 export const revalidate = 86400;
 
 export async function ListCard({
+  containerClassname,
   creatorProfileImage,
   creatorUsername,
   listCreatedAt,
@@ -55,7 +58,12 @@ export async function ListCard({
   }
 
   return (
-    <div className="flex w-full max-w-5xl justify-between border-2 p-4 shadow-sm">
+    <div
+      className={classNames(
+        'flex w-full max-w-5xl justify-between border-2 p-4 shadow-sm',
+        containerClassname,
+      )}
+    >
       <div className="grid">
         <p className="text-xl font-bold text-blue-900 underline">
           <Link href={`/i/list/${listId}`}>{listName}</Link>
