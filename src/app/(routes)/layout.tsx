@@ -1,4 +1,4 @@
-import { currentUser, SignUpButton, UserButton } from '@clerk/nextjs';
+import { SignUpButton, UserButton } from '@clerk/nextjs';
 import {
   ClipboardDocumentListIcon,
   PlusCircleIcon,
@@ -6,6 +6,7 @@ import {
 import Link from 'next/link';
 import type { JSX, ReactNode } from 'react';
 
+import { syncCurrentUser } from '../(actions)/sync-user';
 import { Button } from '../(components)/(elements)/button';
 
 type LayoutProperties = {
@@ -15,7 +16,7 @@ type LayoutProperties = {
 export default async function Layout({
   children,
 }: LayoutProperties): Promise<JSX.Element> {
-  const user = await currentUser();
+  const user = await syncCurrentUser();
 
   return (
     <>

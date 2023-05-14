@@ -71,8 +71,9 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
           username: user.username ?? undefined,
         },
       });
-      await createList(parsed);
+      const list = await createList(parsed);
       router.refresh();
+      router.push(`/list/${list.id}`);
     }
 
     toggleIsLoading();
