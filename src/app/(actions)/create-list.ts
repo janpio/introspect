@@ -25,15 +25,17 @@ export const createList = async (
         connectOrCreate: data.courses.map(course => {
           return {
             create: {
-              instructors: course.instructors,
+              instructors: course.instructors.map(instructor => {
+                return instructor.trim();
+              }),
               links: {
                 connectOrCreate: course.links.map(link => {
                   return {
                     create: {
-                      url: link,
+                      url: link.trim(),
                     },
                     where: {
-                      url: link,
+                      url: link.trim(),
                     },
                   };
                 }),

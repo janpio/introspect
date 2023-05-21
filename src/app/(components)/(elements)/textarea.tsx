@@ -11,7 +11,6 @@ type TextareaProperties = {
     input?: JSX.IntrinsicElements['textarea'];
     label?: JSX.IntrinsicElements['label'];
   };
-  type?: string;
 };
 
 export function Textarea({
@@ -19,7 +18,6 @@ export function Textarea({
   label,
   name,
   properties,
-  type,
 }: TextareaProperties): JSX.Element {
   return (
     <div

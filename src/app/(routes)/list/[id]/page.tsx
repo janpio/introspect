@@ -118,6 +118,11 @@ export default async function ListPage({
                     return link.url;
                   }),
                 }}
+                user={{
+                  id: user.id,
+                  profileImageUrl: user.profileImageUrl,
+                  username: user.username,
+                }}
               />
             )}
           </div>
