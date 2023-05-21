@@ -6,6 +6,7 @@ import {
 import Link from 'next/link';
 import type { JSX, ReactNode } from 'react';
 
+import { environment } from '../../util/environment';
 import { syncCurrentUser } from '../(actions)/sync-user';
 import { Button } from '../(components)/(elements)/button';
 
@@ -45,7 +46,7 @@ export default async function Layout({
               </Button>
             </>
           )}
-          {!user && (
+          {!user && environment.NODE_ENV === 'development' && (
             <Button className="px-2 py-1">
               <SignUpButton>Sign Up/In</SignUpButton>
             </Button>

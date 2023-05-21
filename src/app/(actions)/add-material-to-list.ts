@@ -12,7 +12,17 @@ type AddMaterialToListData = {
 export const addMaterialToList = async (
   data: AddMaterialToListData,
 ): Promise<{ id: string }> => {
-  return prisma.learningMaterial.create({
+  const learningListUpdate = prisma.learningList.update({
+    data: {
+      updatedAt: new Date(),
+    },
+    select: { id: true },
+    where: {
+      id: data.listId,
+    },
+  });
+
+  const createMaterial = prisma.learningMaterial.create({
     data: {
       instructors: data.instructors,
       learningLists: {
@@ -37,4 +47,11 @@ export const addMaterialToList = async (
     },
     select: { id: true },
   });
+
+  const returnData = await prisma.$transaction([
+    learningListUpdate,
+    createMaterial,
+  ]);
+
+  return returnData[1];
 };
