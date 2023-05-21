@@ -8,6 +8,10 @@ export default authMiddleware({
       landingPage.searchParams.set('redirect_url', request.url);
       return NextResponse.redirect(landingPage);
     }
+
+    if (auth.userId && request.nextUrl.pathname === '/landing') {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
   },
   publicRoutes: ['/landing', '/list/(.*)'],
 });

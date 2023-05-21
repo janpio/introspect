@@ -1,30 +1,28 @@
 import { z } from 'zod';
 
-export const createCourseFormSchema = z.object({
-  courses: z
-    .array(
-      z.object({
-        courseName: z.string().min(1),
-        instructors: z
-          .string()
-          .min(1)
-          .transform(value => {
-            return value.split(',');
-          }),
-        links: z
-          .string()
-          .url()
-          .transform(value => {
-            return value.split(',');
-          }),
-        publisherName: z.string().min(1),
-      }),
-    )
-    .min(1),
+export const createMaterialFormSchema = z.object({
+  courseName: z.string().min(1),
+  instructors: z
+    .string()
+    .min(1)
+    .transform(value => {
+      return value.split(',');
+    }),
+  links: z
+    .string()
+    .url()
+    .transform(value => {
+      return value.split(',');
+    }),
+  publisherName: z.string().min(1),
+});
+
+export const createListFormSchema = z.object({
+  courses: z.array(createMaterialFormSchema).min(1),
   name: z.string().min(1),
 });
 
-export const createCourseSchemaWithUser = z.object({
+export const createListFormSchemaWithUser = z.object({
   courses: z
     .array(
       z.object({

@@ -2,10 +2,10 @@
 import type { z } from 'zod';
 
 import { prisma } from '../../prisma/database';
-import type { createCourseSchemaWithUser } from './create-list-schema';
+import type { createListFormSchemaWithUser } from './create-list-schema';
 
 export const createList = async (
-  data: z.output<typeof createCourseSchemaWithUser>,
+  data: z.output<typeof createListFormSchemaWithUser>,
 ): Promise<{ id: string }> => {
   return prisma.learningList.create({
     data: {

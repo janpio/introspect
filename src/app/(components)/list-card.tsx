@@ -62,8 +62,10 @@ export async function ListCard({
       )}
     >
       <div className="grid">
-        <p className="text-xl font-bold text-blue-900 underline">
-          <Link href={`/list/${listId}`}>{listName}</Link>
+        <p className="text-xl font-bold underline">
+          <Link className="text-blue-900" href={`/list/${listId}`}>
+            {listName}
+          </Link>
         </p>
         {listUpdatedAt && <time>Updated: {listUpdatedAt}</time>}
         {listCreatedAt && <time>Created: {listCreatedAt}</time>}

@@ -9,8 +9,8 @@ import type { z } from 'zod';
 
 import { createList } from '../../../(actions)/create-list';
 import {
-  createCourseFormSchema,
-  createCourseSchemaWithUser,
+  createListFormSchema,
+  createListFormSchemaWithUser,
 } from '../../../(actions)/create-list-schema';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
@@ -24,7 +24,7 @@ type MainFormProperties = {
   } | null;
 };
 
-const defaultValues: z.input<typeof createCourseFormSchema> = {
+const defaultValues: z.input<typeof createListFormSchema> = {
   courses: [
     {
       courseName: '',
@@ -45,9 +45,9 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
     register,
     handleSubmit,
     control,
-  } = useForm<z.input<typeof createCourseFormSchema>>({
+  } = useForm<z.input<typeof createListFormSchema>>({
     defaultValues,
-    resolver: zodResolver(createCourseFormSchema),
+    resolver: zodResolver(createListFormSchema),
   });
 
   const {
@@ -60,11 +60,11 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
   });
 
   const handleCreateList = async (
-    data: z.input<typeof createCourseFormSchema>,
+    data: z.input<typeof createListFormSchema>,
   ): Promise<void> => {
     toggleIsLoading();
     if (user?.id) {
-      const parsed = createCourseSchemaWithUser.parse({
+      const parsed = createListFormSchemaWithUser.parse({
         ...data,
         user: {
           clerkId: user.id,

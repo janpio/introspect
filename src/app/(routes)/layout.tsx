@@ -28,12 +28,18 @@ export default async function Layout({
           {user && (
             <>
               <Button>
-                <Link className="flex items-center gap-1" href="/manage">
+                <Link
+                  className="flex items-center gap-1 text-white"
+                  href="/manage"
+                >
                   <ClipboardDocumentListIcon height={20} width={20} /> Manage
                 </Link>
               </Button>
               <Button>
-                <Link className="flex items-center gap-1" href="/create">
+                <Link
+                  className="flex items-center gap-1 text-white"
+                  href="/create"
+                >
                   <PlusCircleIcon height={20} width={20} /> Create
                 </Link>
               </Button>

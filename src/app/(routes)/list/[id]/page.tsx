@@ -110,7 +110,16 @@ export default async function ListPage({
                 })}
               </div>
             </div>
-            {isOwnedByCurrent && <EditModal />}
+            {isOwnedByCurrent && (
+              <EditModal
+                material={{
+                  ...material,
+                  links: material.links.map(link => {
+                    return link.url;
+                  }),
+                }}
+              />
+            )}
           </div>
         );
       })}
