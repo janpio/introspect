@@ -41,16 +41,18 @@ export function EditModal({
       instructors: z
         .string()
         .min(1)
-        .trim()
         .transform(value => {
-          return value.split(',');
+          return value.split(',').map(string => {
+            return string.trim();
+          });
         }),
       links: z
         .string()
         .url()
-        .trim()
         .transform(value => {
-          return value.split(',');
+          return value.split(',').map(string => {
+            return string.trim();
+          });
         }),
       publisherName: z.string().trim().min(1),
     })
