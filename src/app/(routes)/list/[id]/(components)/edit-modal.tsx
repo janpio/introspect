@@ -37,20 +37,22 @@ export function EditModal({
 
   const formSchema = z
     .object({
-      courseName: z.string().min(1),
+      courseName: z.string().trim().min(1),
       instructors: z
         .string()
         .min(1)
+        .trim()
         .transform(value => {
           return value.split(',');
         }),
       links: z
         .string()
         .url()
+        .trim()
         .transform(value => {
           return value.split(',');
         }),
-      publisherName: z.string().min(1),
+      publisherName: z.string().trim().min(1),
     })
     .transform(data => {
       return {

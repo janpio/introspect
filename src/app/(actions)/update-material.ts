@@ -18,10 +18,18 @@ type UpdateMaterialData = {
 export const updateMaterial = async (
   data: UpdateMaterialData,
 ): Promise<{ id: string }> => {
-  return prisma.learningMaterial.update({
+  const learningMaterial = await prisma.learningMaterial.update({
     data: {
       instructors: data.instructors,
       links: {
+        createMany: {
+          data: data.links.map(link => {
+            return {
+              url: link,
+            };
+          }),
+          skipDuplicates: true,
+        },
         set: data.links.map(link => {
           return {
             url: link,
@@ -36,4 +44,12 @@ export const updateMaterial = async (
       id: data.id,
     },
   });
+
+  await prisma.learningMaterialLink.deleteMany({
+    where: {
+      learningMaterialId: null,
+    },
+  });
+
+  return learningMaterial;
 };
