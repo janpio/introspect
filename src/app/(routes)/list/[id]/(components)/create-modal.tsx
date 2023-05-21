@@ -1,10 +1,12 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { addMaterialToList } from '../../../../(actions)/add-material-to-list';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
@@ -23,12 +25,13 @@ export function CreateModal({
   listId,
   user,
 }: CreateModalProperties): JSX.Element {
+  const router = useRouter();
+
   const [isOpen, toggleOpen] = useToggle(false);
   const [isLoading, toggleLoading] = useToggle(false);
 
   const formSchema = z
     .object({
-      courseName: z.string().min(1),
       instructors: z
         .string()
         .min(1)
@@ -41,17 +44,13 @@ export function CreateModal({
         .transform(value => {
           return value.split(',');
         }),
+      name: z.string().min(1),
       publisherName: z.string().min(1),
     })
     .transform(data => {
       return {
         ...data,
         listId,
-        user: {
-          clerkId: user?.id,
-          profileImage: user?.profileImageUrl,
-          username: user?.username,
-        },
       };
     });
 
@@ -61,9 +60,9 @@ export function CreateModal({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      courseName: '',
       instructors: '',
       links: '',
+      name: '',
       publisherName: '',
     },
     resolver: zodResolver(formSchema),
@@ -72,10 +71,14 @@ export function CreateModal({
   const handleCreateMaterial = async (
     data: z.output<typeof formSchema>,
   ): Promise<void> => {
+    toggleLoading();
     if (user?.id) {
-      // eslint-disable-next-line no-console
-      console.log(data);
+      await addMaterialToList(data);
     }
+
+    router.refresh();
+    toggleLoading();
+    toggleOpen();
   };
 
   return (
@@ -86,11 +89,11 @@ export function CreateModal({
         <form onSubmit={handleSubmit(handleCreateMaterial)}>
           <fieldset disabled={isLoading}>
             <Input
-              error={errors.courseName?.message}
+              error={errors.name?.message}
               label="Name"
               name="name"
               properties={{
-                input: { ...register('courseName') },
+                input: { ...register('name') },
               }}
             />
             <Input
