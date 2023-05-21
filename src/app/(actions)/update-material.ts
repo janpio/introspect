@@ -1,11 +1,22 @@
 'use server';
-import type { z } from 'zod';
 
 import { prisma } from '../../prisma/database';
-import type { createMaterialFormSchemaWithUser } from './create-list-schema';
+
+type UpdateMaterialData = {
+  courseName: string;
+  id: string;
+  instructors: string[];
+  links: string[];
+  publisherName: string;
+  user: {
+    clerkId: string;
+    profileImage: string;
+    username: string;
+  };
+};
 
 export const updateMaterial = async (
-  data: z.output<typeof createMaterialFormSchemaWithUser>,
+  data: UpdateMaterialData,
 ): Promise<{ id: string }> => {
   return prisma.learningMaterial.update({
     data: {

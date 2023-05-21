@@ -5,13 +5,9 @@ import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import type { z } from 'zod';
+import { z } from 'zod';
 
 import { createList } from '../../../(actions)/create-list';
-import {
-  createListFormSchema,
-  createListFormSchemaWithUser,
-} from '../../../(actions)/create-list-schema';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
 import { Textarea } from '../../../(components)/(elements)/textarea';
@@ -24,7 +20,7 @@ type MainFormProperties = {
   } | null;
 };
 
-const defaultValues: z.input<typeof createListFormSchema> = {
+const defaultValues = {
   courses: [
     {
       courseName: '',
@@ -40,14 +36,38 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
   const router = useRouter();
   const [isLoading, toggleIsLoading] = useToggle(false);
 
+  const formSchema = z.object({
+    courses: z
+      .array(
+        z.object({
+          courseName: z.string().min(1),
+          instructors: z
+            .string()
+            .min(1)
+            .transform(value => {
+              return value.split(',');
+            }),
+          links: z
+            .string()
+            .url()
+            .transform(value => {
+              return value.split(',');
+            }),
+          publisherName: z.string().min(1),
+        }),
+      )
+      .min(1),
+    name: z.string().trim().min(1),
+  });
+
   const {
     formState: { errors },
     register,
     handleSubmit,
     control,
-  } = useForm<z.input<typeof createListFormSchema>>({
+  } = useForm({
     defaultValues,
-    resolver: zodResolver(createListFormSchema),
+    resolver: zodResolver(formSchema),
   });
 
   const {
@@ -60,11 +80,11 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
   });
 
   const handleCreateList = async (
-    data: z.input<typeof createListFormSchema>,
+    data: z.output<typeof formSchema>,
   ): Promise<void> => {
     toggleIsLoading();
     if (user?.id) {
-      const parsed = createListFormSchemaWithUser.parse({
+      const list = await createList({
         ...data,
         user: {
           clerkId: user.id,
@@ -72,7 +92,6 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
           username: user.username ?? undefined,
         },
       });
-      const list = await createList(parsed);
       router.refresh();
       router.push(`/list/${list.id}`);
     }
@@ -81,6 +100,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
   };
 
   return (
+    // @ts-expect-error handled by parse
     <form onSubmit={handleSubmit(handleCreateList)}>
       <fieldset disabled={isLoading}>
         <Input

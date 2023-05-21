@@ -1,11 +1,24 @@
 'use server';
-import type { z } from 'zod';
 
 import { prisma } from '../../prisma/database';
-import type { createListFormSchemaWithUser } from './create-list-schema';
+
+type CreateListData = {
+  courses: Array<{
+    courseName: string;
+    instructors: string[];
+    links: string[];
+    publisherName: string;
+  }>;
+  name: string;
+  user: {
+    clerkId: string;
+    profileImage?: string;
+    username?: string;
+  };
+};
 
 export const createList = async (
-  data: z.output<typeof createListFormSchemaWithUser>,
+  data: CreateListData,
 ): Promise<{ id: string }> => {
   return prisma.learningList.create({
     data: {

@@ -1,25 +1,17 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { updateMaterial } from '../../../../(actions)/update-material';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 
-type EditModalProperties = {
-  material: {
-    id: string;
-    instructors: string[];
-    links: string[];
-    name: string;
-    publisherName: string;
-  };
+type CreateModalProperties = {
+  listId: string;
   user: {
     id: string | undefined;
     profileImageUrl: string | undefined;
@@ -27,11 +19,10 @@ type EditModalProperties = {
   } | null;
 };
 
-export function EditModal({
-  material,
+export function CreateModal({
+  listId,
   user,
-}: EditModalProperties): JSX.Element {
-  const router = useRouter();
+}: CreateModalProperties): JSX.Element {
   const [isOpen, toggleOpen] = useToggle(false);
   const [isLoading, toggleLoading] = useToggle(false);
 
@@ -55,11 +46,11 @@ export function EditModal({
     .transform(data => {
       return {
         ...data,
-        id: material.id,
+        listId,
         user: {
           clerkId: user?.id,
           profileImage: user?.profileImageUrl,
-          username: user?.username ?? undefined,
+          username: user?.username,
         },
       };
     });
@@ -70,33 +61,29 @@ export function EditModal({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      courseName: material.name,
-      instructors: material.instructors.join(', '),
-      links: material.links.join(', '),
-      publisherName: material.publisherName,
+      courseName: '',
+      instructors: '',
+      links: '',
+      publisherName: '',
     },
     resolver: zodResolver(formSchema),
   });
 
-  const handleUpdate = async (
-    data: z.input<typeof formSchema>,
+  const handleCreateMaterial = async (
+    data: z.output<typeof formSchema>,
   ): Promise<void> => {
-    toggleLoading();
     if (user?.id) {
-      // @ts-expect-error clerkId checked in formSchema transform
-      await updateMaterial(data);
+      // eslint-disable-next-line no-console
+      console.log(data);
     }
-
-    toggleLoading();
-    router.refresh();
-    toggleOpen();
   };
 
   return (
     <div>
-      <Button onClick={toggleOpen}>Edit</Button>
+      <Button onClick={toggleOpen}>Add to List</Button>
       <Modal isOpen={isOpen} toggleOpen={toggleOpen}>
-        <form onSubmit={handleSubmit(handleUpdate)}>
+        {/* @ts-expect-error handled by zod parse */}
+        <form onSubmit={handleSubmit(handleCreateMaterial)}>
           <fieldset disabled={isLoading}>
             <Input
               error={errors.courseName?.message}

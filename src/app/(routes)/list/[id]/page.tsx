@@ -5,6 +5,7 @@ import type { JSX } from 'react';
 
 import { prisma } from '../../../../prisma/database';
 import { ListCard } from '../../../(components)/list-card';
+import { CreateModal } from './(components)/create-modal';
 import { EditModal } from './(components)/edit-modal';
 
 type ListPageProperties = {
@@ -128,6 +129,18 @@ export default async function ListPage({
           </div>
         );
       })}
+      <div className="w-full max-w-5xl">
+        {isOwnedByCurrent && (
+          <CreateModal
+            listId={list.id}
+            user={{
+              id: user.id,
+              profileImageUrl: user.profileImageUrl,
+              username: user.username,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
