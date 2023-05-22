@@ -1,4 +1,3 @@
-'use client';
 import classNames from 'classnames';
 import Link from 'next/link';
 import type { ChangeEvent, JSX } from 'react';
@@ -102,9 +101,7 @@ export function MaterialCard({
       });
     }
 
-    setTimeout(() => {
-      setCanUpdate(true);
-    }, 2000);
+    setCanUpdate(true);
   };
 
   return (
