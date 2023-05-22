@@ -5,12 +5,14 @@ import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
 
 import { updateMaterialCompletion } from '../../../../(actions)/update-material-completion';
+import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
 type MaterialCardProperties = {
   index: number;
   isComplete: boolean;
   isOwnedByCurrent: boolean;
+  listId: string;
   material: {
     id: string;
     instructors: string[];
@@ -29,6 +31,7 @@ export function MaterialCard({
   index,
   isComplete,
   isOwnedByCurrent,
+  listId,
   material,
   user,
 }: MaterialCardProperties): JSX.Element {
@@ -89,6 +92,31 @@ export function MaterialCard({
             );
           })}
         </div>
+        <div className="my-4">
+          {isOwnedByCurrent && (
+            <div className="flex flex-wrap gap-2">
+              <EditModal
+                material={{
+                  ...material,
+                  links: material.links.map(link => {
+                    return link.url;
+                  }),
+                }}
+                user={{
+                  id: user?.id,
+                  profileImageUrl: user?.profileImageUrl,
+                  username: user?.username,
+                }}
+              />
+              <DeleteModal
+                listId={listId}
+                materialId={material.id}
+                materialTitle={material.name}
+                order={index}
+              />
+            </div>
+          )}
+        </div>
       </div>
       <div>
         {user && (
@@ -105,21 +133,6 @@ export function MaterialCard({
               'cursor-pointer': canUpdate,
             })}
             onChange={handleDoneChange}
-          />
-        )}
-        {isOwnedByCurrent && (
-          <EditModal
-            material={{
-              ...material,
-              links: material.links.map(link => {
-                return link.url;
-              }),
-            }}
-            user={{
-              id: user?.id,
-              profileImageUrl: user?.profileImageUrl,
-              username: user?.username,
-            }}
           />
         )}
       </div>

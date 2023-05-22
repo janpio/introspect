@@ -55,6 +55,7 @@ export default async function ListPage({
               publisherName: true,
             },
           },
+          order: true,
         },
       },
       name: true,
@@ -83,14 +84,15 @@ export default async function ListPage({
         listUpdatedAt={DateTime.fromJSDate(list.updatedAt).toRelative()}
       />
       <div className="grid w-full md:grid-cols-2 md:gap-2">
-        {list.learningListMaterial.map((listMaterial, index) => {
-          const { learningMaterial } = listMaterial;
+        {list.learningListMaterial.map(listMaterial => {
+          const { learningMaterial, order } = listMaterial;
           return (
             <MaterialCard
-              index={index}
+              index={order}
               isComplete={learningMaterial.completedBy.length > 0}
               isOwnedByCurrent={isOwnedByCurrent}
               key={learningMaterial.id}
+              listId={list.id}
               material={learningMaterial}
               user={{
                 id: user?.id,
