@@ -9,7 +9,6 @@ import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
 type MaterialCardProperties = {
-  index: number;
   isComplete: boolean;
   isOwnedByCurrent: boolean;
   listId: string;
@@ -20,6 +19,7 @@ type MaterialCardProperties = {
     name: string;
     publisherName: string;
   };
+  order: number;
   user: {
     id?: string;
     profileImageUrl?: string;
@@ -28,7 +28,7 @@ type MaterialCardProperties = {
 };
 
 export function MaterialCard({
-  index,
+  order,
   isComplete,
   isOwnedByCurrent,
   listId,
@@ -70,7 +70,7 @@ export function MaterialCard({
     <div className="m-2 mx-auto flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm">
       <div>
         <p>
-          <span className="text-lg font-bold">{`#${index + 1} ${
+          <span className="text-lg font-bold">{`#${order + 1} ${
             material.name
           }`}</span>{' '}
           -- {new Intl.ListFormat().format(material.instructors)}
@@ -112,7 +112,7 @@ export function MaterialCard({
                 listId={listId}
                 materialId={material.id}
                 materialTitle={material.name}
-                order={index}
+                order={order}
               />
             </div>
           )}
@@ -124,8 +124,8 @@ export function MaterialCard({
             aria-label="Mark material as complete"
             checked={isDone}
             disabled={!canUpdate}
-            id={`done-${index}`}
-            name={`done-${index}`}
+            id={`done-${order}`}
+            name={`done-${order}`}
             type="checkbox"
             value={String(isDone)}
             className={classNames('mb-4 h-6 w-6 rounded text-green-500', {
