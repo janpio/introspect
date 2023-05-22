@@ -13,6 +13,7 @@ type MaterialCardProperties = {
   isComplete: boolean;
   isOwnedByCurrent: boolean;
   listId: string;
+  listIndex: number;
   material: {
     id: string;
     instructors: string[];
@@ -36,6 +37,7 @@ export function MaterialCard({
   isComplete,
   isOwnedByCurrent,
   listId,
+  listIndex,
   material,
   user,
 }: MaterialCardProperties): JSX.Element {
@@ -121,7 +123,7 @@ export function MaterialCard({
     >
       <div>
         <p>
-          <span className="text-lg font-bold">{`#${order + 1} ${
+          <span className="text-lg font-bold">{`#${listIndex + 1} ${
             material.name
           }`}</span>{' '}
           -- {new Intl.ListFormat().format(material.instructors)}

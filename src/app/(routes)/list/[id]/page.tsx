@@ -34,7 +34,15 @@ export default async function ListPage({
         listName={list.name}
         listUpdatedAt={DateTime.fromJSDate(list.updatedAt).toRelative()}
       />
-      <CardList isOwnedByCurrent={isOwnedByCurrent} list={list} user={user} />
+      <CardList
+        isOwnedByCurrent={isOwnedByCurrent}
+        list={list}
+        user={{
+          id: user?.id,
+          profileImageUrl: user?.profileImageUrl,
+          username: user?.username,
+        }}
+      />
       <div className="mx-auto my-4 max-w-5xl">
         {isOwnedByCurrent && (
           <CreateModal

@@ -1,5 +1,13 @@
-type CardListArray = Array<{
+export type CardListArray = Array<{
   id: string;
+  learningMaterial: {
+    completedBy: Array<{ id: string }>;
+    id: string;
+    instructors: string[];
+    links: Array<{ id: string; url: string }>;
+    name: string;
+    publisherName: string;
+  };
   order: number;
 }>;
 
