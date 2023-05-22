@@ -119,7 +119,7 @@ export function MaterialCard({
         </div>
       </div>
       <div>
-        {user && (
+        {user?.id && (
           <input
             aria-label="Mark material as complete"
             checked={isDone}
