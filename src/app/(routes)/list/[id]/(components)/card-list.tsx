@@ -40,7 +40,7 @@ export function CardList({
     return { card, index: card ? cards.indexOf(card) : 0 };
   };
 
-  const moveCard = async (order: string, atIndex: number): Promise<void> => {
+  const moveCard = (order: string, atIndex: number): void => {
     const { card, index } = findCard(order);
     const newCards = [...cards.slice(0, index), ...cards.slice(index + 1)];
 
