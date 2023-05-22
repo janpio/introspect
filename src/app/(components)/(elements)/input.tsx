@@ -26,9 +26,12 @@ export function Input({
       className={classNames('my-4', properties?.container?.className)}
     >
       <label
-        className="block text-sm font-medium leading-6 text-gray-900"
         htmlFor={name}
         {...properties?.label}
+        className={classNames(
+          'block text-sm font-medium leading-6 text-gray-900',
+          properties?.label?.className,
+        )}
       >
         {label}
         <p>{error && <span className="text-red-500">{error}</span>}</p>

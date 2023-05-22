@@ -42,6 +42,7 @@ model LearningMaterial {
   name          String
   publisherName String
 
+  completedBy          Person[]               @relation("completedMaterial")
   instructors          String[]
   links                LearningMaterialLink[]
   learningListMaterial LearningListMaterial[]
@@ -67,6 +68,7 @@ model Person {
   profileImageUrl String?
   clerkId         String   @unique
 
-  favoriteLists LearningList[] @relation("favoriteList")
-  learningList  LearningList[] @relation("ownedList")
+  completedMaterial LearningMaterial[] @relation("completedMaterial")
+  favoriteLists     LearningList[]     @relation("favoriteList")
+  learningList      LearningList[]     @relation("ownedList")
 }
