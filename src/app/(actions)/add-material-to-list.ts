@@ -5,6 +5,7 @@ type AddMaterialToListData = {
   instructors: string[];
   links: string[];
   listId: string;
+  listLength: number;
   name: string;
   publisherName: string;
 };
@@ -25,9 +26,14 @@ export const addMaterialToList = async (
   const createMaterial = prisma.learningMaterial.create({
     data: {
       instructors: data.instructors,
-      learningLists: {
-        connect: {
-          id: data.listId,
+      learningListMaterial: {
+        create: {
+          learningList: {
+            connect: {
+              id: data.listId,
+            },
+          },
+          order: data.listLength,
         },
       },
       links: {

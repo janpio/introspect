@@ -34,37 +34,37 @@ export const createList = async (
           },
         },
       },
-      learningMaterials: {
-        connectOrCreate: data.courses.map(course => {
-          return {
-            create: {
-              instructors: course.instructors.map(instructor => {
-                return instructor.trim();
-              }),
-              links: {
-                connectOrCreate: course.links.map(link => {
-                  return {
-                    create: {
-                      url: link.trim(),
-                    },
-                    where: {
-                      url: link.trim(),
-                    },
-                  };
-                }),
-              },
-              name: course.courseName,
-              publisherName: course.publisherName,
-            },
-            where: {
-              name_publisherName: {
-                name: course.courseName,
-                publisherName: course.publisherName,
-              },
-            },
-          };
-        }),
-      },
+      // learningMaterials: {
+      //   connectOrCreate: data.courses.map(course => {
+      //     return {
+      //       create: {
+      //         instructors: course.instructors.map(instructor => {
+      //           return instructor.trim();
+      //         }),
+      //         links: {
+      //           connectOrCreate: course.links.map(link => {
+      //             return {
+      //               create: {
+      //                 url: link.trim(),
+      //               },
+      //               where: {
+      //                 url: link.trim(),
+      //               },
+      //             };
+      //           }),
+      //         },
+      //         name: course.courseName,
+      //         publisherName: course.publisherName,
+      //       },
+      //       where: {
+      //         name_publisherName: {
+      //           name: course.courseName,
+      //           publisherName: course.publisherName,
+      //         },
+      //       },
+      //     };
+      //   }),
+      // },
       name: data.name,
     },
     select: { id: true },

@@ -15,10 +15,24 @@ model LearningList {
   updatedAt DateTime @updatedAt
   name      String
 
-  createrId         String
-  creator           Person             @relation(fields: [createrId], references: [id], "ownedList")
-  learningMaterials LearningMaterial[]
-  favoritedBy       Person[]           @relation("favoriteList")
+  createrId            String
+  creator              Person                 @relation(fields: [createrId], references: [id], "ownedList")
+  favoritedBy          Person[]               @relation("favoriteList")
+  learningListMaterial LearningListMaterial[]
+}
+
+model LearningListMaterial {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Int
+
+  learningListId     String
+  learningList       LearningList     @relation(fields: [learningListId], references: [id])
+  learningMaterialId String
+  learningMaterial   LearningMaterial @relation(fields: [learningMaterialId], references: [id])
+
+  @@unique([order, learningListId, learningMaterialId])
 }
 
 model LearningMaterial {
@@ -28,9 +42,9 @@ model LearningMaterial {
   name          String
   publisherName String
 
-  instructors   String[]
-  links         LearningMaterialLink[]
-  learningLists LearningList[]
+  instructors          String[]
+  links                LearningMaterialLink[]
+  learningListMaterial LearningListMaterial[]
 
   @@unique([name, publisherName])
 }

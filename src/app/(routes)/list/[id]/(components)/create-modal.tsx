@@ -14,6 +14,7 @@ import { Modal } from '../../../../(components)/modal';
 
 type CreateModalProperties = {
   listId: string;
+  listLength: number;
   user: {
     id: string | undefined;
     profileImageUrl: string | undefined;
@@ -22,6 +23,7 @@ type CreateModalProperties = {
 };
 
 export function CreateModal({
+  listLength,
   listId,
   user,
 }: CreateModalProperties): JSX.Element {
@@ -51,6 +53,7 @@ export function CreateModal({
       return {
         ...data,
         listId,
+        listLength,
       };
     });
 

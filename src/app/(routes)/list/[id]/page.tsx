@@ -33,18 +33,22 @@ export default async function ListPage({
         select: { id: true },
       },
       id: true,
-      learningMaterials: {
+      learningListMaterial: {
         select: {
-          id: true,
-          instructors: true,
-          links: {
+          learningMaterial: {
             select: {
               id: true,
-              url: true,
+              instructors: true,
+              links: {
+                select: {
+                  id: true,
+                  url: true,
+                },
+              },
+              name: true,
+              publisherName: true,
             },
           },
-          name: true,
-          publisherName: true,
         },
       },
       name: true,
@@ -72,7 +76,8 @@ export default async function ListPage({
         listName={list.name}
         listUpdatedAt={DateTime.fromJSDate(list.updatedAt).toRelative()}
       />
-      {list.learningMaterials.map(material => {
+      {list.learningListMaterial.map(listMaterial => {
+        const { learningMaterial: material } = listMaterial;
         const urlObjects = material.links.map(link => {
           const url = new URL(link.url);
 
@@ -129,10 +134,11 @@ export default async function ListPage({
           </div>
         );
       })}
-      <div className="w-full max-w-5xl">
+      <div className="my-4 w-full max-w-5xl">
         {isOwnedByCurrent && (
           <CreateModal
             listId={list.id}
+            listLength={list.learningListMaterial.length}
             user={{
               id: user.id,
               profileImageUrl: user.profileImageUrl,
