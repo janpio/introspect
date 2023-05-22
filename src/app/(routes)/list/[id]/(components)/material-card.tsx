@@ -3,12 +3,14 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { updateMaterialCompletion } from '../../../../(actions)/update-material-completion';
 import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
 type MaterialCardProperties = {
+  findCard: (id: string) => { index: number };
   isComplete: boolean;
   isOwnedByCurrent: boolean;
   listId: string;
@@ -19,6 +21,7 @@ type MaterialCardProperties = {
     name: string;
     publisherName: string;
   };
+  moveCard: (id: string, to: number) => void;
   order: number;
   user: {
     id?: string;
@@ -28,6 +31,8 @@ type MaterialCardProperties = {
 };
 
 export function MaterialCard({
+  findCard,
+  moveCard,
   order,
   isComplete,
   isOwnedByCurrent,
@@ -37,6 +42,42 @@ export function MaterialCard({
 }: MaterialCardProperties): JSX.Element {
   const [isDone, setIsDone] = useState(isComplete);
   const [canUpdate, setCanUpdate] = useState(true);
+
+  const originalIndex = findCard(String(order)).index;
+
+  const [{ isDragging }, drag] = useDrag(() => {
+    return {
+      collect(monitor): { isDragging: boolean } {
+        return {
+          isDragging: monitor.isDragging(),
+        };
+      },
+      end(item, monitor): void {
+        const { order, originalIndex } = item as {
+          order: string;
+          originalIndex: number;
+        };
+        const didDrop = monitor.didDrop();
+        if (!didDrop) {
+          moveCard(order, originalIndex);
+        }
+      },
+      item: { order: String(order), originalIndex },
+      type: 'card',
+    };
+  });
+
+  const [, drop] = useDrop(() => {
+    return {
+      accept: 'card',
+      hover({ order: order_ }: { order: string }): void {
+        if (order_ !== String(order)) {
+          const { index } = findCard(String(order));
+          moveCard(order_, index);
+        }
+      },
+    };
+  });
 
   const urlObjects = material.links.map(link => {
     const url = new URL(link.url);
@@ -48,7 +89,7 @@ export function MaterialCard({
     };
   });
 
-  const handleDoneChange = async (
+  const handleMarkAsDone = async (
     event: ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     setIsDone(Boolean(event.target.checked));
@@ -67,7 +108,20 @@ export function MaterialCard({
   };
 
   return (
-    <div className="m-2 mx-auto flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm">
+    <div
+      className={classNames(
+        'm-2 mx-auto flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm',
+        {
+          'cursor-move': isOwnedByCurrent,
+          'opacity-0': isDragging,
+        },
+      )}
+      ref={(node): ReturnType<typeof drag> | undefined => {
+        if (isOwnedByCurrent) {
+          return drag(drop(node));
+        }
+      }}
+    >
       <div>
         <p>
           <span className="text-lg font-bold">{`#${order + 1} ${
@@ -132,7 +186,7 @@ export function MaterialCard({
               'bg-gray-200 opacity-50': !canUpdate,
               'cursor-pointer': canUpdate,
             })}
-            onChange={handleDoneChange}
+            onChange={handleMarkAsDone}
           />
         )}
       </div>

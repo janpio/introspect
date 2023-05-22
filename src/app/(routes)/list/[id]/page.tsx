@@ -2,8 +2,8 @@ import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
 import { ListCard } from '../../../(components)/list-card';
+import { CardList } from './(components)/card-list';
 import { CreateModal } from './(components)/create-modal';
-import { MaterialCard } from './(components)/material-card';
 import { getListData } from './data';
 
 type ListPageProperties = {
@@ -34,26 +34,7 @@ export default async function ListPage({
         listName={list.name}
         listUpdatedAt={DateTime.fromJSDate(list.updatedAt).toRelative()}
       />
-      <div className="grid w-full md:grid-cols-2 md:gap-2">
-        {list.learningListMaterial.map(listMaterial => {
-          const { learningMaterial, order } = listMaterial;
-          return (
-            <MaterialCard
-              isComplete={learningMaterial.completedBy.length > 0}
-              isOwnedByCurrent={isOwnedByCurrent}
-              key={learningMaterial.id}
-              listId={list.id}
-              material={learningMaterial}
-              order={order}
-              user={{
-                id: user?.id,
-                profileImageUrl: user?.profileImageUrl,
-                username: user?.username,
-              }}
-            />
-          );
-        })}
-      </div>
+      <CardList isOwnedByCurrent={isOwnedByCurrent} list={list} user={user} />
       <div className="mx-auto my-4 max-w-5xl">
         {isOwnedByCurrent && (
           <CreateModal
