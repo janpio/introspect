@@ -61,6 +61,7 @@ export function CreateModal({
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
       instructors: '',
@@ -79,6 +80,7 @@ export function CreateModal({
       await addMaterialToList(data);
     }
 
+    reset();
     router.refresh();
     toggleLoading();
     toggleOpen();

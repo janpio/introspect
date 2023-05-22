@@ -23,35 +23,44 @@ export const addMaterialToList = async (
     },
   });
 
-  const createMaterial = prisma.learningMaterial.create({
-    data: {
-      instructors: data.instructors,
-      learningListMaterial: {
-        create: {
-          learningList: {
-            connect: {
-              id: data.listId,
-            },
+  const upsertData = {
+    instructors: data.instructors,
+    learningListMaterial: {
+      create: {
+        learningList: {
+          connect: {
+            id: data.listId,
           },
-          order: data.listLength,
         },
+        order: data.listLength,
       },
-      links: {
-        connectOrCreate: data.links.map(link => {
-          return {
-            create: {
-              url: link,
-            },
-            where: {
-              url: link,
-            },
-          };
-        }),
-      },
-      name: data.name,
-      publisherName: data.publisherName,
     },
+    links: {
+      connectOrCreate: data.links.map(link => {
+        return {
+          create: {
+            url: link,
+          },
+          where: {
+            url: link,
+          },
+        };
+      }),
+    },
+    name: data.name,
+    publisherName: data.publisherName,
+  };
+
+  const createMaterial = prisma.learningMaterial.upsert({
+    create: upsertData,
     select: { id: true },
+    update: upsertData,
+    where: {
+      name_publisherName: {
+        name: data.name,
+        publisherName: data.publisherName,
+      },
+    },
   });
 
   const returnData = await prisma.$transaction([

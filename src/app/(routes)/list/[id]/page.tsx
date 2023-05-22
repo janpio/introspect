@@ -34,6 +34,7 @@ export default async function ListPage({
       },
       id: true,
       learningListMaterial: {
+        orderBy: { order: 'asc' },
         select: {
           learningMaterial: {
             select: {
@@ -76,65 +77,69 @@ export default async function ListPage({
         listName={list.name}
         listUpdatedAt={DateTime.fromJSDate(list.updatedAt).toRelative()}
       />
-      {list.learningListMaterial.map(listMaterial => {
-        const { learningMaterial: material } = listMaterial;
-        const urlObjects = material.links.map(link => {
-          const url = new URL(link.url);
+      <div className="grid w-full md:grid-cols-2 md:gap-2">
+        {list.learningListMaterial.map((listMaterial, index) => {
+          const { learningMaterial: material } = listMaterial;
+          const urlObjects = material.links.map(link => {
+            const url = new URL(link.url);
 
-          return {
-            host: url.hostname,
-            key: link.id,
-            url: link.url,
-          };
-        });
+            return {
+              host: url.hostname,
+              key: link.id,
+              url: link.url,
+            };
+          });
 
-        return (
-          <div
-            className="m-4 mx-auto flex w-full max-w-5xl justify-between border-2 p-4 shadow-sm"
-            key={material.id}
-          >
-            <div>
-              <p>
-                <span className="text-lg font-bold">{material.name}</span> --{' '}
-                {new Intl.ListFormat().format(material.instructors)}
-              </p>
-              <p>{material.publisherName}</p>
-              <div className="flex flex-wrap gap-2">
-                {urlObjects.map(urlObject => {
-                  return (
-                    <p key={urlObject.key}>
-                      <Link
-                        className="text-blue-700 underline"
-                        href={urlObject.url}
-                        referrerPolicy="no-referrer"
-                        target="_blank"
-                      >
-                        {urlObject.host}
-                      </Link>
-                    </p>
-                  );
-                })}
+          return (
+            <div
+              className="m-2 mx-auto flex w-full max-w-5xl justify-between border-2 p-4 shadow-sm"
+              key={material.id}
+            >
+              <div>
+                <p>
+                  <span className="text-lg font-bold">{`#${index + 1} ${
+                    material.name
+                  }`}</span>{' '}
+                  -- {new Intl.ListFormat().format(material.instructors)}
+                </p>
+                <p>{material.publisherName}</p>
+                <div className="flex flex-wrap gap-2">
+                  {urlObjects.map(urlObject => {
+                    return (
+                      <p key={urlObject.key}>
+                        <Link
+                          className="text-blue-700 underline"
+                          href={urlObject.url}
+                          referrerPolicy="no-referrer"
+                          target="_blank"
+                        >
+                          {urlObject.host}
+                        </Link>
+                      </p>
+                    );
+                  })}
+                </div>
               </div>
+              {isOwnedByCurrent && (
+                <EditModal
+                  material={{
+                    ...material,
+                    links: material.links.map(link => {
+                      return link.url;
+                    }),
+                  }}
+                  user={{
+                    id: user.id,
+                    profileImageUrl: user.profileImageUrl,
+                    username: user.username,
+                  }}
+                />
+              )}
             </div>
-            {isOwnedByCurrent && (
-              <EditModal
-                material={{
-                  ...material,
-                  links: material.links.map(link => {
-                    return link.url;
-                  }),
-                }}
-                user={{
-                  id: user.id,
-                  profileImageUrl: user.profileImageUrl,
-                  username: user.username,
-                }}
-              />
-            )}
-          </div>
-        );
-      })}
-      <div className="my-4 w-full max-w-5xl">
+          );
+        })}
+      </div>
+      <div className="mx-auto my-4 max-w-5xl">
         {isOwnedByCurrent && (
           <CreateModal
             listId={list.id}
