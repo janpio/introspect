@@ -53,8 +53,11 @@ export function CardList({
 
   const handleUpdateListOrder = async (): Promise<void> => {
     toggleLoading();
-    await updateListOrder({ list: cards });
-    router.refresh();
+    if (list?.id) {
+      await updateListOrder({ list: cards, listId: list.id });
+      router.refresh();
+    }
+
     toggleLoading();
   };
 

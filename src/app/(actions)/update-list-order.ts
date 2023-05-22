@@ -6,10 +6,12 @@ import type { CardListArray } from '../(routes)/list/[id]/util';
 
 type UpdateListOrderData = {
   list: CardListArray;
+  listId: string;
 };
 
 export const updateListOrder = async ({
   list,
+  listId,
 }: UpdateListOrderData): Promise<Array<{ id: string }>> => {
   let promises: Array<PrismaPromise<{ id: string }>> = [];
   let newOrder = 0;
@@ -29,6 +31,18 @@ export const updateListOrder = async ({
     ];
     newOrder += 1;
   }
+
+  promises = [
+    ...promises,
+    prisma.learningList.update({
+      data: {
+        updatedAt: new Date(),
+      },
+      where: {
+        id: listId,
+      },
+    }),
+  ];
 
   return Promise.all(promises);
 };
