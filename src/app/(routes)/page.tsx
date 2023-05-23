@@ -1,23 +1,43 @@
+import { gql } from '@apollo/client';
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
-import { prisma } from '../../prisma/database';
 import { ListCard } from '../(components)/list-card';
+import { getClient } from '../layout';
+
+type QueryReturn = {
+  allLearningLists: {
+    nodes: Array<{
+      createdAt: string;
+      id: string;
+      name: string;
+      personByCreaterId: { profileImageUrl: string; username: string };
+      updatedAt: string;
+    }>;
+  };
+};
+
+const query = gql`
+  query LearningLists {
+    allLearningLists {
+      nodes {
+        createdAt
+        personByCreaterId {
+          profileImageUrl
+          username
+        }
+        id
+        name
+        updatedAt
+      }
+    }
+  }
+`;
 
 export default async function ListPage(): Promise<JSX.Element> {
-  const lists = await prisma.learningList.findMany({
-    select: {
-      createdAt: true,
-      creator: {
-        select: {
-          profileImageUrl: true,
-          username: true,
-        },
-      },
-      id: true,
-      name: true,
-      updatedAt: true,
-    },
+  const { data } = await getClient().query<QueryReturn>({
+    context: { fetchOptions: { next: { revalidate: 86_400 } } },
+    query,
   });
 
   return (
@@ -26,21 +46,17 @@ export default async function ListPage(): Promise<JSX.Element> {
         Top Lists
       </h1>
       <div className="grid place-items-center">
-        {lists.map(async list => {
+        {data.allLearningLists.nodes.map(async list => {
           return (
             // @ts-expect-error ListCard returns Promise
             <ListCard
-              creatorProfileImage={list.creator.profileImageUrl}
-              creatorUsername={list.creator.username}
+              creatorProfileImage={list.personByCreaterId.profileImageUrl}
+              creatorUsername={list.personByCreaterId.username}
               key={list.id}
+              listCreatedAt={DateTime.fromISO(list.createdAt).toRelative()}
               listId={list.id}
               listName={list.name}
-              listCreatedAt={DateTime.fromISO(
-                list.createdAt.toISOString(),
-              ).toRelative()}
-              listUpdatedAt={DateTime.fromISO(
-                list.updatedAt.toISOString(),
-              ).toRelative()}
+              listUpdatedAt={DateTime.fromISO(list.updatedAt).toRelative()}
             />
           );
         })}

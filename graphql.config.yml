@@ -1,0 +1,3 @@
+projects: Introspect
+schema:
+  - http://localhost:3001/graphql
