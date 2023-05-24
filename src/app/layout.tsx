@@ -9,6 +9,8 @@ import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import type { JSX } from 'react';
 
+import { environment } from '../util/environment';
+
 const inter = Inter({ subsets: ['latin'] });
 
 // eslint-disable-next-line unicorn/numeric-separators-style
@@ -24,7 +26,10 @@ export const metadata = {
 };
 
 const httpLink = new HttpLink({
-  uri: 'https://introspect-gql.onrender.com/graphql',
+  uri:
+    environment.NODE_ENV === 'development'
+      ? 'http://localhost:3000/graphql'
+      : 'https://introspect.dev/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
