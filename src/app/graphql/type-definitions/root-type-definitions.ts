@@ -20,6 +20,7 @@ export const rootTypeDefinitions = gql`
     ): LearningListMaterial
     learningListMaterials(
       where: LearningListMaterialWhereInput
+      orderBy: LearningListMaterialOrderByWithRelationInput
     ): [LearningListMaterial]
     learningMaterial(where: LearningMaterialWhereUniqueInput!): LearningMaterial
     learningMaterials(where: LearningMaterialWhereInput): [LearningMaterial]

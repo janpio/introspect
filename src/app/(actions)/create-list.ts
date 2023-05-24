@@ -7,6 +7,7 @@ type CreateListData = {
     courseName: string;
     instructors: string[];
     links: string[];
+    order: number;
     publisherName: string;
   }>;
   name: string;
@@ -34,37 +35,42 @@ export const createList = async (
           },
         },
       },
-      // learningMaterials: {
-      //   connectOrCreate: data.courses.map(course => {
-      //     return {
-      //       create: {
-      //         instructors: course.instructors.map(instructor => {
-      //           return instructor.trim();
-      //         }),
-      //         links: {
-      //           connectOrCreate: course.links.map(link => {
-      //             return {
-      //               create: {
-      //                 url: link.trim(),
-      //               },
-      //               where: {
-      //                 url: link.trim(),
-      //               },
-      //             };
-      //           }),
-      //         },
-      //         name: course.courseName,
-      //         publisherName: course.publisherName,
-      //       },
-      //       where: {
-      //         name_publisherName: {
-      //           name: course.courseName,
-      //           publisherName: course.publisherName,
-      //         },
-      //       },
-      //     };
-      //   }),
-      // },
+      learningListMaterial: {
+        create: data.courses.map(course => {
+          return {
+            learningMaterial: {
+              connectOrCreate: {
+                create: {
+                  instructors: course.instructors.map(instructor => {
+                    return instructor.trim();
+                  }),
+                  links: {
+                    connectOrCreate: course.links.map(link => {
+                      return {
+                        create: {
+                          url: link.trim(),
+                        },
+                        where: {
+                          url: link.trim(),
+                        },
+                      };
+                    }),
+                  },
+                  name: course.courseName,
+                  publisherName: course.publisherName,
+                },
+                where: {
+                  name_publisherName: {
+                    name: course.courseName,
+                    publisherName: course.publisherName,
+                  },
+                },
+              },
+            },
+            order: course.order,
+          };
+        }),
+      },
       name: data.name,
     },
     select: { id: true },

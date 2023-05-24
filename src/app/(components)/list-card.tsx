@@ -21,7 +21,9 @@ type ListCardProperties = {
 
 type ListCardQuery = {
   learningList: {
-    favoritedBy: Array<{ id: string }>;
+    _count: {
+      favoritedBy: number;
+    };
   };
   person: {
     clerkId: string;
@@ -37,8 +39,8 @@ const listCardQuery = gql`
   ) {
     learningList(where: $learningListWhere) {
       createrId
-      favoritedBy {
-        id
+      _count {
+        favoritedBy
       }
     }
     person(where: $personWhere) {
@@ -74,8 +76,6 @@ export async function ListCard({
       },
     },
   });
-
-  const favoriteCount = data.learningList.favoritedBy.length;
 
   let currentUserHasFavorited = false;
   if (!isNil(data.person)) {
@@ -118,7 +118,7 @@ export async function ListCard({
         </div>
         <FavoriteButton
           clerkId={clerkUser?.id}
-          favoritedCount={favoriteCount ?? 0}
+          favoritedCount={data.learningList._count.favoritedBy ?? 0}
           hasUserFavorited={currentUserHasFavorited}
           listId={listId}
         />

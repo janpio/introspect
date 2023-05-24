@@ -9,7 +9,10 @@ export const databaseModelTypeDefinitions = gql`
     createrId: String!
     creator: Person!
     favoritedBy: [Person]!
-    learningListMaterials: [LearningListMaterial]!
+    learningListMaterials(
+      orderBy: LearningListMaterialOrderByWithRelationInput
+    ): [LearningListMaterial]!
+    _count: LearningListCountOutputTypeSelect
   }
 
   type LearningListMaterial {

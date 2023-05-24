@@ -13,9 +13,6 @@ export type ListPageQuery = {
       profileImageUrl: string;
       username: string;
     };
-    favoritedBy: Array<{
-      id: string;
-    }>;
     id: string;
     learningListMaterials: Array<{
       id: string;
@@ -53,11 +50,8 @@ const listPageQuery = gql`
         profileImageUrl
         username
       }
-      favoritedBy {
-        id
-      }
       id
-      learningListMaterials {
+      learningListMaterials(orderBy: { order: asc }) {
         learningMaterialId
         learningMaterial {
           completedBy(where: $userWhere) {

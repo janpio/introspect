@@ -53,6 +53,7 @@ export function MainForm({ user }: MainFormProperties): JSX.Element {
             .transform(value => {
               return value.split(',');
             }),
+          order: z.number().min(0).int(),
           publisherName: z.string().min(1),
         }),
       )

@@ -10,8 +10,8 @@ export const databaseInputTypeDefinitions = gql`
   }
 
   enum SortOrder {
-    ASC
-    DESC
+    asc
+    desc
   }
 
   input DateTimeFilter {
@@ -23,6 +23,21 @@ export const databaseInputTypeDefinitions = gql`
     gt: Date
     gte: Date
     not: DateTimeFilter
+  }
+
+  input LearningListMaterialOrderByWithRelationInput {
+    id: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    order: SortOrder
+    learningListId: SortOrder
+    learningMaterialId: SortOrder
+    learningList: LearningListOrderByWithRelationInput
+    learningMaterial: LearningMaterialOrderByWithRelationInput
+  }
+
+  input LearningListMaterialOrderByRelationAggregateInput {
+    _count: SortOrder
   }
 
   input LearningListMaterialListRelationFilter {
@@ -89,9 +104,24 @@ export const databaseInputTypeDefinitions = gql`
     learningListMaterial: OrderByRelationAggregateInput
   }
 
+  input LearningMaterialLinkOrderByRelationAggregateInput {
+    _count: SortOrder
+  }
+
   input LearningMaterialNamePublisherNameCompoundUniqueInput {
     name: String!
     publisherName: String!
+  }
+
+  input LearningMaterialOrderByWithRelationInput {
+    id: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    name: SortOrder
+    publisherName: SortOrder
+    instructors: SortOrder
+    links: LearningMaterialLinkOrderByRelationAggregateInput
+    learningListMaterial: LearningListMaterialOrderByRelationAggregateInput
   }
 
   input LearningMaterialWhereUniqueInput {
