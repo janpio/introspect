@@ -49,7 +49,7 @@ export default async function ListPage({
         {isOwnedByCurrent && (
           <CreateModal
             listId={list.id}
-            listLength={list.learningListMaterial.length}
+            listLength={list.learningListMaterials.length}
             user={{
               id: user.id,
               profileImageUrl: user.profileImageUrl,

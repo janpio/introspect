@@ -7,6 +7,7 @@ import { getClient } from '../../../layout';
 export type ListPageQuery = {
   learningList?: {
     createdAt: string;
+    createrId: string;
     creator: {
       clerkId: string;
       profileImageUrl: string;
@@ -16,8 +17,9 @@ export type ListPageQuery = {
       id: string;
     }>;
     id: string;
-    learningListMaterial: Array<{
+    learningListMaterials: Array<{
       id: string;
+      learningListMaterialId: string;
       learningMaterial: {
         completedBy: Array<{
           id: string;
@@ -45,6 +47,7 @@ const listPageQuery = gql`
   ) {
     learningList(where: $learningListWhere) {
       createdAt
+      createrId
       creator {
         clerkId
         profileImageUrl
@@ -54,7 +57,8 @@ const listPageQuery = gql`
         id
       }
       id
-      learningListMaterial {
+      learningListMaterials {
+        learningMaterialId
         learningMaterial {
           completedBy(where: $userWhere) {
             id

@@ -9,6 +9,7 @@ import { getClient } from '../../layout';
 type ManageQuery = {
   learningLists: Array<{
     createdAt: string;
+    createrId: string;
     creator: {
       profileImageUrl: string;
       username: string;
@@ -23,6 +24,7 @@ const manageQuery = gql`
   query Manage($where: LearningListWhereInput) {
     learningLists(where: $where) {
       createdAt
+      createrId
       creator {
         profileImageUrl
         username

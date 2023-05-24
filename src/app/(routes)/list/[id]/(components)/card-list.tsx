@@ -29,7 +29,7 @@ export function CardList({
 }: CardListProperties): JSX.Element {
   const router = useRouter();
   const [isLoading, toggleLoading] = useToggle(false);
-  const [cards, setCards] = useState(list?.learningListMaterial ?? []);
+  const [cards, setCards] = useState(list?.learningListMaterials ?? []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const findCard = (order: string) => {
@@ -66,7 +66,7 @@ export function CardList({
       {isOwnedByCurrent && (
         <Button
           className="my-2"
-          disabled={isEqual(list?.learningListMaterial, cards) || isLoading}
+          disabled={isEqual(list?.learningListMaterials, cards) || isLoading}
           onClick={handleUpdateListOrder}
         >
           Save List Order

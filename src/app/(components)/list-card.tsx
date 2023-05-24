@@ -36,6 +36,7 @@ const listCardQuery = gql`
     $personWhere: PersonWhereUniqueInput!
   ) {
     learningList(where: $learningListWhere) {
+      createrId
       favoritedBy {
         id
       }

@@ -8,6 +8,7 @@ import { getClient } from '../layout';
 type QueryReturn = {
   learningLists: Array<{
     createdAt: string;
+    createrId: string;
     creator: {
       profileImageUrl: string;
       username: string;
@@ -22,6 +23,7 @@ const listPageQuery = gql`
   query LearningLists {
     learningLists {
       createdAt
+      createrId
       creator {
         profileImageUrl
         username
