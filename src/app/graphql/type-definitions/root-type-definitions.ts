@@ -6,6 +6,7 @@ export const rootTypeDefinitions = gql`
   scalar JSON
 
   type Query {
+    learningList(where: LearningListWhereUniqueInput): LearningList
     learningLists(
       where: LearningListWhereInput
       orderBy: [LearningListOrderByWithRelationInput]

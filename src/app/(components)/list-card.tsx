@@ -1,3 +1,4 @@
+import { gql } from '@apollo/client';
 import { currentUser } from '@clerk/nextjs';
 import classNames from 'classnames';
 import { isNil } from 'lodash';
@@ -6,6 +7,7 @@ import Link from 'next/link';
 import type { JSX } from 'react';
 
 import { prisma } from '../../prisma/database';
+import { getClient } from '../layout';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -18,6 +20,22 @@ type ListCardProperties = {
   listUpdatedAt: string | null;
 };
 
+type ListCardQuery = {
+  learningList: {
+    favoritedBy: Array<{ id: string }>;
+  };
+};
+
+const listCardQuery = gql`
+  query ExampleQuery($where: LearningListWhereUniqueInput) {
+    learningList(where: $where) {
+      favoritedBy {
+        id
+      }
+    }
+  }
+`;
+
 export async function ListCard({
   containerClassname,
   creatorProfileImage,
@@ -29,15 +47,17 @@ export async function ListCard({
 }: ListCardProperties): Promise<JSX.Element> {
   const clerkUser = await currentUser();
 
-  const learningLists = await prisma.learningList.findUnique({
-    select: {
-      favoritedBy: {
-        select: { id: true },
+  const { data } = await getClient().query<ListCardQuery>({
+    context: { fetchOptions: { next: { revalidate: 0 } } },
+    query: listCardQuery,
+    variables: {
+      where: {
+        id: listId,
       },
     },
-    where: { id: listId },
   });
-  const favoriteCount = learningLists?.favoritedBy.length;
+
+  const favoriteCount = data.learningList.favoritedBy.length;
 
   const user = await prisma.person.findUnique({
     select: { clerkId: true, favoriteLists: true, id: true },

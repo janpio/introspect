@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { currentUser } from '@clerk/nextjs';
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
@@ -19,9 +18,9 @@ type QueryReturn = {
   }>;
 };
 
-const query = gql`
-  query LearningLists($where: LearningListWhereInput) {
-    learningLists(where: $where) {
+const listPageQuery = gql`
+  query LearningLists {
+    learningLists {
       createdAt
       creator {
         profileImageUrl
@@ -35,21 +34,9 @@ const query = gql`
 `;
 
 export default async function ListPage(): Promise<JSX.Element> {
-  const user = await currentUser();
   const { data } = await getClient().query<QueryReturn>({
     context: { fetchOptions: { next: { revalidate: 86_400 } } },
-    query,
-    variables: {
-      where: {
-        creator: {
-          is: {
-            clerkId: {
-              equals: user?.id,
-            },
-          },
-        },
-      },
-    },
+    query: listPageQuery,
   });
 
   return (
