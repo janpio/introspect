@@ -15,11 +15,13 @@ type ListPageProperties = {
 export default async function ListPage({
   params,
 }: ListPageProperties): Promise<JSX.Element | null> {
-  const { user, list } = await getListData(params.id);
+  const { user, data } = await getListData(params.id);
 
-  if (!list) {
+  if (!data.learningList) {
     return null;
   }
+
+  const list = data.learningList;
 
   const isOwnedByCurrent = user?.id === list.creator.clerkId;
 
@@ -29,10 +31,10 @@ export default async function ListPage({
       <ListCard
         creatorProfileImage={list.creator.profileImageUrl}
         creatorUsername={list.creator.username}
-        listCreatedAt={DateTime.fromJSDate(list.createdAt).toRelative()}
+        listCreatedAt={DateTime.fromISO(list.createdAt).toRelative()}
         listId={list.id}
         listName={list.name}
-        listUpdatedAt={DateTime.fromJSDate(list.updatedAt).toRelative()}
+        listUpdatedAt={DateTime.fromISO(list.updatedAt).toRelative()}
       />
       <CardList
         isOwnedByCurrent={isOwnedByCurrent}

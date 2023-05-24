@@ -5,7 +5,7 @@ import { currentUser } from '@clerk/nextjs';
 import { getClient } from '../../../layout';
 
 type ListPageQuery = {
-  learningList: {
+  learningList?: {
     createdAt: string;
     creator: {
       clerkId: string;
@@ -16,7 +16,7 @@ type ListPageQuery = {
       id: string;
     };
     id: string;
-    learningListMaterial: {
+    learningListMaterial: Array<{
       learningMaterial: {
         completedBy: {
           id: string;
@@ -31,7 +31,7 @@ type ListPageQuery = {
         publisherName: string;
       };
       order: number;
-    };
+    }>;
     name: string;
     updatedAt: string;
   };
@@ -76,7 +76,7 @@ const listPageQuery = gql`
 `;
 
 type GetListDataReturn = Promise<{
-  list: ListPageQuery['learningList'];
+  data: ListPageQuery;
   user: Awaited<ReturnType<typeof currentUser>>;
 }>;
 
@@ -96,5 +96,5 @@ export const getListData = async (listId: string): GetListDataReturn => {
     },
   });
 
-  return { list: data.learningList, user };
+  return { data, user };
 };
