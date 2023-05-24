@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
 
-import { prisma } from '../../prisma/database';
 import { getClient } from '../layout';
 import { FavoriteButton } from './favorite-button';
 
@@ -24,12 +23,27 @@ type ListCardQuery = {
   learningList: {
     favoritedBy: Array<{ id: string }>;
   };
+  person: {
+    clerkId: string;
+    favoriteLists: Array<{ id: string }>;
+    id: string;
+  };
 };
 
 const listCardQuery = gql`
-  query ExampleQuery($where: LearningListWhereUniqueInput) {
-    learningList(where: $where) {
+  query ListCardQuery(
+    $learningListWhere: LearningListWhereUniqueInput!
+    $personWhere: PersonWhereUniqueInput!
+  ) {
+    learningList(where: $learningListWhere) {
       favoritedBy {
+        id
+      }
+    }
+    person(where: $personWhere) {
+      id
+      clerkId
+      favoriteLists {
         id
       }
     }
@@ -51,22 +65,20 @@ export async function ListCard({
     context: { fetchOptions: { next: { revalidate: 0 } } },
     query: listCardQuery,
     variables: {
-      where: {
+      learningListWhere: {
         id: listId,
+      },
+      personWhere: {
+        clerkId: clerkUser?.id,
       },
     },
   });
 
   const favoriteCount = data.learningList.favoritedBy.length;
 
-  const user = await prisma.person.findUnique({
-    select: { clerkId: true, favoriteLists: true, id: true },
-    where: { clerkId: clerkUser?.id ?? '' },
-  });
-
   let currentUserHasFavorited = false;
-  if (!isNil(user)) {
-    for (const favoriteList of user.favoriteLists) {
+  if (!isNil(data.person)) {
+    for (const favoriteList of data.person.favoriteLists) {
       if (favoriteList.id === listId) {
         currentUserHasFavorited = true;
         break;

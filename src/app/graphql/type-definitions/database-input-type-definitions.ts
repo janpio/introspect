@@ -173,6 +173,12 @@ export const databaseInputTypeDefinitions = gql`
     learningList: LearningListListRelationFilter
   }
 
+  input PersonWhereUniqueInput {
+    id: String
+    username: String
+    clerkId: String
+  }
+
   input StringFilter {
     equals: String
     in: [String]

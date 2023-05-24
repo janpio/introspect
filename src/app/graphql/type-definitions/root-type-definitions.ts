@@ -6,7 +6,7 @@ export const rootTypeDefinitions = gql`
   scalar JSON
 
   type Query {
-    learningList(where: LearningListWhereUniqueInput): LearningList
+    learningList(where: LearningListWhereUniqueInput!): LearningList
     learningLists(
       where: LearningListWhereInput
       orderBy: [LearningListOrderByWithRelationInput]
@@ -15,5 +15,6 @@ export const rootTypeDefinitions = gql`
       skip: Int
       distinct: [LearningListScalarFieldEnum]
     ): [LearningList]
+    person(where: PersonWhereUniqueInput!): Person
   }
 `;
