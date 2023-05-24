@@ -14,7 +14,7 @@ import { MaterialCard } from './material-card';
 
 type CardListProperties = {
   isOwnedByCurrent: boolean;
-  list: Awaited<ReturnType<typeof getListData>>['list'];
+  list: Awaited<ReturnType<typeof getListData>>['data']['learningList'];
   user: {
     id?: string;
     profileImageUrl?: string;

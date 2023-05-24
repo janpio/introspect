@@ -4,7 +4,7 @@ import { currentUser } from '@clerk/nextjs';
 
 import { getClient } from '../../../layout';
 
-type ListPageQuery = {
+export type ListPageQuery = {
   learningList?: {
     createdAt: string;
     creator: {
@@ -12,15 +12,16 @@ type ListPageQuery = {
       profileImageUrl: string;
       username: string;
     };
-    favoritedBy: {
+    favoritedBy: Array<{
       id: string;
-    };
+    }>;
     id: string;
     learningListMaterial: Array<{
+      id: string;
       learningMaterial: {
-        completedBy: {
+        completedBy: Array<{
           id: string;
-        };
+        }>;
         id: string;
         instructors: string[];
         links: Array<{
