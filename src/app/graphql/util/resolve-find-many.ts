@@ -16,23 +16,20 @@ type ResolveQueryParameters = {
   resolvedArguments: ResolvedArguments<unknown>;
 };
 
-/*
- * In relationships provide index name if it exists.
- * Reference node_modules\.prisma\client\index.d.ts
- * ex. DomainUsers -> Bills created by DomainUser
- * ex. DomainUser.Bill_Bill_CreatedByToDomainUser, relationInfo.relationIndexName = 'Bill_Bill_CreatedByToDomainUser'
- */
 export const resolveFindMany = async <ModelType>(
   parameters: ResolveQueryParameters,
 ): Promise<ModelType[]> => {
+  const lowercaseModelName = `${parameters.modelName
+    .charAt(0)
+    .toLowerCase()}${parameters.modelName.slice(1)}`;
+
   if (parameters.relationInfo) {
     for (const relation of parameters.relationInfo) {
       if (relation.parentTableName === parameters.info.parentType.name) {
-        const model = prisma[
-          `${relation.parentTableName
-            .charAt(0)
-            .toLowerCase()}${relation.parentTableName.slice(1)}`
-        ] as {
+        const lowercaseParentTableName = `${relation.parentTableName
+          .charAt(0)
+          .toLowerCase()}${relation.parentTableName.slice(1)}`;
+        const model = prisma[lowercaseParentTableName] as {
           findUnique: ({ where: any }) => typeof parameters.modelName;
         };
 
@@ -63,11 +60,7 @@ export const resolveFindMany = async <ModelType>(
             `Make sure ${relation.parentTableName} has a foreign key constraint on ${parameters.modelName}.`,
           );
 
-          return prisma[
-            `${parameters.modelName
-              .charAt(0)
-              .toLowerCase()}${parameters.modelName.slice(1)}`
-          ].findMany({
+          return prisma[lowercaseModelName].findMany({
             ...parameters.resolvedArguments,
           }) as ModelType[];
         }
@@ -76,11 +69,7 @@ export const resolveFindMany = async <ModelType>(
   }
 
   // If relationship isn't defined, use n + 1 efficiency
-  return prisma[
-    `${parameters.modelName
-      .charAt(0)
-      .toLowerCase()}${parameters.modelName.slice(1)}`
-  ].findMany({
+  return prisma[lowercaseModelName].findMany({
     ...parameters.resolvedArguments,
   }) as ModelType[];
 };
