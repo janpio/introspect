@@ -9,7 +9,7 @@ export const databaseModelTypeDefinitions = gql`
     createrId: String!
     creator: Person!
     favoritedBy: [Person]!
-    learningListMaterial: [LearningListMaterial]!
+    learningListMaterials: [LearningListMaterial]!
   }
 
   type LearningListMaterial {

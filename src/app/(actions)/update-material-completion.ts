@@ -31,7 +31,5 @@ export const updateMaterialCompletion = async ({
     },
   });
 
-  console.log(result);
-
   return result;
 };

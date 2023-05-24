@@ -68,6 +68,10 @@ export const databaseInputTypeDefinitions = gql`
     learningMaterial: LearningMaterialRelationFilter
   }
 
+  input LearningListMaterialWhereUniqueInput {
+    id: String!
+  }
+
   input LearningListListRelationFilter {
     every: LearningListWhereInput
     some: LearningListWhereInput
@@ -83,6 +87,16 @@ export const databaseInputTypeDefinitions = gql`
     creator: PersonOrderByWithRelationInput
     favoritedBy: OrderByRelationAggregateInput
     learningListMaterial: OrderByRelationAggregateInput
+  }
+
+  input LearningMaterialNamePublisherNameCompoundUniqueInput {
+    name: String!
+    publisherName: String!
+  }
+
+  input LearningMaterialWhereUniqueInput {
+    id: String
+    name_publisherName: LearningMaterialNamePublisherNameCompoundUniqueInput
   }
 
   input LearningMaterialLinkListRelationFilter {

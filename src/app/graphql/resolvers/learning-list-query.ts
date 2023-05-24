@@ -6,11 +6,13 @@ import type { GraphQLResolveInfo } from 'graphql';
 import { prisma } from '../../../prisma/database';
 import { resolveArguments } from '../util/resolve-arguments';
 import { resolveFindMany } from '../util/resolve-find-many';
+import { learningListMaterials } from './learning-list-material-query';
 import { person, persons } from './person-query';
 
 export const learningListRelationships = {
   creator: person,
   favoritedBy: persons,
+  learningListMaterials,
 };
 
 export async function learningList(

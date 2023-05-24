@@ -9,7 +9,7 @@ export type RelationInfo = {
   parentColumnName: string;
   parentTableName: string;
   relationColumnName: string;
-  relationIndexName?: string;
+  relationIndexName: string;
 };
 
 export type ResolvedArguments<SelectType> = {

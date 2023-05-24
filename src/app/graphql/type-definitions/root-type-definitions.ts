@@ -15,6 +15,14 @@ export const rootTypeDefinitions = gql`
       skip: Int
       distinct: [LearningListScalarFieldEnum]
     ): [LearningList]
+    learningListMaterial(
+      where: LearningListMaterialWhereUniqueInput!
+    ): LearningListMaterial
+    learningListMaterials(
+      where: LearningListMaterialWhereInput
+    ): [LearningListMaterial]
+    learningMaterial(where: LearningMaterialWhereUniqueInput!): LearningMaterial
+    learningMaterials(where: LearningMaterialWhereInput): [LearningMaterial]
     person(where: PersonWhereUniqueInput!): Person
     persons(where: PersonWhereInput): [Person]
   }

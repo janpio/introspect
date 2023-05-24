@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck this file is wild
-/* eslint-disable @typescript-eslint/no-unsafe-call,functional/immutable-data,@typescript-eslint/no-dynamic-delete */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import type { Context } from '@apollo/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
@@ -47,22 +47,14 @@ export const resolveFindMany = async <ModelType>(
         // Try parentTable.findUnique().childTable()
         // https://www.prisma.io/docs/guides/performance-and-optimization/query-optimization-performance#solving-the-n1-problem
         try {
-          delete parameters.resolvedArguments.where[
-            relation.relationColumnName
-          ];
-
           return model
             .findUnique({
               where: {
                 [relation.parentColumnName]: relationValue,
               },
             })
-            [
-              typeof relation.relationIndexName === 'string'
-                ? relation.relationIndexName
-                : parameters.modelName
-            ]({
-              ...parameters.resolvedArguments,
+            [relation.relationIndexName]({
+              select: parameters.resolvedArguments.select,
             }) as ModelType[];
           // If the parentTable -> childTable relationship has no index, fall back on original n + 1 issue.
           // This creates a new SELECT for every parent result
@@ -70,10 +62,6 @@ export const resolveFindMany = async <ModelType>(
           console.error(
             `Make sure ${relation.parentTableName} has a foreign key constraint on ${parameters.modelName}.`,
           );
-
-          // This value was deleted above, readd
-          parameters.resolvedArguments.where[relation.relationColumnName] =
-            relationValue;
 
           return prisma[
             `${parameters.modelName
