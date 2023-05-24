@@ -1,60 +1,100 @@
 'use server';
+import { gql } from '@apollo/client';
 import { currentUser } from '@clerk/nextjs';
 
-import { prisma } from '../../../../prisma/database';
+import { getClient } from '../../../layout';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const getListData = async (listId: string) => {
+type ListPageQuery = {
+  learningList: {
+    createdAt: string;
+    creator: {
+      clerkId: string;
+      profileImageUrl: string;
+      username: string;
+    };
+    favoritedBy: {
+      id: string;
+    };
+    id: string;
+    learningListMaterial: {
+      learningMaterial: {
+        completedBy: {
+          id: string;
+        };
+        id: string;
+        instructors: string[];
+        links: Array<{
+          id: string;
+          url: string;
+        }>;
+        name: string;
+        publisherName: string;
+      };
+      order: number;
+    };
+    name: string;
+    updatedAt: string;
+  };
+};
+
+const listPageQuery = gql`
+  query LearningList(
+    $learningListWhere: LearningListWhereUniqueInput!
+    $userWhere: PersonWhereUniqueInput
+  ) {
+    learningList(where: $learningListWhere) {
+      createdAt
+      creator {
+        clerkId
+        profileImageUrl
+        username
+      }
+      favoritedBy {
+        id
+      }
+      id
+      learningListMaterial {
+        learningMaterial {
+          completedBy(where: $userWhere) {
+            id
+          }
+          instructors
+          id
+          links {
+            id
+            url
+          }
+          name
+          publisherName
+        }
+        order
+      }
+      name
+      updatedAt
+    }
+  }
+`;
+
+type GetListDataReturn = Promise<{
+  list: ListPageQuery['learningList'];
+  user: Awaited<ReturnType<typeof currentUser>>;
+}>;
+
+export const getListData = async (listId: string): GetListDataReturn => {
   const user = await currentUser();
 
-  const list = await prisma.learningList.findUnique({
-    select: {
-      createdAt: true,
-      creator: {
-        select: {
-          clerkId: true,
-          profileImageUrl: true,
-          username: true,
-        },
+  const { data } = await getClient().query<ListPageQuery>({
+    context: { fetchOptions: { next: { revalidate: 86_400 } } },
+    query: listPageQuery,
+    variables: {
+      learningListWhere: {
+        id: listId,
       },
-      favoritedBy: {
-        select: { id: true },
+      userWhere: {
+        clerkId: user?.id,
       },
-      id: true,
-      learningListMaterial: {
-        orderBy: { order: 'asc' },
-        select: {
-          id: true,
-          learningMaterial: {
-            select: {
-              completedBy: {
-                select: { id: true },
-                where: {
-                  clerkId: user?.id,
-                },
-              },
-              id: true,
-              instructors: true,
-              links: {
-                select: {
-                  id: true,
-                  url: true,
-                },
-              },
-              name: true,
-              publisherName: true,
-            },
-          },
-          order: true,
-        },
-      },
-      name: true,
-      updatedAt: true,
-    },
-    where: {
-      id: listId,
     },
   });
 
-  return { list, user };
+  return { list: data.learningList, user };
 };

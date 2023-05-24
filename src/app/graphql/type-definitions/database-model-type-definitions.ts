@@ -29,7 +29,7 @@ export const databaseModelTypeDefinitions = gql`
     updatedAt: DateTime!
     name: String!
     publisherName: String!
-    completedBy: [Person]!
+    completedBy(where: PersonWhereUniqueInput): [Person]!
     instructors: [String]!
     links: [LearningMaterialLink]!
     learningListMaterial: [LearningListMaterial]!
