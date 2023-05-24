@@ -32,7 +32,7 @@ export const resolveArguments = <
   parameters: ResolveParentParameters<ArgumentsType>,
   ignoreSelect = false,
 ): ArgumentsType => {
-  const thisParent: Record<string, unknown> | undefined = parameters.parent;
+  const parentQuery: Record<string, unknown> | undefined = parameters.parent;
 
   if (parameters.relationInfo && parameters.parent) {
     const indexArray = parameters.relationInfo.map(info => {
@@ -67,7 +67,7 @@ export const resolveArguments = <
       ...parameters.arguments_,
 
       where: {
-        [relation.relationColumnName]: thisParent?.[relation.parentColumnName],
+        [relation.relationColumnName]: parentQuery?.[relation.parentColumnName],
         ...parameters.arguments_.where,
       },
     };
@@ -78,7 +78,7 @@ export const resolveArguments = <
   if (parameters.relationInfo && parameters.parent) {
     for (const relation of parameters.relationInfo) {
       if (parameters.info.parentType.name === relation.parentTableName) {
-        if (thisParent?.[relation.parentColumnName] === undefined) {
+        if (parentQuery?.[relation.parentColumnName] === undefined) {
           throw new TypeError(
             `Must call ${relation.parentColumnName} from ${relation.parentTableName}`,
           );
