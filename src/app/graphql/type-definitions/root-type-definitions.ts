@@ -16,5 +16,6 @@ export const rootTypeDefinitions = gql`
       distinct: [LearningListScalarFieldEnum]
     ): [LearningList]
     person(where: PersonWhereUniqueInput!): Person
+    persons(where: PersonWhereInput): [Person]
   }
 `;

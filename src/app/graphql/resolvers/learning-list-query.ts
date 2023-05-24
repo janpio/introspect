@@ -6,6 +6,12 @@ import type { GraphQLResolveInfo } from 'graphql';
 import { prisma } from '../../../prisma/database';
 import { resolveArguments } from '../util/resolve-arguments';
 import { resolveFindMany } from '../util/resolve-find-many';
+import { person, persons } from './person-query';
+
+export const learningListRelationships = {
+  creator: person,
+  favoritedBy: persons,
+};
 
 export async function learningList(
   parent: Record<string, unknown> | undefined,
