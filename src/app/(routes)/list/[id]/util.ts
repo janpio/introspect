@@ -1,7 +1,7 @@
 export type CardListArray = Array<{
   id: string;
   learningMaterial: {
-    completedBy: Array<{
+    completedBy?: Array<{
       id: string;
     }>;
     id: string;

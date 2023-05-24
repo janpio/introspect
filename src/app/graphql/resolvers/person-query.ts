@@ -2,6 +2,7 @@ import type { Context } from '@apollo/client';
 import type { Person } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
+import { isEqual } from 'lodash';
 
 import { prisma } from '../../../prisma/database';
 import { type RelationInfo, resolveArguments } from '../util/resolve-arguments';
@@ -26,6 +27,10 @@ export async function person(
       },
     ],
   });
+
+  if (isEqual(resolvedArguments.where, {})) {
+    return null;
+  }
 
   return prisma.person.findUnique({
     ...resolvedArguments,

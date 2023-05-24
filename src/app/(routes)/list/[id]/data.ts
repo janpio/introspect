@@ -18,7 +18,7 @@ export type ListPageQuery = {
       id: string;
       learningListMaterialId: string;
       learningMaterial: {
-        completedBy: Array<{
+        completedBy?: Array<{
           id: string;
         }>;
         id: string;
@@ -41,6 +41,7 @@ const listPageQuery = gql`
   query LearningList(
     $learningListWhere: LearningListWhereUniqueInput!
     $userWhere: PersonWhereUniqueInput
+    $isLoggedIn: Boolean!
   ) {
     learningList(where: $learningListWhere) {
       createdAt
@@ -54,7 +55,7 @@ const listPageQuery = gql`
       learningListMaterials(orderBy: { order: asc }) {
         learningMaterialId
         learningMaterial {
-          completedBy(where: $userWhere) {
+          completedBy(where: $userWhere) @include(if: $isLoggedIn) {
             id
           }
           instructors
@@ -86,6 +87,7 @@ export const getListData = async (listId: string): GetListDataReturn => {
     context: { fetchOptions: { next: { revalidate: 86_400 } } },
     query: listPageQuery,
     variables: {
+      isLoggedIn: typeof user?.id === 'string',
       learningListWhere: {
         id: listId,
       },

@@ -79,7 +79,6 @@ export function CardList({
             return (
               <MaterialCard
                 findCard={findCard}
-                isComplete={learningMaterial.completedBy.length > 0}
                 isOwnedByCurrent={isOwnedByCurrent}
                 key={learningMaterial.id}
                 listId={list.id}
@@ -87,6 +86,10 @@ export function CardList({
                 material={learningMaterial}
                 moveCard={moveCard}
                 order={order}
+                isComplete={
+                  learningMaterial.completedBy?.length === undefined ||
+                  learningMaterial.completedBy.length > 0
+                }
                 user={{
                   id: user?.id,
                   profileImageUrl: user?.profileImageUrl,
