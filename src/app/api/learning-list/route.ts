@@ -5,18 +5,19 @@ import { prisma } from '../../../prisma/database';
 import { learningListParametersSchema } from './types';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const { clerkId, isLoggedIn, listId } = learningListParametersSchema.parse(
+  const { clerkId, listId } = learningListParametersSchema.parse(
     Object.fromEntries(request.nextUrl.searchParams),
   );
 
-  const getCompletedBy = isLoggedIn
-    ? {
-        select: { id: true },
-        where: {
-          clerkId,
-        },
-      }
-    : false;
+  const getCompletedBy =
+    typeof clerkId === 'string'
+      ? {
+          select: { id: true },
+          where: {
+            clerkId,
+          },
+        }
+      : false;
 
   const result = await prisma.learningList.findUnique({
     select: {

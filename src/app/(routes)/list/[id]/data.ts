@@ -15,7 +15,6 @@ export const getListData = async (listId: string): GetListDataReturn => {
   const user = await currentUser();
 
   const parameters = new URLSearchParams({
-    isLoggedIn: String(typeof user?.id === 'string'),
     listId,
   });
   if (user?.id) {

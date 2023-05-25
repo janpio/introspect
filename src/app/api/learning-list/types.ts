@@ -3,7 +3,6 @@ import { z } from 'zod';
 export const learningListParametersSchema = z.object(
   {
     clerkId: z.string().optional(),
-    isLoggedIn: z.enum(['true', 'false']).transform(Boolean),
     listId: z.string(),
   },
   { invalid_type_error: 'learningListParamsSchema' },
