@@ -9,6 +9,16 @@ datasource db {
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
+model Error {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  message   String?
+  name      String?
+  stack     String?
+  cause     String?
+}
+
 model LearningList {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
