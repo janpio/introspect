@@ -6,7 +6,7 @@ export type ListCardQueryReturn = {
       favoritedBy: number;
     };
   };
-  person: {
+  person?: {
     clerkId: string;
     favoriteLists: Array<{ id: string }>;
     id: string;

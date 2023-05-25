@@ -50,7 +50,9 @@ export async function ListCard({
     },
   });
 
-  const currentUserHasFavorited = data.person.favoriteLists.length > 0;
+  const currentUserHasFavorited = data.person
+    ? data.person.favoriteLists.length > 0
+    : false;
 
   return (
     <div
