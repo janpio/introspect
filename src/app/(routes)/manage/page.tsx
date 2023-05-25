@@ -7,6 +7,7 @@ import {
   type LearningListFragmentReturn,
   manageQuery,
 } from '../../(queries)/learning-list';
+import { defaultQueryOptions } from '../../graphql/util/apollo';
 import { getClient } from '../../layout';
 
 export default async function Manage(): Promise<JSX.Element | null> {
@@ -17,9 +18,7 @@ export default async function Manage(): Promise<JSX.Element | null> {
   }
 
   const { data } = await getClient().query<LearningListFragmentReturn>({
-    context: {
-      fetchOptions: { next: { revalidate: 86_400, tags: ['manageQuery'] } },
-    },
+    ...defaultQueryOptions,
     query: manageQuery,
     variables: {
       where: {

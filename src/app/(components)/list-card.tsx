@@ -4,11 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
 
-import {
-  listCardQuery,
-  type ListCardQueryReturn,
-} from '../(queries)/learning-list-person';
-import { getClient } from '../layout';
+import { ROOT_URL } from '../../util/constants';
+import type { ListCardReturn } from '../api/list-card/types';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -32,26 +29,25 @@ export async function ListCard({
 }: ListCardProperties): Promise<JSX.Element> {
   const clerkUser = await currentUser();
 
-  const { data } = await getClient().query<ListCardQueryReturn>({
-    context: {
-      fetchOptions: { next: { revalidate: 0, tags: ['listCardQuery'] } },
-    },
-    query: listCardQuery,
-    variables: {
-      favoriteListsWhere: {
-        id: { equals: listId },
-      },
-      learningListWhere: {
-        id: listId,
-      },
-      personWhere: {
-        clerkId: clerkUser?.id,
-      },
-    },
+  const searchParameters = new URLSearchParams({
+    clerkId: clerkUser?.id ?? '',
+    listId,
   });
+  const response = await fetch(
+    `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,
+    {
+      credentials: 'same-origin',
+      method: 'GET',
+      next: {
+        revalidate: 86_400,
+        tags: ['listCard'],
+      },
+    },
+  );
+  const [learningList, person] = (await response.json()) as ListCardReturn;
 
-  const currentUserHasFavorited = data.person
-    ? data.person.favoriteLists.length > 0
+  const currentUserHasFavorited = person
+    ? person.favoriteLists.length > 0
     : false;
 
   return (
@@ -85,7 +81,7 @@ export async function ListCard({
         </div>
         <FavoriteButton
           clerkId={clerkUser?.id}
-          favoritedCount={data.learningList._count.favoritedBy}
+          favoritedCount={learningList?._count.favoritedBy ?? 0}
           hasUserFavorited={currentUserHasFavorited}
           listId={listId}
         />

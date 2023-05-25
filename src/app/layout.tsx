@@ -1,18 +1,13 @@
 import './globals.css';
 
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  type Reference,
-} from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
 import type { JSX } from 'react';
 
-import { environment } from '../util/environment';
+import { ClientProvider } from './client-provider';
+import { apolloServerClient } from './graphql/util/apollo';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,31 +24,7 @@ export const metadata = {
 };
 
 export const { getClient } = registerApolloClient(() => {
-  return new ApolloClient({
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            learningList: {
-              read(_, { args, toReference }): Reference | undefined {
-                return toReference({
-                  __typename: 'LearningList',
-                  id: args?.id as string,
-                });
-              },
-            },
-          },
-        },
-      },
-    }),
-    credentials: 'same-origin',
-    link: new HttpLink({
-      uri:
-        environment.NODE_ENV === 'development'
-          ? 'http://localhost:3000/graphql'
-          : 'https://introspect.dev/graphql',
-    }),
-  });
+  return apolloServerClient;
 });
 
 export default function RootLayout({
@@ -62,7 +33,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en-US">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <ClientProvider>{children}</ClientProvider>
+        </body>
       </html>
       <Analytics />
     </ClerkProvider>

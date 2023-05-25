@@ -6,13 +6,12 @@ import {
   type LearningListFragmentReturn,
   listPageQuery,
 } from '../(queries)/learning-list';
+import { defaultQueryOptions } from '../graphql/util/apollo';
 import { getClient } from '../layout';
 
 export default async function ListPage(): Promise<JSX.Element> {
   const { data } = await getClient().query<LearningListFragmentReturn>({
-    context: {
-      fetchOptions: { next: { revalidate: 86_400, tags: ['listPageQuery'] } },
-    },
+    ...defaultQueryOptions,
     query: listPageQuery,
   });
 

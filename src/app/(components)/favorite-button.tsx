@@ -2,12 +2,10 @@
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { StarIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
-import { isNil } from 'lodash';
-import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { useState } from 'react';
 
-import { favoriteList } from '../(actions)/favorite';
+import { ROOT_URL } from '../../util/constants';
 
 type FavoriteButtonProperties = {
   clerkId?: string | null;
@@ -22,22 +20,27 @@ export function FavoriteButton({
   favoritedCount,
   listId,
 }: FavoriteButtonProperties): JSX.Element {
-  const router = useRouter();
   const [isLoading, toggleLoading] = useToggle(false);
   const [isFavorite, toggleFavorite] = useToggle(hasUserFavorited);
   const [clientCount, setClientCount] = useState(favoritedCount ?? 0);
 
   const handleFavorite = async (): Promise<void> => {
-    if (!isNil(clerkId) && !isLoading) {
+    if (clerkId) {
       toggleLoading();
       toggleFavorite();
       setClientCount(clientCount_ => {
         return isFavorite ? clientCount_ - 1 : clientCount_ + 1;
       });
-      await favoriteList(clerkId, listId, hasUserFavorited);
-      router.refresh();
-
-      setTimeout(toggleLoading, 3000);
+      await fetch(`${ROOT_URL}/api/favorite-list`, {
+        body: JSON.stringify({
+          clerkId,
+          isAdding: !isFavorite,
+          listId,
+        }),
+        credentials: 'same-origin',
+        method: 'POST',
+      });
+      toggleLoading();
     }
   };
 

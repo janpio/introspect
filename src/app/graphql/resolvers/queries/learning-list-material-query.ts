@@ -1,9 +1,9 @@
 import { type LearningListMaterial, Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
-import type { ApolloContext } from '../route';
-import { resolveArguments } from '../util/resolve-arguments';
-import { resolveFindMany } from '../util/resolve-find-many';
+import type { ApolloContext } from '../../route';
+import { resolveArguments } from '../../util/resolve-arguments';
+import { resolveFindMany } from '../../util/resolve-find-many';
 import { learningMaterial } from './learning-material-query';
 
 export const learningListMaterialRelationships = {

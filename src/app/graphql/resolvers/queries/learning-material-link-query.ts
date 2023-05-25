@@ -1,9 +1,12 @@
 import { type LearningMaterialLink, Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
-import type { ApolloContext } from '../route';
-import { type RelationInfo, resolveArguments } from '../util/resolve-arguments';
-import { resolveFindMany } from '../util/resolve-find-many';
+import type { ApolloContext } from '../../route';
+import {
+  type RelationInfo,
+  resolveArguments,
+} from '../../util/resolve-arguments';
+import { resolveFindMany } from '../../util/resolve-find-many';
 
 export async function learningMaterialLink(
   parent: Record<string, unknown> | undefined,

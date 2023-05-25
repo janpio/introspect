@@ -5,6 +5,14 @@ export const rootTypeDefinitions = gql`
   scalar DateTime
   scalar JSON
 
+  type Mutation {
+    favoriteList(
+      clerkId: String
+      isAdding: Boolean
+      listId: String
+    ): LearningList
+  }
+
   type Query {
     learningList(where: LearningListWhereUniqueInput!): LearningList
     learningLists(

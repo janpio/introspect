@@ -13,6 +13,18 @@ export type ListCardQueryReturn = {
   };
 };
 
+// variables: {
+//       favoriteListsWhere: {
+//         id: { equals: listId },
+//       },
+//       learningListWhere: {
+//         id: listId,
+//       },
+//       personWhere: {
+//         clerkId: clerkUser?.id,
+//       },
+//     }
+
 export const listCardQuery = gql`
   query ListCardQuery(
     $learningListWhere: LearningListWhereUniqueInput!

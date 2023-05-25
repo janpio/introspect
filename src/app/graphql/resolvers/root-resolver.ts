@@ -1,24 +1,28 @@
+import { favoriteList } from './mutations/favorite-list-mutation';
 import {
   learningListMaterial,
   learningListMaterialRelationships,
   learningListMaterials,
-} from './learning-list-material-query';
+} from './queries/learning-list-material-query';
 import {
   learningList,
   learningListRelationships,
   learningLists,
-} from './learning-list-query';
+} from './queries/learning-list-query';
 import {
   learningMaterial,
   learningMaterialRelationships,
   learningMaterials,
-} from './learning-material-query';
-import { person, persons } from './person-query';
+} from './queries/learning-material-query';
+import { person, persons } from './queries/person-query';
 
 export const rootResolver = {
   LearningList: learningListRelationships,
   LearningListMaterial: learningListMaterialRelationships,
   LearningMaterial: learningMaterialRelationships,
+  Mutation: {
+    favoriteList,
+  },
   Query: {
     learningList,
     learningListMaterial,

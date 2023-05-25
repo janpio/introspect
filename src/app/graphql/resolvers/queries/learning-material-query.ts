@@ -1,9 +1,9 @@
 import { type LearningMaterial, Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
-import type { ApolloContext } from '../route';
-import { resolveArguments } from '../util/resolve-arguments';
-import { resolveFindMany } from '../util/resolve-find-many';
+import type { ApolloContext } from '../../route';
+import { resolveArguments } from '../../util/resolve-arguments';
+import { resolveFindMany } from '../../util/resolve-find-many';
 import { learningMaterialLinks } from './learning-material-link-query';
 import { persons } from './person-query';
 
