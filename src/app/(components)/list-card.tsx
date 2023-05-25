@@ -30,9 +30,12 @@ export async function ListCard({
   const clerkUser = await currentUser();
 
   const searchParameters = new URLSearchParams({
-    clerkId: clerkUser?.id ?? '',
     listId,
   });
+  if (clerkUser?.id) {
+    searchParameters.append('clerkId', clerkUser.id);
+  }
+
   const response = await fetch(
     `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,
     {
