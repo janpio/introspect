@@ -1,14 +1,18 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
-import { isEqual, isNil } from 'lodash';
-import { useRouter } from 'next/navigation';
+import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { updateListOrder } from '../../../../(actions)/update-list-order';
+import { ROOT_URL } from '../../../../../util/constants';
+import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
+import {
+  updateListOrderReturnSchema,
+  updateListOrderTags,
+} from '../../../../api/update-list-order/types';
 import type { getListData } from '../data';
 import { MaterialCard } from './material-card';
 
@@ -27,7 +31,7 @@ export function CardList({
   list,
   user,
 }: CardListProperties): JSX.Element | null {
-  const router = useRouter();
+  const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, toggleLoading] = useToggle(false);
   const [cards, setCards] = useState(list?.learningListMaterial ?? []);
 
@@ -53,13 +57,28 @@ export function CardList({
         ? [...newCards.slice(0, atIndex), card, ...newCards.slice(atIndex)]
         : [...newCards.slice(0, atIndex), ...newCards.slice(atIndex)],
     );
+    setIsDisabled(false);
   };
 
   const handleUpdateListOrder = async (): Promise<void> => {
     toggleLoading();
     if (list.id) {
-      await updateListOrder({ list: cards, listId: list.id });
-      router.refresh();
+      await zodFetch(
+        updateListOrderReturnSchema,
+        `${ROOT_URL}/api/update-list-order`,
+        {
+          body: JSON.stringify({
+            list: cards,
+            listId: list.id,
+          }),
+          credentials: 'same-origin',
+          method: 'POST',
+          next: {
+            tags: updateListOrderTags(list.id),
+          },
+        },
+      );
+      setIsDisabled(true);
     }
 
     toggleLoading();
@@ -70,7 +89,7 @@ export function CardList({
       {isOwnedByCurrent && (
         <Button
           className="my-2"
-          disabled={isEqual(list.learningListMaterial, cards) || isLoading}
+          disabled={isDisabled || isLoading}
           onClick={handleUpdateListOrder}
         >
           Save List Order

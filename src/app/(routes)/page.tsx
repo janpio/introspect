@@ -4,7 +4,7 @@ import type { JSX } from 'react';
 import { ROOT_URL } from '../../util/constants';
 import { zodFetch } from '../../util/zod';
 import { ListCard } from '../(components)/list-card';
-import { listPageReturnSchema } from '../api/list-page/types';
+import { listPageReturnSchema, listPageTags } from '../api/list-page/types';
 
 export default async function ListPage(): Promise<JSX.Element> {
   const data = await zodFetch(
@@ -12,7 +12,7 @@ export default async function ListPage(): Promise<JSX.Element> {
     `${ROOT_URL}/api/list-page`,
     {
       credentials: 'same-origin',
-      next: { revalidate: 86_400, tags: ['list-page'] },
+      next: { revalidate: 86_400, tags: listPageTags() },
     },
   );
 

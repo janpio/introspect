@@ -4,7 +4,10 @@ import type { z } from 'zod';
 
 import { ROOT_URL } from '../../../../util/constants';
 import { zodFetch } from '../../../../util/zod';
-import { learningListReturnSchema } from '../../../api/learning-list/types';
+import {
+  learningListReturnSchema,
+  learningListTags,
+} from '../../../api/learning-list/types';
 
 type GetListDataReturn = Promise<{
   data: z.output<typeof learningListReturnSchema>;
@@ -28,7 +31,7 @@ export const getListData = async (listId: string): GetListDataReturn => {
       credentials: 'same-origin',
       next: {
         revalidate: 86_400,
-        tags: ['learningList'],
+        tags: learningListTags(listId),
       },
     },
   );

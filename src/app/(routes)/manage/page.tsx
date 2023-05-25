@@ -5,7 +5,10 @@ import type { JSX } from 'react';
 import { ROOT_URL } from '../../../util/constants';
 import { zodFetch } from '../../../util/zod';
 import { ListCard } from '../../(components)/list-card';
-import { manageListsReturnSchema } from '../../api/manage-lists/types';
+import {
+  manageListsReturnSchema,
+  manageListsTags,
+} from '../../api/manage-lists/types';
 
 export default async function Manage(): Promise<JSX.Element | null> {
   const user = await currentUser();
@@ -22,7 +25,7 @@ export default async function Manage(): Promise<JSX.Element | null> {
     `${ROOT_URL}/api/manage-lists?${searchParameters.toString()}`,
     {
       credentials: 'same-origin',
-      next: { revalidate: 86_400, tags: [`manage-lists-${user.id}`] },
+      next: { revalidate: 86_400, tags: manageListsTags(user.id) },
     },
   );
 

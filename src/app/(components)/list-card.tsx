@@ -6,6 +6,7 @@ import type { JSX } from 'react';
 
 import { ROOT_URL } from '../../util/constants';
 import type { ListCardReturn } from '../api/list-card/types';
+import { listCardTags } from '../api/list-card/types';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -43,7 +44,7 @@ export async function ListCard({
       method: 'GET',
       next: {
         revalidate: 86_400,
-        tags: [`listCard-${listId}`],
+        tags: listCardTags(listId),
       },
     },
   );

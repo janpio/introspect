@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+export const manageListsTags = (clerkId: string): [string] => {
+  return [`manage-lists-${clerkId}`];
+};
+
 export const manageListsParametersSchema = z.object({
   clerkId: z.string(),
 });

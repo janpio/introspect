@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+export const listPageTags = (): [string] => {
+  return ['list-page'];
+};
+
 export const listPageReturnSchema = z.array(
   z.object({
     createdAt: z.string().datetime(),
