@@ -2,7 +2,12 @@
 import Link from 'next/link';
 import type { JSX } from 'react';
 
-import { prisma } from '../prisma/database';
+import { ROOT_URL } from '../util/constants';
+import { zodFetch } from '../util/zod';
+import {
+  createErrorBodySchema,
+  createErrorReturnSchema,
+} from './api/create-error/types';
 
 type ErrorProperties = {
   error: Error;
@@ -11,15 +16,14 @@ type ErrorProperties = {
 export default async function ErrorPage({
   error,
 }: ErrorProperties): Promise<JSX.Element> {
-  const createdError = await prisma.error.create({
-    data: {
-      cause: error.cause ? JSON.stringify(error.cause) : undefined,
-      message: error.message,
-      name: error.name,
-      stack: error.stack,
+  const createdError = await zodFetch(
+    createErrorReturnSchema,
+    `${ROOT_URL}/api/create-error`,
+    {
+      body: JSON.stringify(createErrorBodySchema.parse(error)),
+      method: 'POST',
     },
-    select: { id: true },
-  });
+  );
 
   return (
     <main>
