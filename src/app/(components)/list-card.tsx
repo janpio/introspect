@@ -5,8 +5,7 @@ import Link from 'next/link';
 import type { JSX } from 'react';
 
 import { ROOT_URL } from '../../util/constants';
-import { zodFetch } from '../../util/zod';
-import { listCardReturnSchema } from '../api/list-card/types';
+import type { ListCardReturn } from '../api/list-card/types';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -37,8 +36,7 @@ export async function ListCard({
     searchParameters.append('clerkId', clerkUser.id);
   }
 
-  const [learningList, person] = await zodFetch(
-    listCardReturnSchema,
+  const response = await fetch(
     `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,
     {
       credentials: 'same-origin',
@@ -49,6 +47,7 @@ export async function ListCard({
       },
     },
   );
+  const [learningList, person] = (await response.json()) as ListCardReturn;
 
   const currentUserHasFavorited = person
     ? person.favoriteLists.length > 0
