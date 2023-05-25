@@ -2,10 +2,11 @@
 import type { PrismaPromise } from '@prisma/client';
 
 import { prisma } from '../../prisma/database';
-import type { CardListArray } from '../(routes)/list/[id]/util';
 
 type UpdateListOrderData = {
-  list: CardListArray;
+  list: Array<{
+    id: string;
+  }>;
   listId: string;
 };
 

@@ -1,34 +1,38 @@
 'use server';
 import { currentUser } from '@clerk/nextjs';
+import type { z } from 'zod';
 
-import {
-  learningListQuery,
-  type LearningListQueryReturn,
-} from '../../../(queries)/learning-list';
-import { defaultQueryOptions } from '../../../graphql/util/apollo';
-import { getClient } from '../../../layout';
+import { ROOT_URL } from '../../../../util/constants';
+import { zodFetch } from '../../../../util/zod';
+import { learningListReturnSchema } from '../../../api/learning-list/types';
 
 type GetListDataReturn = Promise<{
-  data: LearningListQueryReturn;
+  data: z.output<typeof learningListReturnSchema>;
   user: Awaited<ReturnType<typeof currentUser>>;
 }>;
 
 export const getListData = async (listId: string): GetListDataReturn => {
   const user = await currentUser();
 
-  const { data } = await getClient().query<LearningListQueryReturn>({
-    ...defaultQueryOptions,
-    query: learningListQuery,
-    variables: {
-      isLoggedIn: typeof user?.id === 'string',
-      learningListWhere: {
-        id: listId,
-      },
-      userWhere: {
-        clerkId: user?.id,
+  const parameters = new URLSearchParams({
+    isLoggedIn: String(typeof user?.id === 'string'),
+    listId,
+  });
+  if (user?.id) {
+    parameters.append('clerkId', user.id);
+  }
+
+  const data = await zodFetch(
+    learningListReturnSchema,
+    `${ROOT_URL}/api/learning-list?${parameters.toString()}`,
+    {
+      credentials: 'same-origin',
+      next: {
+        revalidate: 86_400,
+        tags: ['learningList'],
       },
     },
-  });
+  );
 
   return { data, user };
 };
