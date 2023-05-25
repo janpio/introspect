@@ -32,8 +32,8 @@ dependencies:
     specifier: ^3.1.0
     version: 3.1.0(react-hook-form@7.43.9)
   '@paljs/plugins':
-    specifier: ^5.3.0
-    version: 5.3.0(@prisma/client@4.14.1)(graphql@16.6.0)
+    specifier: ^5.3.1
+    version: 5.3.1(@prisma/client@4.14.1)(graphql@16.6.0)
   '@prisma/client':
     specifier: ^4.14.1
     version: 4.14.1(prisma@4.14.1)
@@ -781,8 +781,8 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: false
 
-  /@paljs/display@5.3.0:
-    resolution: {integrity: sha512-qX/ksnhUN74vfuAspaTvormsYpcqlUdHpFG68Cx2GigGF0zD5roXXYvmqPAFhKjc71gtNCxyRCjicONDg6rCFQ==}
+  /@paljs/display@5.3.1:
+    resolution: {integrity: sha512-fxZ6YN+mwaLD4DXqYUUVYPVTNws9LfrfGylFBPASrnM4wpzYSjUa7ythFMBKEinQ2iRYdldRxi65JK4lAYDYfQ==}
     dependencies:
       chalk: 4.1.2
       debug: 4.3.4
@@ -792,14 +792,14 @@ packages:
       - supports-color
     dev: false
 
-  /@paljs/plugins@5.3.0(@prisma/client@4.14.1)(graphql@16.6.0):
-    resolution: {integrity: sha512-J8oJESaP/Y2PDZp92k7PV7K7nTjps6O54Qo0MGWk0CEy6Y+x5AwvAH4aUDrmz/+YOSU1W9PjnUktV3K6xZM52g==}
+  /@paljs/plugins@5.3.1(@prisma/client@4.14.1)(graphql@16.6.0):
+    resolution: {integrity: sha512-yRwbiekUL1JDObhfEG6Qt5CzWGJeeCoGkS3hVIEvW9Q5G9VpAydUeaYqacatIjg6rQoRSsZc9zgz8Y8ZOIt8cQ==}
     peerDependencies:
       '@prisma/client': ^4
       graphql: ^15 || ^16
     dependencies:
-      '@paljs/types': 5.3.0
-      '@paljs/utils': 5.3.0
+      '@paljs/types': 5.3.1
+      '@paljs/utils': 5.3.1
       '@prisma/client': 4.14.1(prisma@4.14.1)
       graphql: 16.6.0
       graphql-parse-resolve-info: 4.13.0(graphql@16.6.0)
@@ -810,15 +810,15 @@ packages:
       - supports-color
     dev: false
 
-  /@paljs/types@5.3.0:
-    resolution: {integrity: sha512-MkZVwPaiQ03Kc+3I0xM0Pl23m1Dl85H6/iR+4+93vZBoKCbQD2uYKNYxdCt5YDfzH/DGGyKogaMMXvnRPBfavA==}
+  /@paljs/types@5.3.1:
+    resolution: {integrity: sha512-Wffhrck/JgOdYD8PRyaRdp5N5WFzeOk09wPo6O4XVi7S8LcqffHVAMeY0/BTEdRtvpxUlXn9Umfn+FFxRI/opw==}
     dev: false
 
-  /@paljs/utils@5.3.0:
-    resolution: {integrity: sha512-6O0s9Hp1Ks3DMwvrT3HFMHfPK8GTjE5Se9+pRb6bU5q6pqcOYTfnK1gchofD9SRyGvO+sp5/HV1pEb5iu6/W0w==}
+  /@paljs/utils@5.3.1:
+    resolution: {integrity: sha512-DPjtQLAnf8eRHq0CT77mmIOMsMdE7W86snFSZL80iLlZCURqXhFANr4bIGar6EU+VB11cneU3vL2OAs0JFcjEg==}
     dependencies:
-      '@paljs/display': 5.3.0
-      '@paljs/types': 5.3.0
+      '@paljs/display': 5.3.1
+      '@paljs/types': 5.3.1
       '@prisma/internals': 4.14.1
     transitivePeerDependencies:
       - encoding
