@@ -1,40 +1,13 @@
-import { gql } from '@apollo/client';
 import { currentUser } from '@clerk/nextjs';
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
 import { ListCard } from '../../(components)/list-card';
+import {
+  type LearningListFragmentReturn,
+  manageQuery,
+} from '../../(queries)/learning-list';
 import { getClient } from '../../layout';
-
-type ManageQuery = {
-  learningLists: Array<{
-    createdAt: string;
-    createrId: string;
-    creator: {
-      profileImageUrl: string;
-      username: string;
-    };
-    id: string;
-    name: string;
-    updatedAt: string;
-  }>;
-};
-
-const manageQuery = gql`
-  query Manage($where: LearningListWhereInput) {
-    learningLists(where: $where) {
-      createdAt
-      createrId
-      creator {
-        profileImageUrl
-        username
-      }
-      id
-      name
-      updatedAt
-    }
-  }
-`;
 
 export default async function Manage(): Promise<JSX.Element | null> {
   const user = await currentUser();
@@ -43,8 +16,10 @@ export default async function Manage(): Promise<JSX.Element | null> {
     return null;
   }
 
-  const { data } = await getClient().query<ManageQuery>({
-    context: { fetchOptions: { next: { revalidate: 86_400 } } },
+  const { data } = await getClient().query<LearningListFragmentReturn>({
+    context: {
+      fetchOptions: { next: { revalidate: 86_400, tags: ['manageQuery'] } },
+    },
     query: manageQuery,
     variables: {
       where: {

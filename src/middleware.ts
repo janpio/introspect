@@ -13,7 +13,7 @@ export default authMiddleware({
       return NextResponse.redirect(new URL('/', request.url));
     }
   },
-  publicRoutes: ['/landing', '/list/(.*)'],
+  publicRoutes: ['/landing', '/list/(.*)', '/graphql(.*)'],
 });
 
 export const config = {

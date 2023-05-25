@@ -1,17 +1,16 @@
-import type { Context } from '@apollo/client';
 import type { Person } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
 import { isEqual } from 'lodash';
 
-import { prisma } from '../../../prisma/database';
+import type { ApolloContext } from '../route';
 import { type RelationInfo, resolveArguments } from '../util/resolve-arguments';
 import { resolveFindMany } from '../util/resolve-find-many';
 
 export async function person(
   parent: Record<string, unknown> | undefined,
   arguments_: Prisma.PersonFindUniqueArgs,
-  context: Context,
+  context: ApolloContext,
   info: GraphQLResolveInfo,
 ): Promise<Person | null> {
   const resolvedArguments = resolveArguments({
@@ -32,7 +31,7 @@ export async function person(
     return null;
   }
 
-  return prisma.person.findUnique({
+  return context.dataSources.prisma.person.findUnique({
     ...resolvedArguments,
   });
 }
@@ -40,7 +39,7 @@ export async function person(
 export async function persons(
   parent: Record<string, unknown> | undefined,
   arguments_: Prisma.PersonFindManyArgs,
-  context: Context,
+  context: ApolloContext,
   info: GraphQLResolveInfo,
 ): Promise<Person[]> {
   const relationInfo: RelationInfo[] = [

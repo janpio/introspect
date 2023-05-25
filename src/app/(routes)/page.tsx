@@ -1,43 +1,18 @@
-import { gql } from '@apollo/client';
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
 import { ListCard } from '../(components)/list-card';
+import {
+  type LearningListFragmentReturn,
+  listPageQuery,
+} from '../(queries)/learning-list';
 import { getClient } from '../layout';
 
-type QueryReturn = {
-  learningLists: Array<{
-    createdAt: string;
-    createrId: string;
-    creator: {
-      profileImageUrl: string;
-      username: string;
-    };
-    id: string;
-    name: string;
-    updatedAt: string;
-  }>;
-};
-
-const listPageQuery = gql`
-  query LearningLists {
-    learningLists {
-      createdAt
-      createrId
-      creator {
-        profileImageUrl
-        username
-      }
-      id
-      name
-      updatedAt
-    }
-  }
-`;
-
 export default async function ListPage(): Promise<JSX.Element> {
-  const { data } = await getClient().query<QueryReturn>({
-    context: { fetchOptions: { next: { revalidate: 86_400 } } },
+  const { data } = await getClient().query<LearningListFragmentReturn>({
+    context: {
+      fetchOptions: { next: { revalidate: 86_400, tags: ['listPageQuery'] } },
+    },
     query: listPageQuery,
   });
 

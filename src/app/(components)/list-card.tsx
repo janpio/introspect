@@ -1,11 +1,13 @@
-import { gql } from '@apollo/client';
 import { currentUser } from '@clerk/nextjs';
 import classNames from 'classnames';
-import { isNil } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
 
+import {
+  listCardQuery,
+  type ListCardQueryReturn,
+} from '../(queries)/learning-list-person';
 import { getClient } from '../layout';
 import { FavoriteButton } from './favorite-button';
 
@@ -19,40 +21,6 @@ type ListCardProperties = {
   listUpdatedAt: string | null;
 };
 
-type ListCardQuery = {
-  learningList: {
-    _count: {
-      favoritedBy: number;
-    };
-  };
-  person: {
-    clerkId: string;
-    favoriteLists: Array<{ id: string }>;
-    id: string;
-  };
-};
-
-const listCardQuery = gql`
-  query ListCardQuery(
-    $learningListWhere: LearningListWhereUniqueInput!
-    $personWhere: PersonWhereUniqueInput!
-  ) {
-    learningList(where: $learningListWhere) {
-      createrId
-      _count {
-        favoritedBy
-      }
-    }
-    person(where: $personWhere) {
-      id
-      clerkId
-      favoriteLists {
-        id
-      }
-    }
-  }
-`;
-
 export async function ListCard({
   containerClassname,
   creatorProfileImage,
@@ -64,10 +32,15 @@ export async function ListCard({
 }: ListCardProperties): Promise<JSX.Element> {
   const clerkUser = await currentUser();
 
-  const { data } = await getClient().query<ListCardQuery>({
-    context: { fetchOptions: { next: { revalidate: 0 } } },
+  const { data } = await getClient().query<ListCardQueryReturn>({
+    context: {
+      fetchOptions: { next: { revalidate: 0, tags: ['listCardQuery'] } },
+    },
     query: listCardQuery,
     variables: {
+      favoriteListsWhere: {
+        id: { equals: listId },
+      },
       learningListWhere: {
         id: listId,
       },
@@ -77,15 +50,7 @@ export async function ListCard({
     },
   });
 
-  let currentUserHasFavorited = false;
-  if (!isNil(data.person)) {
-    for (const favoriteList of data.person.favoriteLists) {
-      if (favoriteList.id === listId) {
-        currentUserHasFavorited = true;
-        break;
-      }
-    }
-  }
+  const currentUserHasFavorited = data.person.favoriteLists.length > 0;
 
   return (
     <div
@@ -118,7 +83,7 @@ export async function ListCard({
         </div>
         <FavoriteButton
           clerkId={clerkUser?.id}
-          favoritedCount={data.learningList._count.favoritedBy ?? 0}
+          favoritedCount={data.learningList._count.favoritedBy}
           hasUserFavorited={currentUserHasFavorited}
           listId={listId}
         />

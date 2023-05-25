@@ -1,14 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck this file is wild
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import type { Context } from '@apollo/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
-import { prisma } from '../../../prisma/database';
+import type { ApolloContext } from '../route';
 import type { RelationInfo, ResolvedArguments } from './resolve-arguments';
 
 type ResolveQueryParameters = {
-  context: Context;
+  context: ApolloContext;
   info: GraphQLResolveInfo;
   modelName: string;
   parent: Record<string, unknown> | undefined;
@@ -29,7 +28,9 @@ export const resolveFindMany = async <ModelType>(
         const lowercaseParentTableName = `${relation.parentTableName
           .charAt(0)
           .toLowerCase()}${relation.parentTableName.slice(1)}`;
-        const model = prisma[lowercaseParentTableName] as {
+        const model = parameters.context.dataSources.prisma[
+          lowercaseParentTableName
+        ] as {
           findUnique: ({ where: any }) => typeof parameters.modelName;
         };
 
@@ -60,7 +61,9 @@ export const resolveFindMany = async <ModelType>(
             `Make sure ${relation.parentTableName} has a foreign key constraint on ${parameters.modelName}.`,
           );
 
-          return prisma[lowercaseModelName].findMany({
+          return parameters.context.dataSources.prisma[
+            lowercaseModelName
+          ].findMany({
             ...parameters.resolvedArguments,
           }) as ModelType[];
         }
@@ -69,7 +72,7 @@ export const resolveFindMany = async <ModelType>(
   }
 
   // If relationship isn't defined, use n + 1 efficiency
-  return prisma[lowercaseModelName].findMany({
+  return parameters.context.dataSources.prisma[lowercaseModelName].findMany({
     ...parameters.resolvedArguments,
   }) as ModelType[];
 };

@@ -8,7 +8,7 @@ export const databaseModelTypeDefinitions = gql`
     name: String!
     createrId: String!
     creator: Person!
-    favoritedBy: [Person]!
+    favoritedBy(where: PersonWhereInput): [Person]!
     learningListMaterials(
       orderBy: LearningListMaterialOrderByWithRelationInput
     ): [LearningListMaterial]!
@@ -55,7 +55,7 @@ export const databaseModelTypeDefinitions = gql`
     profileImageUrl: String
     clerkId: String!
     completedMaterial: [LearningMaterial]!
-    favoriteLists: [LearningList]!
+    favoriteLists(where: LearningListWhereInput): [LearningList]!
     learningList: [LearningList]!
   }
 `;

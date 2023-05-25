@@ -1,15 +1,14 @@
-import type { Context } from '@apollo/client';
 import { type LearningMaterialLink, Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
-import { prisma } from '../../../prisma/database';
+import type { ApolloContext } from '../route';
 import { type RelationInfo, resolveArguments } from '../util/resolve-arguments';
 import { resolveFindMany } from '../util/resolve-find-many';
 
 export async function learningMaterialLink(
   parent: Record<string, unknown> | undefined,
   arguments_: Prisma.LearningMaterialLinkFindUniqueArgs,
-  context: Context,
+  context: ApolloContext,
   info: GraphQLResolveInfo,
 ): Promise<LearningMaterialLink | null> {
   const resolvedArguments = resolveArguments({
@@ -18,7 +17,7 @@ export async function learningMaterialLink(
     parent,
   });
 
-  return prisma.learningMaterialLink.findUnique({
+  return context.dataSources.prisma.learningMaterialLink.findUnique({
     ...resolvedArguments,
   });
 }
@@ -26,7 +25,7 @@ export async function learningMaterialLink(
 export async function learningMaterialLinks(
   parent: Record<string, unknown> | undefined,
   arguments_: Prisma.LearningMaterialLinkFindManyArgs,
-  context: Context,
+  context: ApolloContext,
   info: GraphQLResolveInfo,
 ): Promise<LearningMaterialLink[]> {
   const relationInfo: RelationInfo[] = [

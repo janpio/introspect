@@ -1,9 +1,8 @@
-import type { Context } from '@apollo/client';
 import type { LearningList } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo } from 'graphql';
 
-import { prisma } from '../../../prisma/database';
+import type { ApolloContext } from '../route';
 import { resolveArguments } from '../util/resolve-arguments';
 import { resolveFindMany } from '../util/resolve-find-many';
 import { learningListMaterials } from './learning-list-material-query';
@@ -18,7 +17,7 @@ export const learningListRelationships = {
 export async function learningList(
   parent: Record<string, unknown> | undefined,
   arguments_: Prisma.LearningListFindUniqueArgs,
-  context: Context,
+  context: ApolloContext,
   info: GraphQLResolveInfo,
 ): Promise<LearningList | null> {
   const resolvedArguments = resolveArguments({
@@ -27,7 +26,7 @@ export async function learningList(
     parent,
   });
 
-  return prisma.learningList.findUnique({
+  return context.dataSources.prisma.learningList.findUnique({
     ...resolvedArguments,
   });
 }
@@ -35,7 +34,7 @@ export async function learningList(
 export async function learningLists(
   parent: Record<string, unknown> | undefined,
   arguments_: Prisma.LearningListFindManyArgs,
-  context: Context,
+  context: ApolloContext,
   info: GraphQLResolveInfo,
 ): Promise<LearningList[]> {
   const resolvedArguments = resolveArguments({

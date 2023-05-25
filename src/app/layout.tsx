@@ -1,6 +1,11 @@
 import './globals.css';
 
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  type Reference,
+} from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
@@ -25,9 +30,24 @@ export const metadata = {
 
 export const { getClient } = registerApolloClient(() => {
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            learningList: {
+              read(_, { args, toReference }): Reference | undefined {
+                return toReference({
+                  __typename: 'LearningList',
+                  id: args?.id as string,
+                });
+              },
+            },
+          },
+        },
+      },
+    }),
+    credentials: 'same-origin',
     link: new HttpLink({
-      credentials: 'same-site',
       uri:
         environment.NODE_ENV === 'development'
           ? 'http://localhost:3000/graphql'
