@@ -1,12 +1,10 @@
 import './globals.css';
 
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
-import { cookies } from 'next/headers';
 import type { JSX } from 'react';
 
 import { environment } from '../util/environment';
@@ -25,28 +23,16 @@ export const metadata = {
   title: 'Introspect',
 };
 
-const httpLink = new HttpLink({
-  uri:
-    environment.NODE_ENV === 'development'
-      ? 'http://localhost:3000/graphql'
-      : 'https://introspect.dev/graphql',
-});
-
-const authLink = setContext((_, { headers }) => {
-  return {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    headers: {
-      ...headers,
-      authorization: cookies().get('__session')?.value,
-    },
-  };
-});
-
 export const { getClient } = registerApolloClient(() => {
   return new ApolloClient({
     cache: new InMemoryCache(),
-    // eslint-disable-next-line unicorn/prefer-spread
-    link: authLink.concat(httpLink),
+    link: new HttpLink({
+      credentials: 'same-site',
+      uri:
+        environment.NODE_ENV === 'development'
+          ? 'http://localhost:3000/graphql'
+          : 'https://introspect.dev/graphql',
+    }),
   });
 });
 
