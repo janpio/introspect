@@ -1,19 +1,20 @@
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
+import { ROOT_URL } from '../../util/constants';
+import { zodFetch } from '../../util/zod';
 import { ListCard } from '../(components)/list-card';
-import {
-  type LearningListFragmentReturn,
-  listPageQuery,
-} from '../(queries)/learning-list';
-import { defaultQueryOptions } from '../graphql/util/apollo';
-import { getClient } from '../layout';
+import { listPageReturnSchema } from '../api/list-page/types';
 
 export default async function ListPage(): Promise<JSX.Element> {
-  const { data } = await getClient().query<LearningListFragmentReturn>({
-    ...defaultQueryOptions,
-    query: listPageQuery,
-  });
+  const data = await zodFetch(
+    listPageReturnSchema,
+    `${ROOT_URL}/api/list-page`,
+    {
+      credentials: 'same-origin',
+      next: { revalidate: 86_400, tags: ['list-page'] },
+    },
+  );
 
   return (
     <main className="my-auto">
@@ -21,7 +22,7 @@ export default async function ListPage(): Promise<JSX.Element> {
         Top Lists
       </h1>
       <div className="grid place-items-center">
-        {data.learningLists.map(async list => {
+        {data.map(async list => {
           return (
             // @ts-expect-error ListCard returns Promise
             <ListCard

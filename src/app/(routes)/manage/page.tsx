@@ -2,13 +2,10 @@ import { currentUser } from '@clerk/nextjs';
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
+import { ROOT_URL } from '../../../util/constants';
+import { zodFetch } from '../../../util/zod';
 import { ListCard } from '../../(components)/list-card';
-import {
-  type LearningListFragmentReturn,
-  manageQuery,
-} from '../../(queries)/learning-list';
-import { defaultQueryOptions } from '../../graphql/util/apollo';
-import { getClient } from '../../layout';
+import { manageListsReturnSchema } from '../../api/manage-lists/types';
 
 export default async function Manage(): Promise<JSX.Element | null> {
   const user = await currentUser();
@@ -17,26 +14,22 @@ export default async function Manage(): Promise<JSX.Element | null> {
     return null;
   }
 
-  const { data } = await getClient().query<LearningListFragmentReturn>({
-    ...defaultQueryOptions,
-    query: manageQuery,
-    variables: {
-      where: {
-        creator: {
-          is: {
-            clerkId: {
-              equals: user.id,
-            },
-          },
-        },
-      },
-    },
+  const searchParameters = new URLSearchParams({
+    clerkId: user.id,
   });
+  const data = await zodFetch(
+    manageListsReturnSchema,
+    `${ROOT_URL}/api/manage-lists?${searchParameters.toString()}`,
+    {
+      credentials: 'same-origin',
+      next: { revalidate: 86_400, tags: [`manage-lists-${user.id}`] },
+    },
+  );
 
   return (
     <div className="mx-auto my-4 grid max-w-7xl place-items-center">
       <div className="w-full max-w-5xl">
-        {data.learningLists.map(list => {
+        {data.map(list => {
           return (
             // @ts-expect-error Returns promise
             <ListCard

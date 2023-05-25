@@ -23,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       id: listId,
     },
   });
-  revalidateTag('listCard');
+  revalidateTag(`listCard-${listId}`);
 
   return NextResponse.json(data);
 }
