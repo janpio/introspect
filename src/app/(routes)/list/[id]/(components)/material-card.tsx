@@ -165,16 +165,13 @@ export function MaterialCard({
           {isOwnedByCurrent && (
             <div className="flex flex-wrap gap-2">
               <EditModal
+                listId={listId}
+                userId={user?.id}
                 material={{
                   ...material,
                   links: material.links.map(link => {
                     return link.url;
                   }),
-                }}
-                user={{
-                  id: user?.id,
-                  profileImageUrl: user?.profileImageUrl,
-                  username: user?.username,
                 }}
               />
               <DeleteModal

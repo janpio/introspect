@@ -6,13 +6,16 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { updateMaterial } from '../../../../(actions)/update-material';
+import { ROOT_URL } from '../../../../../util/constants';
+import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
+import { updateMaterialReturnSchema } from '../../../../api/update-material/types';
 
 type EditModalProperties = {
+  listId: string;
   material: {
     id: string;
     instructors: string[];
@@ -20,16 +23,13 @@ type EditModalProperties = {
     name: string;
     publisherName: string;
   };
-  user: {
-    id: string | undefined;
-    profileImageUrl: string | undefined;
-    username: string | null | undefined;
-  } | null;
+  userId?: string;
 };
 
 export function EditModal({
   material,
-  user,
+  userId,
+  listId,
 }: EditModalProperties): JSX.Element {
   const router = useRouter();
   const [isOpen, toggleOpen] = useToggle(false);
@@ -60,11 +60,7 @@ export function EditModal({
       return {
         ...data,
         id: material.id,
-        user: {
-          clerkId: user?.id,
-          profileImage: user?.profileImageUrl,
-          username: user?.username ?? undefined,
-        },
+        listId,
       };
     });
 
@@ -86,9 +82,16 @@ export function EditModal({
     data: z.input<typeof formSchema>,
   ): Promise<void> => {
     toggleLoading();
-    if (user?.id) {
-      // @ts-expect-error clerkId checked in formSchema transform
-      await updateMaterial(data);
+    if (userId) {
+      await zodFetch(
+        updateMaterialReturnSchema,
+        `${ROOT_URL}/api/update-material`,
+        {
+          body: JSON.stringify(data),
+          credentials: 'same-origin',
+          method: 'POST',
+        },
+      );
     }
 
     toggleLoading();

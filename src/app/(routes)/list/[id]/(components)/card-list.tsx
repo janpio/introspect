@@ -2,7 +2,7 @@
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -34,6 +34,12 @@ export function CardList({
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, toggleLoading] = useToggle(false);
   const [cards, setCards] = useState(list?.learningListMaterial ?? []);
+
+  useEffect(() => {
+    if (list?.learningListMaterial) {
+      setCards(list.learningListMaterial);
+    }
+  }, [list]);
 
   if (isNil(list)) {
     return null;
