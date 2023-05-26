@@ -49,17 +49,18 @@ export function CreateListForm({
   return (
     <form onSubmit={handleSubmit(handleCreateList)}>
       <fieldset disabled={isLoading}>
-        <div className="mb-4 flex flex-wrap items-end gap-2">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
           <Input
             isLabelHidden
             label="Name"
             name="name"
             properties={{
-              container: { className: 'my-0' },
               input: { placeholder: 'Web Dev 101', ...register('name') },
             }}
           />
-          <Button type="submit">Create New List</Button>
+          <Button className="mt-2" type="submit">
+            Create New List
+          </Button>
         </div>
       </fieldset>
     </form>
