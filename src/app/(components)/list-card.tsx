@@ -1,8 +1,8 @@
 import { currentUser } from '@clerk/nextjs';
-import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../util/constants';
 import type { ListCardReturn } from '../api/list-card/types';
@@ -56,7 +56,7 @@ export async function ListCard({
 
   return (
     <div
-      className={classNames(
+      className={twMerge(
         'flex w-full max-w-5xl justify-between border-2 p-4 shadow-sm',
         containerClassname,
       )}

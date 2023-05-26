@@ -1,9 +1,9 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { StarIcon } from '@heroicons/react/24/solid';
-import classNames from 'classnames';
 import type { JSX } from 'react';
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../util/constants';
 
@@ -47,10 +47,10 @@ export function FavoriteButton({
   return (
     <button disabled={isLoading} type="button" onClick={handleFavorite}>
       <StarIcon
-        className={classNames('h-14 w-14', {
-          'text-amber-400': isFavorite,
-          'text-gray-400': !isFavorite,
-        })}
+        className={twMerge(
+          'h-14 w-14',
+          isFavorite ? 'text-amber-400' : 'text-gray-400',
+        )}
       />
       <div className="text-center">({clientCount})</div>
     </button>

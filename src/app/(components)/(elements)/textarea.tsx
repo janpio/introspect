@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import type { JSX } from 'react';
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type TextareaProperties = {
   error?: string | null;
@@ -22,12 +22,12 @@ export function Textarea({
   return (
     <div
       {...properties?.container}
-      className={classNames('my-4', properties?.container?.className)}
+      className={twMerge('my-4', properties?.container?.className)}
     >
       <label
         htmlFor={name}
         {...properties}
-        className={classNames(
+        className={twMerge(
           'block text-sm font-medium leading-6 text-gray-900',
           properties?.label?.className,
         )}
@@ -41,12 +41,10 @@ export function Textarea({
           name={name}
           rows={4}
           {...properties?.input}
-          className={classNames(
+          className={twMerge(
             'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6',
             properties?.input?.className,
-            {
-              'border-red-500 border-2': error,
-            },
+            error && 'border-red-500 border-2',
           )}
         />
       </div>

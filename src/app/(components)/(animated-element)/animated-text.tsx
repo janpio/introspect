@@ -1,8 +1,8 @@
 'use client';
 import { useAnimationInterval } from '@ethang/hooks/use-animation-interval';
-import classNames from 'classnames';
 import type { JSX } from 'react';
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import styles from './animated-text.module.css';
 
@@ -25,13 +25,10 @@ export function AnimatedText(): JSX.Element {
 
   return (
     <h1
-      className={classNames(
-        'text-3xl font-semibold',
-        styles['text-anim--slide'],
-      )}
+      className={twMerge('text-3xl font-semibold', styles['text-anim--slide'])}
     >
       <span
-        className={classNames(
+        className={twMerge(
           'relative inline-block py-[0.1em] px-0',
           styles['text-anim__wrapper'],
         )}
@@ -40,11 +37,11 @@ export function AnimatedText(): JSX.Element {
           return (
             <i
               key={word}
-              className={classNames({
-                'not-italic': true,
-                [styles['text-anim__word']]: true,
-                [styles['text-anim__word--in']]: currentWord === index,
-              })}
+              className={twMerge(
+                'not-italic',
+                styles['text-anim__word'],
+                currentWord === index && [styles['text-anim__word--in']],
+              )}
             >
               {word}
             </i>

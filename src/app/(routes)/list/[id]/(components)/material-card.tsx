@@ -1,8 +1,8 @@
-import classNames from 'classnames';
 import Link from 'next/link';
 import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../../../../util/constants';
 import { zodFetch } from '../../../../../util/zod';
@@ -124,12 +124,10 @@ export function MaterialCard({
 
   return (
     <div
-      className={classNames(
+      className={twMerge(
         'm-2 mx-auto flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm',
-        {
-          'cursor-move': isOwnedByCurrent,
-          'opacity-0': isDragging,
-        },
+        isOwnedByCurrent && 'cursor-move',
+        isDragging && 'opacity-0',
       )}
       ref={(node): ReturnType<typeof drag> | undefined => {
         if (isOwnedByCurrent) {
@@ -194,10 +192,10 @@ export function MaterialCard({
             name={`done-${order}`}
             type="checkbox"
             value={String(isDone)}
-            className={classNames('mb-4 h-6 w-6 rounded text-green-500', {
-              'bg-gray-200 opacity-50': !canUpdate,
-              'cursor-pointer': canUpdate,
-            })}
+            className={twMerge(
+              'mb-4 h-6 w-6 rounded text-green-500',
+              canUpdate ? 'cursor-pointer' : 'bg-gray-200 opacity-50',
+            )}
             onChange={handleMarkAsDone}
           />
         )}

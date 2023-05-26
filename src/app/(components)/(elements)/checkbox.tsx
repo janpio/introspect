@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import type { JSX } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type CheckboxProperties = {
   error?: string | null;
@@ -21,12 +21,12 @@ export function Checkbox({
   return (
     <div
       {...properties?.container}
-      className={classNames('my-4', properties?.container?.className)}
+      className={twMerge('my-4', properties?.container?.className)}
     >
       <label
         htmlFor={name}
         {...properties?.label}
-        className={classNames(
+        className={twMerge(
           'cursor-pointer text-gray-900 flex items-center gap-2',
           properties?.label?.className,
         )}
@@ -37,12 +37,10 @@ export function Checkbox({
             name={name}
             type="checkbox"
             {...properties?.input}
-            className={classNames(
+            className={twMerge(
               'cursor-pointer h-4 w-4 rounded border-gray-300 text-blue-700 focus:ring-blue-700',
               properties?.input?.className,
-              {
-                'border-red-500': error,
-              },
+              error && 'border-red-500',
             )}
           />
         </div>
