@@ -6,11 +6,13 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addMaterialToList } from '../../../../(actions)/add-material-to-list';
+import { ROOT_URL } from '../../../../../util/constants';
+import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
+import { addMaterialToListReturnSchema } from '../../../../api/add-material-to-list/types';
 
 type CreateModalProperties = {
   listId: string;
@@ -77,7 +79,15 @@ export function CreateModal({
   ): Promise<void> => {
     toggleLoading();
     if (user?.id) {
-      await addMaterialToList(data);
+      await zodFetch(
+        addMaterialToListReturnSchema,
+        `${ROOT_URL}/api/add-material-to-list`,
+        {
+          body: JSON.stringify(data),
+          credentials: 'same-origin',
+          method: 'POST',
+        },
+      );
     }
 
     reset();
