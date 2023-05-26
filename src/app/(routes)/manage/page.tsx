@@ -1,6 +1,7 @@
 import { currentUser } from '@clerk/nextjs';
 import { DateTime } from 'luxon';
 import type { JSX } from 'react';
+import { Fragment } from 'react';
 
 import { ROOT_URL } from '../../../util/constants';
 import { zodFetch } from '../../../util/zod';
@@ -9,7 +10,8 @@ import {
   manageListsReturnSchema,
   manageListsTags,
 } from '../../api/manage-lists/types';
-import { CreateListForm } from './create-list-form';
+import { CreateListForm } from './(components)/create-list-form';
+import { DeleteListModal } from './(components)/delete-list-modal';
 
 export default async function Manage(): Promise<JSX.Element | null> {
   const user = await currentUser();
@@ -36,16 +38,22 @@ export default async function Manage(): Promise<JSX.Element | null> {
         <CreateListForm clerkId={user.id} />
         {data.map(list => {
           return (
-            // @ts-expect-error Returns promise
-            <ListCard
-              creatorProfileImage={user.profileImageUrl}
-              creatorUsername={user.username}
-              key={list.id}
-              listCreatedAt={DateTime.fromISO(list.createdAt).toRelative()}
-              listId={list.id}
-              listName={list.name}
-              listUpdatedAt={DateTime.fromISO(list.updatedAt).toRelative()}
-            />
+            <Fragment key={list.id}>
+              {/* @ts-expect-error Returns promise */}
+              <ListCard
+                creatorProfileImage={user.profileImageUrl}
+                creatorUsername={user.username}
+                listCreatedAt={DateTime.fromISO(list.createdAt).toRelative()}
+                listId={list.id}
+                listName={list.name}
+                listUpdatedAt={DateTime.fromISO(list.updatedAt).toRelative()}
+              />
+              <DeleteListModal
+                clerkId={user.id}
+                listId={list.id}
+                listTitle={list.name}
+              />
+            </Fragment>
           );
         })}
       </div>

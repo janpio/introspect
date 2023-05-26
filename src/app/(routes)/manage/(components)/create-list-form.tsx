@@ -6,11 +6,11 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { ROOT_URL } from '../../../util/constants';
-import { zodFetch } from '../../../util/zod';
-import { Button } from '../../(components)/(elements)/button';
-import { Input } from '../../(components)/(elements)/input';
-import { createListReturnSchema } from '../../api/create-list/types';
+import { ROOT_URL } from '../../../../util/constants';
+import { zodFetch } from '../../../../util/zod';
+import { Button } from '../../../(components)/(elements)/button';
+import { Input } from '../../../(components)/(elements)/input';
+import { createListReturnSchema } from '../../../api/create-list/types';
 
 type CreateListFormProperties = {
   clerkId: string;
@@ -25,7 +25,7 @@ export function CreateListForm({
 }: CreateListFormProperties): JSX.Element {
   const router = useRouter();
   const [isLoading, toggleLoading] = useToggle(false);
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: { name: '' },
     resolver: zodResolver(formSchema),
   });
@@ -41,6 +41,7 @@ export function CreateListForm({
       method: 'POST',
     });
 
+    reset();
     router.refresh();
     toggleLoading();
   };
