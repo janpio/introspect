@@ -3,7 +3,7 @@ import type { JSX } from 'react';
 
 type InputProperties = {
   error?: string | null;
-  hideLabel?: boolean;
+  isLabelHidden?: boolean;
   label: string;
   name: string;
   properties?: {
@@ -16,7 +16,7 @@ type InputProperties = {
 
 export function Input({
   error,
-  hideLabel,
+  isLabelHidden,
   label,
   name,
   type = 'text',
@@ -27,7 +27,7 @@ export function Input({
       {...properties?.container}
       className={classNames('my-4', properties?.container?.className)}
     >
-      {hideLabel !== true && (
+      {isLabelHidden !== true && (
         <label
           htmlFor={name}
           {...properties?.label}

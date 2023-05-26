@@ -50,7 +50,7 @@ export function CreateListForm({
       <fieldset disabled={isLoading}>
         <div className="mb-4 flex flex-wrap items-end gap-2">
           <Input
-            hideLabel
+            isLabelHidden
             label="Name"
             name="name"
             properties={{
