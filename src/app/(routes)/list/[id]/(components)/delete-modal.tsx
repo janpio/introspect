@@ -3,9 +3,11 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 
-import { removeMaterialFromList } from '../../../../(actions)/remove-material-from-list';
+import { ROOT_URL } from '../../../../../util/constants';
+import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Modal } from '../../../../(components)/modal';
+import { removeMaterialFromListReturnSchema } from '../../../../api/remove-material-from-list/types';
 
 type DeleteModalProperties = {
   listId: string;
@@ -21,11 +23,23 @@ export function DeleteModal({
   order,
 }: DeleteModalProperties): JSX.Element {
   const router = useRouter();
+  const [isLoading, toggleLoading] = useToggle(false);
   const [isOpen, toggleOpen] = useToggle(false);
 
   const handleRemove = async (): Promise<void> => {
-    await removeMaterialFromList({ listId, materialId, order });
+    toggleLoading();
+    await zodFetch(
+      removeMaterialFromListReturnSchema,
+      `${ROOT_URL}/api/remove-material-from-list`,
+      {
+        body: JSON.stringify({ listId, materialId, order }),
+        credentials: 'same-origin',
+        method: 'POST',
+      },
+    );
     router.refresh();
+    toggleLoading();
+    toggleOpen();
   };
 
   return (
@@ -40,8 +54,12 @@ export function DeleteModal({
         </p>
         <p>Are you sure?</p>
         <div className="my-4 flex justify-between">
-          <Button onClick={handleRemove}>Yes, Remove</Button>
-          <Button onClick={toggleOpen}>No, Cancel</Button>
+          <Button disabled={isLoading} onClick={handleRemove}>
+            Yes, Remove
+          </Button>
+          <Button disabled={isLoading} onClick={toggleOpen}>
+            No, Cancel
+          </Button>
         </div>
       </Modal>
     </div>
