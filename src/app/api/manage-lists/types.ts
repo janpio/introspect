@@ -4,10 +4,6 @@ export const manageListsTags = (clerkId: string): [string] => {
   return [`manage-lists-${clerkId}`];
 };
 
-export const manageListsParametersSchema = z.object({
-  clerkId: z.string(),
-});
-
 export const manageListsReturnSchema = z.array(
   z.object({
     createdAt: z.string().datetime(),

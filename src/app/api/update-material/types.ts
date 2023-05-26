@@ -12,4 +12,7 @@ export const updateMaterialBodySchema = z.object(
   { invalid_type_error: 'updateMaterialBody' },
 );
 
-export const updateMaterialReturnSchema = z.object({ id: z.string() });
+export const updateMaterialReturnSchema = z.object(
+  { id: z.string() },
+  { invalid_type_error: 'updateMaterialReturnSchema' },
+);

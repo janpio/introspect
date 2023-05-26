@@ -1,14 +1,17 @@
 import type { PrismaPromise } from '@prisma/client';
+import { isNil } from 'lodash';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const requestBody = Object.fromEntries(request.nextUrl.searchParams) as {
-    clerkId: string | undefined;
-    listId: string;
-  };
+  const clerkId = request.nextUrl.searchParams.get('clerkId');
+  const listId = request.nextUrl.searchParams.get('listId');
+
+  if (isNil(listId)) {
+    return NextResponse.json({ error: 'Invalid parameters' });
+  }
 
   let promises: Array<PrismaPromise<unknown>> = [
     prisma.learningList.findUnique({
@@ -20,22 +23,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         },
       },
       where: {
-        id: requestBody.listId,
+        id: listId,
       },
     }),
   ];
 
-  if (typeof requestBody.clerkId === 'string') {
+  if (!isNil(clerkId)) {
     promises = [
       ...promises,
       prisma.person.findUnique({
         select: {
           favoriteLists: {
             select: { id: true },
-            where: { id: requestBody.listId },
+            where: { id: listId },
           },
         },
-        where: { clerkId: requestBody.clerkId },
+        where: { clerkId },
       }),
     ];
   }

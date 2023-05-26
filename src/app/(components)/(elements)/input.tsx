@@ -3,6 +3,7 @@ import type { JSX } from 'react';
 
 type InputProperties = {
   error?: string | null;
+  hideLabel?: boolean;
   label: string;
   name: string;
   properties?: {
@@ -14,28 +15,31 @@ type InputProperties = {
 };
 
 export function Input({
+  error,
+  hideLabel,
   label,
   name,
   type = 'text',
   properties,
-  error,
 }: InputProperties): JSX.Element {
   return (
     <div
       {...properties?.container}
       className={classNames('my-4', properties?.container?.className)}
     >
-      <label
-        htmlFor={name}
-        {...properties?.label}
-        className={classNames(
-          'block text-sm font-medium leading-6 text-gray-900',
-          properties?.label?.className,
-        )}
-      >
-        {label}
-        <p>{error && <span className="text-red-500">{error}</span>}</p>
-      </label>
+      {hideLabel !== true && (
+        <label
+          htmlFor={name}
+          {...properties?.label}
+          className={classNames(
+            'block text-sm font-medium leading-6 text-gray-900',
+            properties?.label?.className,
+          )}
+        >
+          {label}
+          <p>{error && <span className="text-red-500">{error}</span>}</p>
+        </label>
+      )}
       <div className="mt-2">
         <input
           id={name}

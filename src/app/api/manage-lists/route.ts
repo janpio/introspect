@@ -1,12 +1,14 @@
+import { isNil } from 'lodash';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
-import { manageListsParametersSchema } from './types';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const { clerkId } = manageListsParametersSchema.parse(
-    Object.entries(request.nextUrl.searchParams),
-  );
+  const clerkId = request.nextUrl.searchParams.get('clerkId');
+
+  if (isNil(clerkId)) {
+    return NextResponse.json({ error: 'Invalid Parameters' });
+  }
 
   const data = await prisma.learningList.findMany({
     select: {

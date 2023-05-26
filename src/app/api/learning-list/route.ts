@@ -1,23 +1,25 @@
+import { isNil } from 'lodash';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
-import { learningListParametersSchema } from './types';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const { clerkId, listId } = learningListParametersSchema.parse(
-    Object.fromEntries(request.nextUrl.searchParams),
-  );
+  const clerkId = request.nextUrl.searchParams.get('clerkId');
+  const listId = request.nextUrl.searchParams.get('listId');
 
-  const getCompletedBy =
-    typeof clerkId === 'string'
-      ? {
-          select: { id: true },
-          where: {
-            clerkId,
-          },
-        }
-      : false;
+  if (isNil(listId)) {
+    return NextResponse.json({ error: 'Invalid parameters.' });
+  }
+
+  const getCompletedBy = isNil(clerkId)
+    ? false
+    : {
+        select: { id: true },
+        where: {
+          clerkId,
+        },
+      };
 
   const result = await prisma.learningList.findUnique({
     select: {

@@ -4,14 +4,6 @@ export const learningListTags = (listId: string): [string] => {
   return [`learning-list-${listId}`];
 };
 
-export const learningListParametersSchema = z.object(
-  {
-    clerkId: z.string().optional(),
-    listId: z.string(),
-  },
-  { invalid_type_error: 'learningListParamsSchema' },
-);
-
 export const learningListReturnSchema = z
   .object(
     {
