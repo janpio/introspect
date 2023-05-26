@@ -25,7 +25,7 @@ model LearningList {
   updatedAt DateTime @updatedAt
   name      String
 
-  createrId            String                 @unique
+  createrId            String
   creator              Person                 @relation(fields: [createrId], references: [id], "ownedList")
   favoritedBy          Person[]               @relation("favoriteList")
   learningListMaterial LearningListMaterial[]

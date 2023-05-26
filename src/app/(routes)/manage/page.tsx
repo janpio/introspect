@@ -9,6 +9,7 @@ import {
   manageListsReturnSchema,
   manageListsTags,
 } from '../../api/manage-lists/types';
+import { CreateListForm } from './create-list-form';
 
 export default async function Manage(): Promise<JSX.Element | null> {
   const user = await currentUser();
@@ -31,7 +32,8 @@ export default async function Manage(): Promise<JSX.Element | null> {
 
   return (
     <div className="mx-auto my-4 grid max-w-7xl place-items-center">
-      <div className="w-full max-w-5xl">
+      <div className="grid w-full max-w-5xl gap-2">
+        <CreateListForm clerkId={user.id} />
         {data.map(list => {
           return (
             // @ts-expect-error Returns promise

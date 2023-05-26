@@ -1,5 +1,4 @@
-import type { ZodSchema } from 'zod';
-import type { z } from 'zod';
+import type { z, ZodSchema } from 'zod';
 
 export async function zodFetch<SchemaType extends ZodSchema>(
   schema: SchemaType,
