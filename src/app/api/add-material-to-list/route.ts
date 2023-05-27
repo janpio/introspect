@@ -57,7 +57,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     select: { id: true },
     update: upsertData,
     where: {
-      name_publisherName: {
+      name_publisherName_instructors: {
+        instructors,
         name,
         publisherName,
       },

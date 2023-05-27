@@ -3,6 +3,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
+import {
+  LEARNING_MATERIAL_INDEX,
+  meilisearchAdmin,
+} from '../../../util/meilisearch';
 import { listCardTags } from '../list-card/types';
 import { updateMaterialBodySchema } from './types';
 
@@ -37,11 +41,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     },
   });
 
-  await prisma.learningMaterialLink.deleteMany({
-    where: {
-      learningMaterialId: null,
-    },
-  });
+  await Promise.all([
+    prisma.learningMaterialLink.deleteMany({
+      where: {
+        learningMaterialId: null,
+      },
+    }),
+    meilisearchAdmin()
+      .index(LEARNING_MATERIAL_INDEX)
+      .addDocuments([learningMaterial]),
+  ]);
   revalidateTag(listCardTags(listId)[0]);
 
   return NextResponse.json(learningMaterial);
