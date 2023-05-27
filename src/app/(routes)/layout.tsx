@@ -3,7 +3,6 @@ import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import type { JSX, ReactNode } from 'react';
 
-import { environment } from '../../util/environment';
 import { syncCurrentUser } from '../(actions)/sync-user';
 import { Button } from '../(components)/(elements)/button';
 
@@ -33,11 +32,9 @@ export default async function Layout({
               </Link>
             </Button>
           )}
-          {!user && environment.NODE_ENV === 'development' && (
-            <Button className="px-2 py-1">
-              <SignUpButton>Sign Up/In</SignUpButton>
-            </Button>
-          )}
+          <Button className="px-2 py-1">
+            <SignUpButton>Sign Up/In</SignUpButton>
+          </Button>
           <UserButton />
         </div>
       </nav>

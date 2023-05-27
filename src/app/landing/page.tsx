@@ -1,7 +1,6 @@
 import { SignInButton } from '@clerk/nextjs';
 import type { JSX } from 'react';
 
-import { environment } from '../../util/environment';
 import { AnimatedText } from '../(components)/(animated-element)/animated-text';
 import { Button } from '../(components)/(elements)/button';
 
@@ -13,13 +12,11 @@ export default function Home(): JSX.Element {
           Introspect.dev
         </h1>
         <AnimatedText />
-        {environment.NODE_ENV === 'development' && (
-          <div className="my-4 flex gap-4">
-            <SignInButton>
-              <Button>Learn Now</Button>
-            </SignInButton>
-          </div>
-        )}
+        <div className="my-4 flex gap-4">
+          <SignInButton>
+            <Button>Learn Now</Button>
+          </SignInButton>
+        </div>
       </div>
     </main>
   );
