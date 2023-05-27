@@ -136,11 +136,7 @@ export function CreateModal({
               }}
             />
             <div className="mt-5 flex justify-end gap-4 sm:mt-4">
-              <Button
-                className="border-gray-500 bg-gray-500 text-blue-700"
-                type="button"
-                onClick={toggleOpen}
-              >
+              <Button type="button" onClick={toggleOpen}>
                 Cancel
               </Button>
               <Button type="submit">Save</Button>
