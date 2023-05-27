@@ -1,5 +1,5 @@
 import { Combobox } from '@headlessui/react';
-import { isEmpty, map } from 'lodash';
+import { debounce, isEmpty, map } from 'lodash';
 import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';
@@ -35,24 +35,25 @@ export function CreateSearchBox({
     setSearchResults([]);
   };
 
-  const handleSearchMaterials = async (
-    event: ChangeEvent<HTMLInputElement>,
-  ): Promise<void> => {
-    if (isEmpty(event.target.value)) {
-      emptySearch();
-      return;
-    }
+  const handleSearchMaterials = debounce(
+    async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
+      if (isEmpty(event.target.value)) {
+        emptySearch();
+        return;
+      }
 
-    const response = await fetch(
-      `${ROOT_URL}/api/material-search?search=${event.target.value}`,
-      {
-        credentials: 'same-origin',
-      },
-    );
+      const response = await fetch(
+        `${ROOT_URL}/api/material-search?search=${event.target.value}`,
+        {
+          credentials: 'same-origin',
+        },
+      );
 
-    const data = (await response.json()) as LearningMaterialSearchResponse;
-    setSearchResults(data.hits);
-  };
+      const data = (await response.json()) as LearningMaterialSearchResponse;
+      setSearchResults(data.hits);
+    },
+    300,
+  );
 
   const handleChange = (data: SearchResponse): void => {
     if (isEmpty(data)) {
@@ -71,13 +72,13 @@ export function CreateSearchBox({
         Search
       </Combobox.Label>
       <Combobox.Input
-        className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        className="w-full rounded-md border-2 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm"
         placeholder="Search for existing material"
         onChange={handleSearchMaterials}
       />
       {!isEmpty(searchResults) && (
-        <Combobox.Options className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black focus:outline-none sm:text-sm">
-          {map(searchResults, item => {
+        <Combobox.Options className="absolute left-0 z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border-2 bg-white py-1 shadow-lg">
+          {map(searchResults, (item, index) => {
             return (
               <Combobox.Option
                 key={item.id}
@@ -88,24 +89,14 @@ export function CreateSearchBox({
                     active
                       ? 'bg-blue-600 text-white cursor-pointer'
                       : 'text-gray-900',
+                    index !== searchResults.length - 1 && 'border-b-2',
                   );
                 }}
               >
-                {({ selected }): JSX.Element => {
-                  return (
-                    <>
-                      <p
-                        className={twMerge(
-                          'block truncate',
-                          selected && 'font-bold',
-                        )}
-                      >
-                        {item.name} -- {item.publisherName}
-                      </p>
-                      <p>{new Intl.ListFormat().format(item.instructors)}</p>
-                    </>
-                  );
-                }}
+                <p>
+                  {item.name} -- {item.publisherName}
+                </p>
+                <p>{new Intl.ListFormat().format(item.instructors)}</p>
               </Combobox.Option>
             );
           })}
