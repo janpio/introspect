@@ -1,9 +1,5 @@
 import { z } from 'zod';
 
-export const updateListOrderTags = (listId: string): [string] => {
-  return [`update-list-order-${listId}`];
-};
-
 export const updateListOrderBodySchema = z.object(
   {
     list: z.array(z.object({ id: z.string() })),

@@ -10,13 +10,11 @@ import { Modal } from '../../../(components)/modal';
 import { deleteListReturnSchema } from '../../../api/delete-list/types';
 
 type DeleteListModalProperties = {
-  clerkId: string;
   listId: string;
   listTitle: string;
 };
 
 export function DeleteListModal({
-  clerkId,
   listId,
   listTitle,
 }: DeleteListModalProperties): JSX.Element {
@@ -27,7 +25,7 @@ export function DeleteListModal({
   const handleDelete = async (): Promise<void> => {
     toggleLoading();
     await zodFetch(deleteListReturnSchema, `${ROOT_URL}/api/delete-list`, {
-      body: JSON.stringify({ clerkId, listId }),
+      body: JSON.stringify({ listId }),
       credentials: 'same-origin',
       method: 'POST',
     });

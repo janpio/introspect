@@ -6,10 +6,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../../../../util/constants';
 import { zodFetch } from '../../../../../util/zod';
-import {
-  updateMaterialCompletionReturn,
-  updateMaterialCompletionTags,
-} from '../../../../api/update-material-completion/types';
+import { updateMaterialCompletionReturn } from '../../../../api/update-material-completion/types';
 import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
@@ -112,9 +109,6 @@ export function MaterialCard({
           }),
           credentials: 'same-origin',
           method: 'POST',
-          next: {
-            tags: updateMaterialCompletionTags(user.id, material.id),
-          },
         },
       );
     }

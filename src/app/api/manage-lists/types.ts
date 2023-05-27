@@ -1,9 +1,5 @@
 import { z } from 'zod';
 
-export const manageListsTags = (clerkId: string): [string] => {
-  return [`manage-lists-${clerkId}`];
-};
-
 export const manageListsReturnSchema = z.array(
   z.object({
     createdAt: z.string().datetime(),

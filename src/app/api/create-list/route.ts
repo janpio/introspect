@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
-import { manageListsTags } from '../manage-lists/types';
+import { listPageTags } from '../../../util/tags';
 import { createListBodySchema } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -20,7 +20,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     },
     select: { id: true },
   });
-  revalidateTag(manageListsTags(clerkId)[0]);
+
+  revalidateTag(listPageTags()[0]);
 
   return NextResponse.json(list);
 }

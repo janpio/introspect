@@ -8,7 +8,7 @@ import {
   type LearningMaterialSearchDocument,
   meilisearchAdmin,
 } from '../../../util/meilisearch';
-import { learningListTags } from '../learning-list/types';
+import { learningListTags } from '../../../util/tags';
 import { addMaterialToListBodySchema } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -76,7 +76,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     learningListUpdate,
     createMaterial,
   ]);
-  revalidateTag(learningListTags(listId)[0]);
 
   const document: LearningMaterialSearchDocument = {
     id: returnData[1].id,
@@ -93,6 +92,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   await meilisearchAdmin()
     .index(LEARNING_MATERIAL_INDEX)
     .addDocuments([document]);
+
+  revalidateTag(learningListTags(listId)[0]);
 
   return NextResponse.json({ id: returnData[1].id });
 }

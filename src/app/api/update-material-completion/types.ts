@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-export const updateMaterialCompletionTags = (
-  clerkId: string,
-  materialId: string,
-): [string] => {
-  return [`update-material-completion-${clerkId}-${materialId}`];
-};
-
 export const updateMaterialCompletionBody = z.object(
   {
     clerkId: z.string(),

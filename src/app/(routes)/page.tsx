@@ -2,9 +2,10 @@ import { DateTime } from 'luxon';
 import type { JSX } from 'react';
 
 import { ROOT_URL } from '../../util/constants';
+import { listPageTags } from '../../util/tags';
 import { zodFetch } from '../../util/zod';
 import { ListCard } from '../(components)/list-card';
-import { listPageReturnSchema, listPageTags } from '../api/list-page/types';
+import { listPageReturnSchema } from '../api/list-page/types';
 
 export default async function ListPage(): Promise<JSX.Element> {
   const data = await zodFetch(
@@ -21,7 +22,7 @@ export default async function ListPage(): Promise<JSX.Element> {
       <h1 className="my-4 text-center text-3xl font-bold text-blue-900">
         Top Lists
       </h1>
-      <div className="grid place-items-center">
+      <div className="grid place-items-center gap-2">
         {data.map(async list => {
           return (
             // @ts-expect-error ListCard returns Promise

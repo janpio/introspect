@@ -3,11 +3,9 @@ import { currentUser } from '@clerk/nextjs';
 import type { z } from 'zod';
 
 import { ROOT_URL } from '../../../../util/constants';
+import { learningListTags } from '../../../../util/tags';
 import { zodFetch } from '../../../../util/zod';
-import {
-  learningListReturnSchema,
-  learningListTags,
-} from '../../../api/learning-list/types';
+import { learningListReturnSchema } from '../../../api/learning-list/types';
 
 type GetListDataReturn = Promise<{
   data: z.output<typeof learningListReturnSchema>;

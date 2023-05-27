@@ -1,9 +1,5 @@
 import { z } from 'zod';
 
-export const learningListTags = (listId: string): [string] => {
-  return [`learning-list-${listId}`];
-};
-
 export const learningListReturnSchema = z
   .object(
     {

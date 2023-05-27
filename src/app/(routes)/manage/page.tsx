@@ -4,12 +4,10 @@ import type { JSX } from 'react';
 import { Fragment } from 'react';
 
 import { ROOT_URL } from '../../../util/constants';
+import { manageListsTags } from '../../../util/tags';
 import { zodFetch } from '../../../util/zod';
 import { ListCard } from '../../(components)/list-card';
-import {
-  manageListsReturnSchema,
-  manageListsTags,
-} from '../../api/manage-lists/types';
+import { manageListsReturnSchema } from '../../api/manage-lists/types';
 import { CreateListForm } from './(components)/create-list-form';
 import { DeleteListModal } from './(components)/delete-list-modal';
 
@@ -28,7 +26,7 @@ export default async function Manage(): Promise<JSX.Element | null> {
     `${ROOT_URL}/api/manage-lists?${searchParameters.toString()}`,
     {
       credentials: 'same-origin',
-      next: { revalidate: 86_400, tags: manageListsTags(user.id) },
+      next: { tags: manageListsTags(user.id) },
     },
   );
 
@@ -48,11 +46,7 @@ export default async function Manage(): Promise<JSX.Element | null> {
                 listName={list.name}
                 listUpdatedAt={DateTime.fromISO(list.updatedAt).toRelative()}
               />
-              <DeleteListModal
-                clerkId={user.id}
-                listId={list.id}
-                listTitle={list.name}
-              />
+              <DeleteListModal listId={list.id} listTitle={list.name} />
             </Fragment>
           );
         })}

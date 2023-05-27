@@ -1,6 +1,7 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { StarIcon } from '@heroicons/react/24/solid';
+import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -20,6 +21,7 @@ export function FavoriteButton({
   favoritedCount,
   listId,
 }: FavoriteButtonProperties): JSX.Element {
+  const router = useRouter();
   const [isLoading, toggleLoading] = useToggle(false);
   const [isFavorite, toggleFavorite] = useToggle(hasUserFavorited);
   const [clientCount, setClientCount] = useState(favoritedCount ?? 0);
@@ -40,6 +42,7 @@ export function FavoriteButton({
         credentials: 'same-origin',
         method: 'POST',
       });
+      router.refresh();
       toggleLoading();
     }
   };

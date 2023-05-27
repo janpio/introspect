@@ -9,10 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ROOT_URL } from '../../../../../util/constants';
 import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
-import {
-  updateListOrderReturnSchema,
-  updateListOrderTags,
-} from '../../../../api/update-list-order/types';
+import { updateListOrderReturnSchema } from '../../../../api/update-list-order/types';
 import type { getListData } from '../data';
 import { MaterialCard } from './material-card';
 
@@ -79,9 +76,6 @@ export function CardList({
           }),
           credentials: 'same-origin',
           method: 'POST',
-          next: {
-            tags: updateListOrderTags(list.id),
-          },
         },
       );
       setIsDisabled(true);

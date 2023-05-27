@@ -5,8 +5,8 @@ import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../util/constants';
+import { listCardTags } from '../../util/tags';
 import type { ListCardReturn } from '../api/list-card/types';
-import { listCardTags } from '../api/list-card/types';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {

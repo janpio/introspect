@@ -8,7 +8,7 @@ import {
   type LearningMaterialSearchDocument,
   meilisearchAdmin,
 } from '../../../util/meilisearch';
-import { listCardTags } from '../list-card/types';
+import { learningListTags } from '../../../util/tags';
 import { updateMaterialBodySchema } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -70,7 +70,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       .index(LEARNING_MATERIAL_INDEX)
       .addDocuments([materialDocument]),
   ]);
-  revalidateTag(listCardTags(listId)[0]);
+
+  revalidateTag(learningListTags(listId)[0]);
 
   return NextResponse.json({ id: learningMaterial.id });
 }
