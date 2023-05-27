@@ -6,17 +6,9 @@ import type { UseFormSetValue } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../../../../util/constants';
-import type {
-  LearningMaterialIndex,
-  LearningMaterialSearchResponse,
-} from '../../../../api/material-search/types';
+import type { LearningMaterialSearchDocument } from '../../../../../util/meilisearch';
+import type { LearningMaterialSearchResponse } from '../../../../api/material-search/types';
 import type { FormInputs } from './create-modal';
-
-export type SearchResponse = {
-  instructors: string[];
-  name: string;
-  publisherName: string;
-};
 
 type CreateSearchBoxProperties = {
   setValue: UseFormSetValue<FormInputs>;
@@ -26,10 +18,16 @@ export function CreateSearchBox({
   setValue,
 }: CreateSearchBoxProperties): JSX.Element {
   const [selectedSearchResult, setSelectedSearchResult] =
-    useState<SearchResponse>();
-  const [searchResults, setSearchResults] = useState<LearningMaterialIndex[]>(
-    [],
-  );
+    useState<LearningMaterialSearchDocument>({
+      id: '',
+      instructors: '',
+      links: '',
+      name: '',
+      publisherName: '',
+    });
+  const [searchResults, setSearchResults] = useState<
+    LearningMaterialSearchDocument[]
+  >([]);
 
   const emptySearch = (): void => {
     setSearchResults([]);
@@ -55,13 +53,14 @@ export function CreateSearchBox({
     300,
   );
 
-  const handleChange = (data: SearchResponse): void => {
+  const handleChange = (data: LearningMaterialSearchDocument): void => {
     if (isEmpty(data)) {
       emptySearch();
     } else {
       setValue('name', data.name);
       setValue('publisherName', data.publisherName);
-      setValue('instructors', data.instructors.join(','));
+      setValue('instructors', data.instructors);
+      setValue('links', data.links);
       setSelectedSearchResult(data);
     }
   };
@@ -96,7 +95,9 @@ export function CreateSearchBox({
                 <p>
                   {item.name} -- {item.publisherName}
                 </p>
-                <p>{new Intl.ListFormat().format(item.instructors)}</p>
+                <p>
+                  {new Intl.ListFormat().format(item.instructors.split(','))}
+                </p>
               </Combobox.Option>
             );
           })}

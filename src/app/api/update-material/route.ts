@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '../../../prisma/database';
 import {
   LEARNING_MATERIAL_INDEX,
+  type LearningMaterialSearchDocument,
   meilisearchAdmin,
 } from '../../../util/meilisearch';
 import { listCardTags } from '../list-card/types';
@@ -35,11 +36,29 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       name: courseName,
       publisherName,
     },
-    select: { id: true },
+    select: {
+      id: true,
+      instructors: true,
+      links: { select: { url: true } },
+      name: true,
+      publisherName: true,
+    },
     where: {
       id,
     },
   });
+
+  const materialDocument: LearningMaterialSearchDocument = {
+    id: learningMaterial.id,
+    instructors: learningMaterial.instructors.join(','),
+    links: learningMaterial.links
+      .map(link => {
+        return link.url;
+      })
+      .join(','),
+    name: learningMaterial.name,
+    publisherName: learningMaterial.publisherName,
+  };
 
   await Promise.all([
     prisma.learningMaterialLink.deleteMany({
@@ -49,9 +68,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }),
     meilisearchAdmin()
       .index(LEARNING_MATERIAL_INDEX)
-      .addDocuments([learningMaterial]),
+      .addDocuments([materialDocument]),
   ]);
   revalidateTag(listCardTags(listId)[0]);
 
-  return NextResponse.json(learningMaterial);
+  return NextResponse.json({ id: learningMaterial.id });
 }

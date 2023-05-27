@@ -1,13 +1,8 @@
 import type { SearchParams, SearchResponse } from 'meilisearch';
 
-export type LearningMaterialIndex = {
-  id: string;
-  instructors: string[];
-  name: string;
-  publisherName: string;
-};
+import type { LearningMaterialSearchDocument } from '../../../util/meilisearch';
 
 export type LearningMaterialSearchResponse = SearchResponse<
-  LearningMaterialIndex,
+  LearningMaterialSearchDocument,
   SearchParams
 >;
