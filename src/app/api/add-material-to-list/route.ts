@@ -3,6 +3,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
+import {
+  LEARNING_MATERIAL_INDEX,
+  meilisearchAdmin,
+} from '../../../util/meilisearch';
 import { learningListTags } from '../learning-list/types';
 import { addMaterialToListBodySchema } from './types';
 
@@ -65,6 +69,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     createMaterial,
   ]);
   revalidateTag(learningListTags(listId)[0]);
+
+  await meilisearchAdmin()
+    .index(LEARNING_MATERIAL_INDEX)
+    .addDocuments([returnData[1]]);
 
   return NextResponse.json(returnData[1]);
 }

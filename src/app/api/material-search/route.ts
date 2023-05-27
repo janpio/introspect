@@ -1,27 +1,17 @@
-import { constants } from 'node:http2';
-
-import { isNil } from 'lodash';
-import { type NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import {
   LEARNING_MATERIAL_INDEX,
   meilisearch,
 } from '../../../util/meilisearch';
+import type { LearningMaterialIndex } from './types';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const search = request.nextUrl.searchParams.get('search');
+  const data = await meilisearch()
+    .index(LEARNING_MATERIAL_INDEX)
+    .search<LearningMaterialIndex>(search, { limit: 5 });
 
-  if (isNil(search)) {
-    return NextResponse.json(
-      { error: 'Must provide search term.' },
-      { status: constants.HTTP_STATUS_BAD_REQUEST },
-    );
-  }
-
-  const client = meilisearch();
-  const index = client.index(LEARNING_MATERIAL_INDEX);
-
-  const results = await index.search(search);
-
-  return NextResponse.json(results);
+  return NextResponse.json(data);
 }

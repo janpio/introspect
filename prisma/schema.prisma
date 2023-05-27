@@ -57,7 +57,7 @@ model LearningMaterial {
   links                LearningMaterialLink[]
   learningListMaterial LearningListMaterial[]
 
-  @@unique([name, publisherName])
+  @@unique([name, publisherName, instructors])
 }
 
 model LearningMaterialLink {
