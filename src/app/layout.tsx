@@ -21,7 +21,7 @@ export default function RootLayout({
 }: RootLayoutProperties): JSX.Element {
   return (
     <ClerkProvider>
-      <html lang="en-US">
+      <html className="bg-indigo-950" lang="en-US">
         <body className={inter.className}>{children}</body>
       </html>
       <Analytics />

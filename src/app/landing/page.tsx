@@ -9,7 +9,7 @@ export default function Home(): JSX.Element {
   return (
     <main className="mx-2 grid h-96 place-items-center">
       <div className="w-96">
-        <h1 className="my-4 text-5xl font-bold italic text-blue-900">
+        <h1 className="my-4 text-5xl font-bold italic text-white">
           Introspect.dev
         </h1>
         <AnimatedText />

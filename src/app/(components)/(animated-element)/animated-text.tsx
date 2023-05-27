@@ -25,7 +25,10 @@ export function AnimatedText(): JSX.Element {
 
   return (
     <h1
-      className={twMerge('text-3xl font-semibold', styles['text-anim--slide'])}
+      className={twMerge(
+        'text-3xl text-white font-semibold',
+        styles['text-anim--slide'],
+      )}
     >
       <span
         className={twMerge(

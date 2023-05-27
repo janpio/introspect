@@ -33,7 +33,7 @@ export default async function Manage(): Promise<JSX.Element | null> {
   );
 
   return (
-    <div className="mx-auto my-4 grid max-w-7xl place-items-center">
+    <div className="grid place-items-center">
       <div className="grid w-full max-w-5xl gap-2">
         <CreateListForm clerkId={user.id} />
         {data.map(list => {

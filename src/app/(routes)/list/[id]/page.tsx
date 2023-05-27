@@ -24,7 +24,7 @@ export default async function ListPage({
   const isOwnedByCurrent = user?.id === data.creator.clerkId;
 
   return (
-    <div className="mx-auto my-4 grid max-w-7xl place-items-center">
+    <div className="grid place-items-center">
       {/* @ts-expect-error Component returns promise */}
       <ListCard
         creatorProfileImage={data.creator.profileImageUrl}
