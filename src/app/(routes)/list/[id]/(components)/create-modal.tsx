@@ -1,10 +1,8 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { debounce, isEmpty } from 'lodash';
 import { useRouter } from 'next/navigation';
-import type { ChangeEvent, JSX } from 'react';
-import { useState } from 'react';
+import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -15,10 +13,14 @@ import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 import { addMaterialToListReturnSchema } from '../../../../api/add-material-to-list/types';
-import type {
-  LearningMaterialIndex,
-  LearningMaterialSearchResponse,
-} from '../../../../api/material-search/types';
+import { CreateSearchBox } from './create-search-box';
+
+export type FormInputs = {
+  instructors: string;
+  links: string;
+  name: string;
+  publisherName: string;
+};
 
 type CreateModalProperties = {
   listId: string;
@@ -39,9 +41,6 @@ export function CreateModal({
 
   const [isOpen, toggleOpen] = useToggle(false);
   const [isLoading, toggleLoading] = useToggle(false);
-  const [searchResults, setSearchResults] = useState<LearningMaterialIndex[]>(
-    [],
-  );
 
   const formSchema = z
     .object({
@@ -69,6 +68,7 @@ export function CreateModal({
     });
 
   const {
+    setValue,
     handleSubmit,
     register,
     formState: { errors },
@@ -105,53 +105,11 @@ export function CreateModal({
     toggleOpen();
   };
 
-  const handleSearchMaterials = async (
-    event: ChangeEvent<HTMLInputElement>,
-  ): Promise<void> => {
-    if (isEmpty(event.target.value)) {
-      setSearchResults([]);
-      return;
-    }
-
-    const response = await fetch(
-      `${ROOT_URL}/api/material-search?search=${event.target.value}`,
-      {
-        credentials: 'same-origin',
-      },
-    );
-
-    const data = (await response.json()) as LearningMaterialSearchResponse;
-    setSearchResults(data.hits);
-  };
-
   return (
     <div>
       <Button onClick={toggleOpen}>Add to List</Button>
       <Modal isOpen={isOpen} toggleOpen={toggleOpen}>
-        <Input
-          label="Search"
-          name="search"
-          properties={{
-            input: { onChange: debounce(handleSearchMaterials, 100) },
-          }}
-        />
-        {!isEmpty(searchResults) && (
-          <div className="absolute z-10 grid w-96 gap-1 border-2 border-black bg-gray-300">
-            {searchResults.map(item => {
-              return (
-                <div
-                  className="cursor-pointer bg-white p-1 hover:bg-gray-300"
-                  key={item.id}
-                >
-                  <p>
-                    {item.name} -- {item.publisherName}
-                  </p>
-                  <p>{new Intl.ListFormat().format(item.instructors)}</p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        <CreateSearchBox setValue={setValue} />
         {/* @ts-expect-error handled by zod parse */}
         <form onSubmit={handleSubmit(handleCreateMaterial)}>
           <fieldset disabled={isLoading}>
