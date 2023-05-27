@@ -1,4 +1,4 @@
-import { SignUpButton, UserButton } from '@clerk/nextjs';
+import { SignInButton, UserButton } from '@clerk/nextjs';
 import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import type { JSX, ReactNode } from 'react';
@@ -32,10 +32,12 @@ export default async function Layout({
               </Link>
             </Button>
           )}
-          <Button className="px-2 py-1">
-            <SignUpButton>Sign Up/In</SignUpButton>
-          </Button>
-          <UserButton />
+          {user === null && (
+            <Button className="px-2 py-1">
+              <SignInButton>Sign In</SignInButton>
+            </Button>
+          )}
+          {user !== null && <UserButton />}
         </div>
       </nav>
       <main className="mx-auto max-w-7xl bg-white p-4">{children}</main>

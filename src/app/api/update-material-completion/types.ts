@@ -4,6 +4,7 @@ export const updateMaterialCompletionBody = z.object(
   {
     clerkId: z.string(),
     complete: z.boolean(),
+    listId: z.string(),
     materialId: z.string(),
   },
   { invalid_type_error: 'updateMaterialCompletionBody' },

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -43,6 +44,7 @@ export function MaterialCard({
   material,
   user,
 }: MaterialCardProperties): JSX.Element {
+  const router = useRouter();
   const [isDone, setIsDone] = useState(isComplete);
   const [canUpdate, setCanUpdate] = useState(true);
 
@@ -105,12 +107,14 @@ export function MaterialCard({
           body: JSON.stringify({
             clerkId: user.id,
             complete: Boolean(event.target.checked),
+            listId,
             materialId: material.id,
           }),
           credentials: 'same-origin',
           method: 'POST',
         },
       );
+      router.refresh();
     }
 
     setCanUpdate(true);
