@@ -13,7 +13,7 @@ export default async function ListPage(): Promise<JSX.Element> {
     `${ROOT_URL}/api/list-page`,
     {
       credentials: 'same-origin',
-      next: { revalidate: 86_400, tags: listPageTags() },
+      next: { tags: listPageTags() },
     },
   );
 

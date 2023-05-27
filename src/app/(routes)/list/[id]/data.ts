@@ -28,7 +28,6 @@ export const getListData = async (listId: string): GetListDataReturn => {
     {
       credentials: 'same-origin',
       next: {
-        revalidate: 86_400,
         tags: learningListTags(listId),
       },
     },

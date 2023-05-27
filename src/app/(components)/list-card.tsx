@@ -43,7 +43,6 @@ export async function ListCard({
       credentials: 'same-origin',
       method: 'GET',
       next: {
-        revalidate: 86_400,
         tags: listCardTags(listId),
       },
     },
