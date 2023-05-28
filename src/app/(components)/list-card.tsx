@@ -69,7 +69,7 @@ export async function ListCard({
         {listUpdatedAt && <time>Updated: {listUpdatedAt}</time>}
         {listCreatedAt && <time>Created: {listCreatedAt}</time>}
       </div>
-      <div className="grid gap-4 md:grid-cols-40px-40px">
+      <div className="grid grid-cols-[55px] gap-4 md:grid-cols-55px-55px">
         <div>
           {creatorProfileImage && (
             <Image
