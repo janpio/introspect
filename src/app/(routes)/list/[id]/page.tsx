@@ -39,7 +39,7 @@ export default async function ListPage({
         list={data}
         user={{
           id: user?.id,
-          profileImageUrl: user?.profileImageUrl,
+          imageUrl: user?.imageUrl,
           username: user?.username,
         }}
       />
@@ -50,7 +50,7 @@ export default async function ListPage({
             listLength={data.learningListMaterial.length}
             user={{
               id: user.id,
-              profileImageUrl: user.profileImageUrl,
+              profileImageUrl: user.imageUrl,
               username: user.username,
             }}
           />

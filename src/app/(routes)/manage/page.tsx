@@ -39,7 +39,7 @@ export default async function Manage(): Promise<JSX.Element | null> {
             <Fragment key={list.id}>
               {/* @ts-expect-error Returns promise */}
               <ListCard
-                creatorProfileImage={user.profileImageUrl}
+                creatorProfileImage={user.imageUrl}
                 creatorUsername={user.username}
                 listCreatedAt={DateTime.fromISO(list.createdAt).toRelative()}
                 listId={list.id}

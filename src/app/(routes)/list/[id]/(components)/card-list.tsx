@@ -18,7 +18,7 @@ type CardListProperties = {
   list: Awaited<ReturnType<typeof getListData>>['data'];
   user: {
     id?: string;
-    profileImageUrl?: string;
+    imageUrl?: string;
     username?: string | null;
   } | null;
 };
@@ -114,7 +114,7 @@ export function CardList({
               }
               user={{
                 id: user?.id,
-                profileImageUrl: user?.profileImageUrl,
+                profileImageUrl: user?.imageUrl,
                 username: user?.username,
               }}
             />
