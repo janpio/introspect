@@ -7,7 +7,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['images.clerk.dev', 'media.licdn.com', 'img.clerk.com']
+    domains: ['images.clerk.dev', 'avatars.githubusercontent.com', 'img.clerk.com']
   }
 }
 
