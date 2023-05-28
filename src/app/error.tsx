@@ -5,8 +5,8 @@ import type { JSX } from 'react';
 export default async function ErrorPage(): Promise<JSX.Element> {
   return (
     <main>
-      <div className="text-center">
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-red-900 sm:text-5xl">
+      <div className="text-center text-white">
+        <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">
           Error!
         </h1>
         <p className="mt-6 text-base leading-7">Something went wrong!</p>
