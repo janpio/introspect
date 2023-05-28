@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 import { isAuthenticated } from '../../../util/clerk';
-import { listCardTags } from '../../../util/tags';
+import { listCardTags, listPageTags } from '../../../util/tags';
 import type { FavoriteListReturn } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -35,6 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     },
   });
 
+  revalidateTag(listPageTags()[0]);
   revalidateTag(listCardTags(listId)[0]);
 
   return NextResponse.json(data);
