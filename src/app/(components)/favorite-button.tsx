@@ -48,7 +48,12 @@ export function FavoriteButton({
   };
 
   return (
-    <button disabled={isLoading} type="button" onClick={handleFavorite}>
+    <button
+      className="grid place-items-center"
+      disabled={isLoading}
+      type="button"
+      onClick={handleFavorite}
+    >
       <StarIcon
         className={twMerge(
           'h-14 w-14',

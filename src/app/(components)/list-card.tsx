@@ -69,7 +69,7 @@ export async function ListCard({
         {listUpdatedAt && <time>Updated: {listUpdatedAt}</time>}
         {listCreatedAt && <time>Created: {listCreatedAt}</time>}
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid gap-4 md:grid-cols-40px-40px">
         <div>
           {creatorProfileImage && (
             <Image
@@ -80,7 +80,7 @@ export async function ListCard({
               width={60}
             />
           )}
-          <p>{creatorUsername}</p>
+          <p className="text-center">{creatorUsername}</p>
         </div>
         <FavoriteButton
           clerkId={clerkUser?.id}

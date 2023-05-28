@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        '40px-40px': '55px 55px'
+      },
       animation: {
         marquee: 'marquee 3s linear infinite'
       },
