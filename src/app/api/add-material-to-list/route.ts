@@ -1,8 +1,11 @@
+import { constants } from 'node:http2';
+
 import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
+import { isAuthenticated } from '../../../util/clerk';
 import {
   LEARNING_MATERIAL_INDEX,
   type LearningMaterialSearchDocument,
@@ -12,6 +15,13 @@ import { learningListTags } from '../../../util/tags';
 import { addMaterialToListBodySchema } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  if ((await isAuthenticated()) === null) {
+    return NextResponse.json(
+      { error: 'Unauthenticated' },
+      { status: constants.HTTP_STATUS_UNAUTHORIZED },
+    );
+  }
+
   const { instructors, publisherName, name, links, listId, listLength } =
     addMaterialToListBodySchema.parse(await request.json());
 

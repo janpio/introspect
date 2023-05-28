@@ -3,15 +3,6 @@ import { NextResponse } from 'next/server';
 
 export default authMiddleware({
   afterAuth(auth, request) {
-    if (!auth.userId && request.method !== 'GET') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        {
-          status: 401,
-        },
-      );
-    }
-
     if (!auth.userId && !auth.isPublicRoute) {
       const landingPage = new URL('/landing', request.url);
       landingPage.searchParams.set('redirect_url', request.url);
