@@ -3,7 +3,6 @@ import type { JSX } from 'react';
 
 import { ListCard } from '../../../(components)/list-card';
 import { CardList } from './(components)/card-list';
-import { CreateModal } from './(components)/create-modal';
 import { getListData } from './data';
 
 type ListPageProperties = {
@@ -43,19 +42,6 @@ export default async function ListPage({
           username: user?.username,
         }}
       />
-      <div className="mx-auto my-4 max-w-5xl">
-        {isOwnedByCurrent && (
-          <CreateModal
-            listId={data.id}
-            listLength={data.learningListMaterial.length}
-            user={{
-              id: user.id,
-              profileImageUrl: user.imageUrl,
-              username: user.username,
-            }}
-          />
-        )}
-      </div>
     </div>
   );
 }

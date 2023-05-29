@@ -9,8 +9,10 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ROOT_URL } from '../../../../../util/constants';
 import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
+import { Toggle } from '../../../../(components)/(elements)/toggle';
 import { updateListOrderReturnSchema } from '../../../../api/update-list-order/types';
 import type { getListData } from '../data';
+import { CreateModal } from './create-modal';
 import { MaterialCard } from './material-card';
 
 type CardListProperties = {
@@ -28,6 +30,7 @@ export function CardList({
   list,
   user,
 }: CardListProperties): JSX.Element | null {
+  const [isEditing, toggleEditing] = useToggle(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, toggleLoading] = useToggle(false);
   const [cards, setCards] = useState(list?.learningListMaterial ?? []);
@@ -85,42 +88,67 @@ export function CardList({
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {isOwnedByCurrent && (
-        <Button
-          className="my-2"
-          disabled={isDisabled || isLoading}
-          onClick={handleUpdateListOrder}
-        >
-          Save List Order
-        </Button>
-      )}
-      <div className="grid w-full md:grid-cols-2 md:gap-2">
-        {cards.map((listMaterial, index) => {
-          const { learningMaterial, order } = listMaterial;
-          return (
-            <MaterialCard
-              findCard={findCard}
-              isOwnedByCurrent={isOwnedByCurrent}
-              key={learningMaterial.id}
-              listId={list.id}
-              listIndex={index}
-              material={learningMaterial}
-              moveCard={moveCard}
-              order={order}
-              isComplete={
-                learningMaterial.completedBy?.length === undefined ||
-                learningMaterial.completedBy.length > 0
-              }
-              user={{
-                id: user?.id,
-                profileImageUrl: user?.imageUrl,
-                username: user?.username,
-              }}
-            />
-          );
-        })}
+    <>
+      <DndProvider backend={HTML5Backend}>
+        {isOwnedByCurrent && (
+          <Toggle
+            isChecked={isEditing}
+            label="Edit Mode"
+            toggleChecked={(): void => {
+              toggleEditing();
+            }}
+          />
+        )}
+        {isOwnedByCurrent && isEditing && (
+          <Button
+            className="my-2"
+            disabled={isDisabled || isLoading}
+            onClick={handleUpdateListOrder}
+          >
+            Save List Order
+          </Button>
+        )}
+        <div className="grid w-full md:grid-cols-2 md:gap-2">
+          {cards.map((listMaterial, index) => {
+            const { learningMaterial, order } = listMaterial;
+            return (
+              <MaterialCard
+                findCard={findCard}
+                isEditing={isEditing}
+                isOwnedByCurrent={isOwnedByCurrent}
+                key={learningMaterial.id}
+                listId={list.id}
+                listIndex={index}
+                material={learningMaterial}
+                moveCard={moveCard}
+                order={order}
+                isComplete={
+                  learningMaterial.completedBy?.length === undefined ||
+                  learningMaterial.completedBy.length > 0
+                }
+                user={{
+                  id: user?.id,
+                  profileImageUrl: user?.imageUrl,
+                  username: user?.username,
+                }}
+              />
+            );
+          })}
+        </div>
+      </DndProvider>
+      <div className="mx-auto my-4 max-w-5xl">
+        {isOwnedByCurrent && isEditing && (
+          <CreateModal
+            listId={list.id}
+            listLength={list.learningListMaterial.length}
+            user={{
+              id: user?.id,
+              profileImageUrl: user?.imageUrl,
+              username: user?.username,
+            }}
+          />
+        )}
       </div>
-    </DndProvider>
+    </>
   );
 }

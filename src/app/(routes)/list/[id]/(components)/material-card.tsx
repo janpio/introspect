@@ -14,6 +14,7 @@ import { EditModal } from './edit-modal';
 type MaterialCardProperties = {
   findCard: (id: string) => { index: number };
   isComplete: boolean;
+  isEditing: boolean;
   isOwnedByCurrent: boolean;
   listId: string;
   listIndex: number;
@@ -35,6 +36,7 @@ type MaterialCardProperties = {
 
 export function MaterialCard({
   findCard,
+  isEditing,
   moveCard,
   order,
   isComplete,
@@ -158,7 +160,7 @@ export function MaterialCard({
           })}
         </div>
         <div className="my-4">
-          {isOwnedByCurrent && (
+          {isOwnedByCurrent && isEditing && (
             <div className="flex flex-wrap gap-2">
               <EditModal
                 listId={listId}
