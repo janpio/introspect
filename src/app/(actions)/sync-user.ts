@@ -1,6 +1,6 @@
 'use server';
-import type { User } from '@clerk/backend';
 import { currentUser } from '@clerk/nextjs';
+import type { User } from '@clerk/nextjs/server';
 
 import { prisma } from '../../prisma/database';
 
