@@ -132,7 +132,7 @@ export function MaterialCard({
     <div
       className={twMerge(
         'm-2 mx-auto flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm',
-        isOwnedByCurrent && 'cursor-move',
+        isOwnedByCurrent && isEditing && 'cursor-move',
         isDragging && 'opacity-0',
       )}
       ref={(node): ReturnType<typeof drag> | undefined => {
