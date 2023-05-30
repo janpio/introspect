@@ -54,9 +54,6 @@ export function MaterialCard({
 
   const [{ isDragging }, drag] = useDrag(() => {
     return {
-      canDrag(): boolean {
-        return isEditing;
-      },
       collect(monitor): { isDragging: boolean } {
         return {
           isDragging: monitor.isDragging(),
@@ -80,9 +77,6 @@ export function MaterialCard({
   const [, drop] = useDrop(() => {
     return {
       accept: 'card',
-      canDrop(): boolean {
-        return isEditing;
-      },
       hover({ order: order_ }: { order: string }): void {
         if (order_ !== String(order)) {
           const { index } = findCard(String(order));
@@ -136,7 +130,7 @@ export function MaterialCard({
         isDragging && 'opacity-0',
       )}
       ref={(node): ReturnType<typeof drag> | undefined => {
-        if (isOwnedByCurrent) {
+        if (isOwnedByCurrent && isEditing) {
           return drag(drop(node));
         }
       }}
