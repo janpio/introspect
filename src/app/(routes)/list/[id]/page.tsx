@@ -24,7 +24,6 @@ export default async function ListPage({
 
   return (
     <div className="grid place-items-center">
-      {/* @ts-expect-error Component returns promise */}
       <ListCard
         creatorProfileImage={data.creator.profileImageUrl}
         creatorUsername={data.creator.username}

@@ -37,7 +37,6 @@ export default async function Manage(): Promise<JSX.Element | null> {
         {data.map(list => {
           return (
             <Fragment key={list.id}>
-              {/* @ts-expect-error Returns promise */}
               <ListCard
                 creatorProfileImage={user.imageUrl}
                 creatorUsername={user.username}

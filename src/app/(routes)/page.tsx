@@ -25,7 +25,6 @@ export default async function ListPage(): Promise<JSX.Element> {
       <div className="grid place-items-center gap-2">
         {data.map(async list => {
           return (
-            // @ts-expect-error ListCard returns Promise
             <ListCard
               creatorProfileImage={list.creator.profileImageUrl}
               creatorUsername={list.creator.username}
