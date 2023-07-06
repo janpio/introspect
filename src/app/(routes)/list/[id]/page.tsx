@@ -11,6 +11,8 @@ type ListPageProperties = {
   };
 };
 
+export const revalidate = 60;
+
 export default async function ListPage({
   params,
 }: ListPageProperties): Promise<JSX.Element | null> {

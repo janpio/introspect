@@ -5,8 +5,6 @@ import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
 import type { JSX } from 'react';
 
-export const revalidate = 60;
-
 const inter = Inter({ subsets: ['latin'] });
 
 type RootLayoutProperties = {

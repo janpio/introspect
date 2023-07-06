@@ -7,6 +7,8 @@ import { zodFetch } from '../../util/zod';
 import { ListCard } from '../(components)/list-card';
 import { listPageReturnSchema } from '../api/list-page/types';
 
+export const revalidate = 60;
+
 export default async function ListPage(): Promise<JSX.Element> {
   const data = await zodFetch(
     listPageReturnSchema,
