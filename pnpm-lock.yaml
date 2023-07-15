@@ -9,8 +9,8 @@ dependencies:
     specifier: ^4.21.15
     version: 4.21.15(next@13.4.10)(react-dom@18.2.0)(react@18.2.0)
   '@ethang/hooks':
-    specifier: ^1.1.11
-    version: 1.1.11(react@18.2.0)
+    specifier: ^1.1.12
+    version: 1.1.12(react@18.2.0)
   '@headlessui/react':
     specifier: ^1.7.15
     version: 1.7.15(react-dom@18.2.0)(react@18.2.0)
@@ -63,8 +63,8 @@ dependencies:
     specifier: 8.45.0
     version: 8.45.0
   eslint-config-ethang:
-    specifier: ^6.5.0
-    version: 6.5.0(eslint@8.45.0)(prettier@3.0.0)(tailwindcss@3.3.3)(typescript@5.1.6)
+    specifier: ^6.5.1
+    version: 6.5.1(eslint@8.45.0)(prettier@3.0.0)(tailwindcss@3.3.3)(typescript@5.1.6)
   eslint-config-next:
     specifier: 13.4.10
     version: 13.4.10(eslint@8.45.0)(typescript@5.1.6)
@@ -282,8 +282,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@ethang/hooks@1.1.11(react@18.2.0):
-    resolution: {integrity: sha512-aPoKE10nktUzISx3JiMSuYHJMIo99Vv7ASckeSW0NkmttXGwL0BVcnTj/TXjCjEX4PvlqRhgbEvyypJEiVPwXw==}
+  /@ethang/hooks@1.1.12(react@18.2.0):
+    resolution: {integrity: sha512-XBPuweT1R68BzzXluUPnqeYLB6XxIaADCzQAvXPWkHSQkC1MwDAag+TUokpsfAbs/uLimkRt1vG8rHzjbmNpaA==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
@@ -495,14 +495,14 @@ packages:
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.2
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /@peculiar/json-schema@1.1.12:
     resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
     engines: {node: '>=8.0.0'}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /@peculiar/webcrypto@1.4.1:
@@ -512,7 +512,7 @@ packages:
       '@peculiar/asn1-schema': 2.3.6
       '@peculiar/json-schema': 1.1.12
       pvtsutils: 1.3.2
-      tslib: 2.4.1
+      tslib: 2.6.0
       webcrypto-core: 1.7.7
     dev: false
 
@@ -1156,7 +1156,7 @@ packages:
     dependencies:
       pvtsutils: 1.3.2
       pvutils: 1.1.3
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /ast-types-flow@0.0.7:
@@ -1175,7 +1175,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.9
-      caniuse-lite: 1.0.30001504
+      caniuse-lite: 1.0.30001516
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1239,7 +1239,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001504
+      caniuse-lite: 1.0.30001516
       electron-to-chromium: 1.4.434
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.9)
@@ -1305,10 +1305,6 @@ packages:
   /camelcase@5.3.1:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
-    dev: false
-
-  /caniuse-lite@1.0.30001504:
-    resolution: {integrity: sha512-5uo7eoOp2mKbWyfMXnGO9rJWOGU8duvzEiYITW+wivukL7yHH4gX9yuRaobu6El4jPxo6jKZfG+N6fB621GD/Q==}
     dev: false
 
   /caniuse-lite@1.0.30001516:
@@ -1569,7 +1565,7 @@ packages:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /dotenv@16.3.1:
@@ -1700,8 +1696,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /eslint-config-ethang@6.5.0(eslint@8.45.0)(prettier@3.0.0)(tailwindcss@3.3.3)(typescript@5.1.6):
-    resolution: {integrity: sha512-NW7tNtw16KUFoHFmU2I+eQqvdLcD/Sgs7QySmzqeSS9iDDGR4SmErXPqQRirXdsaPgnZ2owytVzO0Bohu44C/w==}
+  /eslint-config-ethang@6.5.1(eslint@8.45.0)(prettier@3.0.0)(tailwindcss@3.3.3)(typescript@5.1.6):
+    resolution: {integrity: sha512-dOzit+XlMAu1kHBE1UlqEp/nYuBbEzlWC7dl6IBL9jeovbxbLn+0CXnr16GseHo1GtyB1frfoHFuKpKtcvk5yQ==}
     peerDependencies:
       eslint: ^8.44.0
       prettier: ^3.0.0
@@ -2951,7 +2947,7 @@ packages:
       jws: 3.2.2
       lodash: 4.17.21
       ms: 2.1.3
-      semver: 7.5.3
+      semver: 7.5.4
     dev: false
 
   /jsx-ast-utils@3.3.4:
@@ -3062,7 +3058,7 @@ packages:
   /lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /lru-cache@6.0.0:
@@ -3258,7 +3254,7 @@ packages:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /node-fetch-native@1.0.1:
@@ -3760,7 +3756,7 @@ packages:
   /pvtsutils@1.3.2:
     resolution: {integrity: sha512-+Ipe2iNUyrZz+8K/2IOo+kKikdtfhRKzNpQbruF2URmqPtoqAs8g3xS7TJvFF2GcPXjh7DkqMnpVveRFq4PgEQ==}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /pvutils@1.1.3:
@@ -4008,14 +4004,6 @@ packages:
     hasBin: true
     dev: false
 
-  /semver@7.5.3:
-    resolution: {integrity: sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      lru-cache: 6.0.0
-    dev: false
-
   /semver@7.5.4:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
     engines: {node: '>=10'}
@@ -4062,7 +4050,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /snakecase-keys@3.2.1:
@@ -4568,7 +4556,7 @@ packages:
       '@peculiar/json-schema': 1.1.12
       asn1js: 3.0.5
       pvtsutils: 1.3.2
-      tslib: 2.4.1
+      tslib: 2.6.0
     dev: false
 
   /webidl-conversions@3.0.1:
