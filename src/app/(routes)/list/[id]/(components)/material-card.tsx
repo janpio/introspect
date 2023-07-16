@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
-import type { ChangeEvent, JSX } from 'react';
+import type { JSX } from 'react';
 import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { twMerge } from 'tailwind-merge';
@@ -95,8 +95,8 @@ export function MaterialCard({
   });
 
   const { isLoading, mutate } = useMutation({
-    async mutationFn(event: ChangeEvent<HTMLInputElement>) {
-      setIsDone(Boolean(event.target.checked));
+    async mutationFn(complete: boolean) {
+      setIsDone(complete);
       if (user?.id) {
         await zodFetch(
           updateMaterialCompletionReturn,
@@ -104,8 +104,7 @@ export function MaterialCard({
           {
             body: JSON.stringify({
               clerkId: user.id,
-              complete: Boolean(event.target.checked),
-              listId,
+              complete,
               materialId: material.id,
             }),
             credentials: 'same-origin',
@@ -181,16 +180,18 @@ export function MaterialCard({
           <input
             aria-label="Mark material as complete"
             checked={isDone}
-            disabled={!isLoading}
+            disabled={isLoading}
             id={`done-${order}`}
             name={`done-${order}`}
             type="checkbox"
             value={String(isDone)}
             className={twMerge(
               'mb-4 h-6 w-6 rounded text-green-500',
-              isLoading ? 'cursor-pointer' : 'bg-gray-200 opacity-50',
+              isLoading ? 'bg-gray-200 opacity-50' : 'cursor-pointer',
             )}
-            onChange={mutate}
+            onChange={(): void => {
+              mutate(!isDone);
+            }}
           />
         )}
       </div>

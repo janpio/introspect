@@ -61,7 +61,7 @@ export function ListCard({
 
   const { data } = useQuery({
     cacheTime: DEFAULT_CACHE_TIME,
-    enabled: user?.id !== undefined,
+    enabled: typeof user?.id === 'string',
     async queryFn() {
       const response = await fetch(
         `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,

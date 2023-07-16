@@ -133,6 +133,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
         <div className="grid w-full md:grid-cols-2 md:gap-2">
           {cards.map((listMaterial, index) => {
             const { learningMaterial, order } = listMaterial;
+
             return (
               <MaterialCard
                 findCard={findCard}
@@ -145,7 +146,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
                 moveCard={moveCard}
                 order={order}
                 isComplete={
-                  learningMaterial.completedBy?.length === undefined ||
+                  learningMaterial.completedBy !== undefined &&
                   learningMaterial.completedBy.length > 0
                 }
                 user={{

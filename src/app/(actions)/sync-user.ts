@@ -7,8 +7,8 @@ export async function syncCurrentUser(): Promise<void> {
   currentUser()
     .then(user => {
       if (user) {
-        try {
-          prisma.person.upsert({
+        prisma.person
+          .upsert({
             create: {
               clerkId: user.id,
               profileImageUrl: user.imageUrl,
@@ -21,10 +21,10 @@ export async function syncCurrentUser(): Promise<void> {
             where: {
               clerkId: user.id,
             },
+          })
+          .catch(error => {
+            console.error(error);
           });
-        } catch (error) {
-          console.error(error);
-        }
       }
     })
     .catch(error => {

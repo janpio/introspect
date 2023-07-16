@@ -1,3 +1,4 @@
+import { currentUser } from '@clerk/nextjs';
 import type { PrismaPromise } from '@prisma/client';
 import { isNil } from 'lodash';
 import type { NextRequest } from 'next/server';
@@ -6,7 +7,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '../../../prisma/database';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const clerkId = request.nextUrl.searchParams.get('clerkId');
+  const user = await currentUser();
   const listId = request.nextUrl.searchParams.get('listId');
 
   if (isNil(listId)) {
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }),
   ];
 
-  if (!isNil(clerkId)) {
+  if (!isNil(user?.id)) {
     promises = [
       ...promises,
       prisma.person.findUnique({
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             where: { id: listId },
           },
         },
-        where: { clerkId },
+        where: { clerkId: user?.id },
       }),
     ];
   }

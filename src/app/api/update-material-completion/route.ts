@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 import { isAuthenticated } from '../../../util/clerk';
-import { learningListTags } from '../../../util/tags';
 import { updateMaterialCompletionBody } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -16,8 +15,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { clerkId, materialId, complete, listId } =
-    updateMaterialCompletionBody.parse(await request.json());
+  const { clerkId, materialId, complete } = updateMaterialCompletionBody.parse(
+    await request.json(),
+  );
 
   const relation = complete
     ? { connect: { id: materialId } }
@@ -36,8 +36,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       clerkId,
     },
   });
-
-  learningListTags(listId);
 
   return NextResponse.json(result);
 }
