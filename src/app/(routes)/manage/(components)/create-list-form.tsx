@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { ROOT_URL } from '../../../../util/constants';
-import { manageListsTags } from '../../../../util/tags';
+import { listPageTags, manageListsTags } from '../../../../util/tags';
 import { zodFetch } from '../../../../util/zod';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
@@ -40,10 +40,12 @@ export function CreateListForm({
         method: 'POST',
       });
 
+      await Promise.all([
+        queryClient.invalidateQueries(manageListsTags(clerkId)),
+        queryClient.invalidateQueries(listPageTags()),
+      ]);
+
       reset();
-    },
-    async onSuccess() {
-      queryClient.invalidateQueries(manageListsTags(clerkId));
     },
   });
 

@@ -1,12 +1,10 @@
 import { constants } from 'node:http2';
 
-import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 import { isAuthenticated } from '../../../util/clerk';
-import { listCardTags, listPageTags } from '../../../util/tags';
 import type { FavoriteListReturn } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -34,9 +32,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       id: listId,
     },
   });
-
-  revalidateTag(listPageTags()[0]);
-  revalidateTag(listCardTags(listId)[0]);
 
   return NextResponse.json(data);
 }

@@ -37,10 +37,8 @@ export function DeleteModal({
           method: 'POST',
         },
       );
-      toggleOpen();
-    },
-    async onSuccess() {
       await queryClient.invalidateQueries(learningListTags(listId));
+      toggleOpen();
     },
   });
 

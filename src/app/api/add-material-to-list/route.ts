@@ -1,17 +1,10 @@
 import { constants } from 'node:http2';
 
-import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 import { isAuthenticated } from '../../../util/clerk';
-import {
-  LEARNING_MATERIAL_INDEX,
-  type LearningMaterialSearchDocument,
-  meilisearchAdmin,
-} from '../../../util/meilisearch';
-import { learningListTags, listPageTags } from '../../../util/tags';
 import { addMaterialToListBodySchema } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -86,25 +79,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     learningListUpdate,
     createMaterial,
   ]);
-
-  const document: LearningMaterialSearchDocument = {
-    id: returnData[1].id,
-    instructors: returnData[1].instructors.join(','),
-    links: returnData[1].links
-      .map(link => {
-        return link.url;
-      })
-      .join(','),
-    name: returnData[1].name,
-    publisherName: returnData[1].publisherName,
-  };
-
-  await meilisearchAdmin()
-    .index(LEARNING_MATERIAL_INDEX)
-    .addDocuments([document]);
-
-  revalidateTag(listPageTags()[0]);
-  revalidateTag(learningListTags(listId)[0]);
 
   return NextResponse.json({ id: returnData[1].id });
 }

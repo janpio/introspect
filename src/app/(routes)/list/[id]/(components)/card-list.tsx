@@ -2,7 +2,7 @@
 import { useUser } from '@clerk/nextjs';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { isEmpty, isNil } from 'lodash';
+import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -78,9 +78,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
   });
 
   useEffect(() => {
-    if (isEmpty(cards)) {
-      setCards(data?.learningListMaterial ?? []);
-    }
+    setCards(data?.learningListMaterial ?? []);
   }, [cards, data?.learningListMaterial]);
 
   if (isNil(data)) {

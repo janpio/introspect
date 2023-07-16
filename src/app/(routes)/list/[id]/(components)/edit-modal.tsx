@@ -60,7 +60,6 @@ export function EditModal({
       return {
         ...data,
         id: material.id,
-        listId,
       };
     });
 
@@ -92,10 +91,9 @@ export function EditModal({
         );
       }
 
-      toggleOpen();
-    },
-    async onSuccess() {
       await queryClient.invalidateQueries(learningListTags(listId));
+
+      toggleOpen();
     },
   });
 

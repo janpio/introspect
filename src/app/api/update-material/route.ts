@@ -1,17 +1,10 @@
 import { constants } from 'node:http2';
 
-import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 import { isAuthenticated } from '../../../util/clerk';
-import {
-  LEARNING_MATERIAL_INDEX,
-  type LearningMaterialSearchDocument,
-  meilisearchAdmin,
-} from '../../../util/meilisearch';
-import { learningListTags } from '../../../util/tags';
 import { updateMaterialBodySchema } from './types';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -22,7 +15,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { id, instructors, links, publisherName, courseName, listId } =
+  const { id, instructors, links, publisherName, courseName } =
     updateMaterialBodySchema.parse(await request.json());
 
   const learningMaterial = await prisma.learningMaterial.update({
@@ -58,30 +51,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     },
   });
 
-  const materialDocument: LearningMaterialSearchDocument = {
-    id: learningMaterial.id,
-    instructors: learningMaterial.instructors.join(','),
-    links: learningMaterial.links
-      .map(link => {
-        return link.url;
-      })
-      .join(','),
-    name: learningMaterial.name,
-    publisherName: learningMaterial.publisherName,
-  };
-
-  await Promise.all([
-    prisma.learningMaterialLink.deleteMany({
-      where: {
-        learningMaterialId: null,
-      },
-    }),
-    meilisearchAdmin()
-      .index(LEARNING_MATERIAL_INDEX)
-      .addDocuments([materialDocument]),
-  ]);
-
-  revalidateTag(learningListTags(listId)[0]);
+  await prisma.learningMaterialLink.deleteMany({
+    where: {
+      learningMaterialId: null,
+    },
+  });
 
   return NextResponse.json({ id: learningMaterial.id });
 }

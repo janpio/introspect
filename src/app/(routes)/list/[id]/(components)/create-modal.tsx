@@ -15,7 +15,6 @@ import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
 import { addMaterialToListReturnSchema } from '../../../../api/add-material-to-list/types';
-import { CreateSearchBox } from './create-search-box';
 
 export type FormInputs = {
   instructors: string;
@@ -67,7 +66,6 @@ export function CreateModal({
     });
 
   const {
-    setValue,
     handleSubmit,
     register,
     formState: { errors },
@@ -96,10 +94,9 @@ export function CreateModal({
         );
       }
 
-      reset();
-    },
-    async onSuccess() {
       await queryClient.invalidateQueries(learningListTags(listId));
+      toggleOpen();
+      reset();
     },
   });
 
@@ -107,7 +104,6 @@ export function CreateModal({
     <div>
       <Button onClick={toggleOpen}>Add to List</Button>
       <Modal isOpen={isOpen} toggleOpen={toggleOpen}>
-        <CreateSearchBox setValue={setValue} />
         <form
           onSubmit={handleSubmit(data => {
             // @ts-expect-error handled by schema transform

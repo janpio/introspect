@@ -6,7 +6,6 @@ export const updateMaterialBodySchema = z.object(
     id: z.string(),
     instructors: z.array(z.string()),
     links: z.array(z.string()),
-    listId: z.string(),
     publisherName: z.string(),
   },
   { invalid_type_error: 'updateMaterialBody' },
