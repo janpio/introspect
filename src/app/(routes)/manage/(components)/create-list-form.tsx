@@ -1,15 +1,16 @@
 'use client';
-import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { ROOT_URL } from '../../../../util/constants';
+import { manageListsTags } from '../../../../util/tags';
 import { zodFetch } from '../../../../util/zod';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
+import { queryClient } from '../../../(components)/providers';
 import { createListReturnSchema } from '../../../api/create-list/types';
 
 type CreateListFormProperties = {
@@ -23,31 +24,35 @@ const formSchema = z.object({
 export function CreateListForm({
   clerkId,
 }: CreateListFormProperties): JSX.Element {
-  const router = useRouter();
-  const [isLoading, toggleLoading] = useToggle(false);
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { name: '' },
     resolver: zodResolver(formSchema),
   });
 
-  const handleCreateList = async (data: { name: string }): Promise<void> => {
-    toggleLoading();
-    await zodFetch(createListReturnSchema, `${ROOT_URL}/api/create-list`, {
-      body: JSON.stringify({
-        ...data,
-        clerkId,
-      }),
-      credentials: 'same-origin',
-      method: 'POST',
-    });
+  const { isLoading, mutate } = useMutation({
+    async mutationFn(data: { name: string }) {
+      await zodFetch(createListReturnSchema, `${ROOT_URL}/api/create-list`, {
+        body: JSON.stringify({
+          ...data,
+          clerkId,
+        }),
+        credentials: 'same-origin',
+        method: 'POST',
+      });
 
-    reset();
-    router.refresh();
-    toggleLoading();
-  };
+      reset();
+    },
+    async onSuccess() {
+      queryClient.invalidateQueries(manageListsTags(clerkId));
+    },
+  });
 
   return (
-    <form onSubmit={handleSubmit(handleCreateList)}>
+    <form
+      onSubmit={handleSubmit(data => {
+        return mutate(data);
+      })}
+    >
       <fieldset disabled={isLoading}>
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <Input

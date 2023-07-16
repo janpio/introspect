@@ -1,17 +1,19 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { ROOT_URL } from '../../../../../util/constants';
+import { learningListTags } from '../../../../../util/tags';
 import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
+import { queryClient } from '../../../../(components)/providers';
 import { addMaterialToListReturnSchema } from '../../../../api/add-material-to-list/types';
 import { CreateSearchBox } from './create-search-box';
 
@@ -37,10 +39,7 @@ export function CreateModal({
   listId,
   user,
 }: CreateModalProperties): JSX.Element {
-  const router = useRouter();
-
   const [isOpen, toggleOpen] = useToggle(false);
-  const [isLoading, toggleLoading] = useToggle(false);
 
   const formSchema = z
     .object({
@@ -83,35 +82,38 @@ export function CreateModal({
     resolver: zodResolver(formSchema),
   });
 
-  const handleCreateMaterial = async (
-    data: z.output<typeof formSchema>,
-  ): Promise<void> => {
-    toggleLoading();
-    if (user?.id) {
-      await zodFetch(
-        addMaterialToListReturnSchema,
-        `${ROOT_URL}/api/add-material-to-list`,
-        {
-          body: JSON.stringify(data),
-          credentials: 'same-origin',
-          method: 'POST',
-        },
-      );
-    }
+  const { isLoading, mutate } = useMutation({
+    async mutationFn(data: z.output<typeof formSchema>) {
+      if (user?.id) {
+        await zodFetch(
+          addMaterialToListReturnSchema,
+          `${ROOT_URL}/api/add-material-to-list`,
+          {
+            body: JSON.stringify(data),
+            credentials: 'same-origin',
+            method: 'POST',
+          },
+        );
+      }
 
-    reset();
-    router.refresh();
-    toggleLoading();
-    toggleOpen();
-  };
+      reset();
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(learningListTags(listId));
+    },
+  });
 
   return (
     <div>
       <Button onClick={toggleOpen}>Add to List</Button>
       <Modal isOpen={isOpen} toggleOpen={toggleOpen}>
         <CreateSearchBox setValue={setValue} />
-        {/* @ts-expect-error handled by zod parse */}
-        <form onSubmit={handleSubmit(handleCreateMaterial)}>
+        <form
+          onSubmit={handleSubmit(data => {
+            // @ts-expect-error handled by schema transform
+            return mutate(data);
+          })}
+        >
           <fieldset disabled={isLoading}>
             <Input
               error={errors.name?.message}

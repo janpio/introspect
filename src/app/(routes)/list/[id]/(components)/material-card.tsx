@@ -1,5 +1,5 @@
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -46,9 +46,7 @@ export function MaterialCard({
   material,
   user,
 }: MaterialCardProperties): JSX.Element {
-  const router = useRouter();
   const [isDone, setIsDone] = useState(isComplete);
-  const [canUpdate, setCanUpdate] = useState(true);
 
   const originalIndex = findCard(String(order)).index;
 
@@ -96,31 +94,27 @@ export function MaterialCard({
     };
   });
 
-  const handleMarkAsDone = async (
-    event: ChangeEvent<HTMLInputElement>,
-  ): Promise<void> => {
-    setIsDone(Boolean(event.target.checked));
-    setCanUpdate(false);
-    if (user?.id) {
-      await zodFetch(
-        updateMaterialCompletionReturn,
-        `${ROOT_URL}/api/update-material-completion`,
-        {
-          body: JSON.stringify({
-            clerkId: user.id,
-            complete: Boolean(event.target.checked),
-            listId,
-            materialId: material.id,
-          }),
-          credentials: 'same-origin',
-          method: 'POST',
-        },
-      );
-      router.refresh();
-    }
-
-    setCanUpdate(true);
-  };
+  const { isLoading, mutate } = useMutation({
+    async mutationFn(event: ChangeEvent<HTMLInputElement>) {
+      setIsDone(Boolean(event.target.checked));
+      if (user?.id) {
+        await zodFetch(
+          updateMaterialCompletionReturn,
+          `${ROOT_URL}/api/update-material-completion`,
+          {
+            body: JSON.stringify({
+              clerkId: user.id,
+              complete: Boolean(event.target.checked),
+              listId,
+              materialId: material.id,
+            }),
+            credentials: 'same-origin',
+            method: 'POST',
+          },
+        );
+      }
+    },
+  });
 
   return (
     <div
@@ -187,16 +181,16 @@ export function MaterialCard({
           <input
             aria-label="Mark material as complete"
             checked={isDone}
-            disabled={!canUpdate}
+            disabled={!isLoading}
             id={`done-${order}`}
             name={`done-${order}`}
             type="checkbox"
             value={String(isDone)}
             className={twMerge(
               'mb-4 h-6 w-6 rounded text-green-500',
-              canUpdate ? 'cursor-pointer' : 'bg-gray-200 opacity-50',
+              isLoading ? 'cursor-pointer' : 'bg-gray-200 opacity-50',
             )}
-            onChange={handleMarkAsDone}
+            onChange={mutate}
           />
         )}
       </div>

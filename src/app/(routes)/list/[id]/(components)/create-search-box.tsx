@@ -1,4 +1,5 @@
 import { Combobox } from '@headlessui/react';
+import { useQuery } from '@tanstack/react-query';
 import { debounce, isEmpty, map } from 'lodash';
 import type { ChangeEvent, JSX } from 'react';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ type CreateSearchBoxProperties = {
 export function CreateSearchBox({
   setValue,
 }: CreateSearchBoxProperties): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>();
   const [selectedSearchResult, setSelectedSearchResult] =
     useState<LearningMaterialSearchDocument>({
       id: '',
@@ -33,15 +35,15 @@ export function CreateSearchBox({
     setSearchResults([]);
   };
 
-  const handleSearchMaterials = debounce(
-    async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
-      if (isEmpty(event.target.value)) {
+  useQuery({
+    async queryFn() {
+      if (isEmpty(searchTerm)) {
         emptySearch();
         return;
       }
 
       const response = await fetch(
-        `${ROOT_URL}/api/material-search?search=${event.target.value}`,
+        `${ROOT_URL}/api/material-search?search=${searchTerm}`,
         {
           credentials: 'same-origin',
         },
@@ -49,6 +51,13 @@ export function CreateSearchBox({
 
       const data = (await response.json()) as LearningMaterialSearchResponse;
       setSearchResults(data.hits);
+    },
+    queryKey: [searchTerm],
+  });
+
+  const handleSearchMaterials = debounce(
+    async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
+      setSearchTerm(event.target.value);
     },
     300,
   );

@@ -1,12 +1,14 @@
 'use client';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { StarIcon } from '@heroicons/react/24/solid';
-import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ROOT_URL } from '../../util/constants';
+import { listCardTags } from '../../util/tags';
+import { queryClient } from './providers';
 
 type FavoriteButtonProperties = {
   clerkId?: string | null;
@@ -21,14 +23,11 @@ export function FavoriteButton({
   favoritedCount,
   listId,
 }: FavoriteButtonProperties): JSX.Element {
-  const router = useRouter();
-  const [isLoading, toggleLoading] = useToggle(false);
   const [isFavorite, toggleFavorite] = useToggle(hasUserFavorited);
   const [clientCount, setClientCount] = useState(favoritedCount ?? 0);
 
-  const handleFavorite = async (): Promise<void> => {
-    if (clerkId) {
-      toggleLoading();
+  const { isLoading, mutate } = useMutation({
+    async mutationFn() {
       toggleFavorite();
       setClientCount(clientCount_ => {
         return isFavorite ? clientCount_ - 1 : clientCount_ + 1;
@@ -42,17 +41,20 @@ export function FavoriteButton({
         credentials: 'same-origin',
         method: 'POST',
       });
-      router.refresh();
-      toggleLoading();
-    }
-  };
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries(listCardTags(listId));
+    },
+  });
 
   return (
     <button
       className="grid place-items-center"
       disabled={isLoading}
       type="button"
-      onClick={handleFavorite}
+      onClick={(): void => {
+        return mutate();
+      }}
     >
       <StarIcon
         className={twMerge(

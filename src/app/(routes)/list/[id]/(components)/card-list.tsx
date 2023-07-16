@@ -1,7 +1,7 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
 import { useToggle } from '@ethang/hooks/use-toggle';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { isEmpty, isNil } from 'lodash';
 import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
@@ -32,8 +32,6 @@ type CardListProperties = {
 export function CardList({ listId }: CardListProperties): JSX.Element | null {
   const { user } = useUser();
   const [isEditing, toggleEditing] = useToggle(false);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isLoading, toggleLoading] = useToggle(false);
   const [cards, setCards] = useState<LearningListMaterialsFromQuery>([]);
 
   const { data } = useQuery({
@@ -58,6 +56,25 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
     queryKey: learningListTags(listId),
     staleTime: DEFAULT_STALE_TIME,
     suspense: true,
+  });
+
+  const { isLoading, mutate } = useMutation({
+    async mutationFn() {
+      if (data?.id) {
+        await zodFetch(
+          updateListOrderReturnSchema,
+          `${ROOT_URL}/api/update-list-order`,
+          {
+            body: JSON.stringify({
+              list: cards,
+              listId: data?.id,
+            }),
+            credentials: 'same-origin',
+            method: 'POST',
+          },
+        );
+      }
+    },
   });
 
   useEffect(() => {
@@ -90,28 +107,6 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
         ? [...newCards.slice(0, atIndex), card, ...newCards.slice(atIndex)]
         : [...newCards.slice(0, atIndex), ...newCards.slice(atIndex)],
     );
-    setIsDisabled(false);
-  };
-
-  const handleUpdateListOrder = async (): Promise<void> => {
-    toggleLoading();
-    if (data?.id) {
-      await zodFetch(
-        updateListOrderReturnSchema,
-        `${ROOT_URL}/api/update-list-order`,
-        {
-          body: JSON.stringify({
-            list: cards,
-            listId: data?.id,
-          }),
-          credentials: 'same-origin',
-          method: 'POST',
-        },
-      );
-      setIsDisabled(true);
-    }
-
-    toggleLoading();
   };
 
   return (
@@ -129,8 +124,10 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
         {isOwnedByCurrent && isEditing && (
           <Button
             className="my-2"
-            disabled={isDisabled || isLoading}
-            onClick={handleUpdateListOrder}
+            disabled={isLoading}
+            onClick={(): void => {
+              return mutate();
+            }}
           >
             Save List Order
           </Button>
