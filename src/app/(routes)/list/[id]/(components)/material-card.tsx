@@ -1,3 +1,4 @@
+import { useUser } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import type { JSX } from 'react';
@@ -27,11 +28,6 @@ type MaterialCardProperties = {
   };
   moveCard: (id: string, to: number) => void;
   order: number;
-  user: {
-    id?: string;
-    profileImageUrl?: string;
-    username?: string | null;
-  } | null;
 };
 
 export function MaterialCard({
@@ -44,8 +40,8 @@ export function MaterialCard({
   listId,
   listIndex,
   material,
-  user,
 }: MaterialCardProperties): JSX.Element {
+  const { user } = useUser();
   const [isDone, setIsDone] = useState(isComplete);
 
   const originalIndex = findCard(String(order)).index;

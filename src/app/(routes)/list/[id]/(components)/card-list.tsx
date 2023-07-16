@@ -149,11 +149,6 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
                   learningMaterial.completedBy !== undefined &&
                   learningMaterial.completedBy.length > 0
                 }
-                user={{
-                  id: user?.id,
-                  profileImageUrl: user?.imageUrl,
-                  username: user?.username,
-                }}
               />
             );
           })}

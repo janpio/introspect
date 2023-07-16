@@ -1,3 +1,4 @@
+import { currentUser } from '@clerk/nextjs';
 import { isNil } from 'lodash';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -5,19 +6,19 @@ import { NextResponse } from 'next/server';
 import { prisma } from '../../../prisma/database';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const clerkId = request.nextUrl.searchParams.get('clerkId');
+  const user = await currentUser();
   const listId = request.nextUrl.searchParams.get('listId');
 
   if (isNil(listId)) {
     return NextResponse.json({ error: 'Invalid parameters.' });
   }
 
-  const getCompletedBy = isNil(clerkId)
+  const getCompletedBy = isNil(user?.id)
     ? false
     : {
         select: { id: true },
         where: {
-          clerkId,
+          clerkId: user?.id,
         },
       };
 
