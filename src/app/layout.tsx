@@ -5,6 +5,8 @@ import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
 import type { JSX, ReactNode } from 'react';
 
+import { Providers } from './(components)/providers';
+
 const inter = Inter({ subsets: ['latin'] });
 
 type RootLayoutProperties = {
@@ -20,11 +22,13 @@ export default function RootLayout({
   children,
 }: RootLayoutProperties): JSX.Element {
   return (
-    <ClerkProvider>
-      <html className="bg-indigo-950" lang="en-US">
-        <body className={inter.className}>{children}</body>
-      </html>
-      <Analytics />
-    </ClerkProvider>
+    <Providers>
+      <ClerkProvider>
+        <html className="bg-indigo-950" lang="en-US">
+          <body className={inter.className}>{children}</body>
+        </html>
+        <Analytics />
+      </ClerkProvider>
+    </Providers>
   );
 }

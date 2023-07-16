@@ -1,56 +1,85 @@
-import { currentUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
+import { useQuery } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { ROOT_URL } from '../../util/constants';
-import { listCardTags } from '../../util/tags';
+import {
+  DEFAULT_CACHE_TIME,
+  DEFAULT_STALE_TIME,
+  ROOT_URL,
+} from '../../util/constants';
+import { learningListTags, listCardTags } from '../../util/tags';
+import { zodFetch } from '../../util/zod';
+import { learningListReturnSchema } from '../api/learning-list/types';
 import type { ListCardReturn } from '../api/list-card/types';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
   containerClassname?: string;
-  creatorProfileImage: string | null;
-  creatorUsername: string | null;
-  listCreatedAt: string | null;
   listId: string;
-  listName: string;
-  listUpdatedAt: string | null;
 };
 
-export async function ListCard({
+export function ListCard({
   containerClassname,
-  creatorProfileImage,
-  creatorUsername,
-  listCreatedAt,
   listId,
-  listName,
-  listUpdatedAt,
-}: ListCardProperties): Promise<JSX.Element> {
-  const clerkUser = await currentUser();
+}: ListCardProperties): JSX.Element {
+  const { user } = useUser();
 
   const searchParameters = new URLSearchParams({
     listId,
   });
-  if (clerkUser?.id) {
-    searchParameters.append('clerkId', clerkUser.id);
+  if (user?.id) {
+    searchParameters.append('clerkId', user.id);
   }
 
-  const response = await fetch(
-    `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,
-    {
-      credentials: 'same-origin',
-      method: 'GET',
-      next: {
-        tags: listCardTags(listId),
-      },
-    },
-  );
-  const [learningList, person] = (await response.json()) as ListCardReturn;
+  const { data: listData } = useQuery({
+    cacheTime: DEFAULT_CACHE_TIME,
+    async queryFn() {
+      const parameters = new URLSearchParams({
+        listId,
+      });
 
-  const currentUserHasFavorited = person
-    ? person.favoriteLists.length > 0
+      if (user?.id) {
+        parameters.append('clerkId', user.id);
+      }
+
+      return zodFetch(
+        learningListReturnSchema,
+        `${ROOT_URL}/api/learning-list?${parameters.toString()}`,
+        {
+          credentials: 'same-origin',
+        },
+      );
+    },
+    queryKey: learningListTags(listId),
+    staleTime: DEFAULT_STALE_TIME,
+    suspense: true,
+  });
+
+  const { data } = useQuery({
+    cacheTime: DEFAULT_CACHE_TIME,
+    enabled: user?.id !== undefined,
+    async queryFn() {
+      const response = await fetch(
+        `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,
+        {
+          credentials: 'same-origin',
+          method: 'GET',
+        },
+      );
+
+      return response.json() as unknown as ListCardReturn;
+    },
+    queryKey: listCardTags(listId),
+    staleTime: DEFAULT_STALE_TIME,
+    suspense: true,
+  });
+
+  const currentUserHasFavorited = data?.[1]
+    ? data?.[1].favoriteLists.length > 0
     : false;
 
   return (
@@ -63,28 +92,36 @@ export async function ListCard({
       <div className="grid">
         <p className="text-xl font-bold underline">
           <Link className="text-blue-900" href={`/list/${listId}`}>
-            {listName}
+            {listData?.name}
           </Link>
         </p>
-        {listUpdatedAt && <time>Updated: {listUpdatedAt}</time>}
-        {listCreatedAt && <time>Created: {listCreatedAt}</time>}
+        {listData?.updatedAt && (
+          <time>
+            Updated: {DateTime.fromISO(listData.updatedAt).toRelative()}
+          </time>
+        )}
+        {listData?.createdAt && (
+          <time>
+            Created: {DateTime.fromISO(listData.createdAt).toRelative()}
+          </time>
+        )}
       </div>
       <div className="grid grid-cols-[55px] gap-4 md:grid-cols-55px-55px">
         <div>
-          {creatorProfileImage && (
+          {listData?.creator.profileImageUrl && (
             <Image
-              alt={`${creatorUsername ?? ''} profile`}
+              alt={`${listData?.creator.username ?? ''} profile`}
               className="rounded-full"
               height={60}
-              src={creatorProfileImage}
+              src={listData?.creator.profileImageUrl}
               width={60}
             />
           )}
-          <p className="text-center">{creatorUsername}</p>
+          <p className="text-center">{listData?.creator.username}</p>
         </div>
         <FavoriteButton
-          clerkId={clerkUser?.id}
-          favoritedCount={learningList?._count.favoritedBy ?? 0}
+          clerkId={user?.id}
+          favoritedCount={data?.[0]?._count.favoritedBy ?? 0}
           hasUserFavorited={currentUserHasFavorited}
           listId={listId}
         />

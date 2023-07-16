@@ -1,23 +1,29 @@
-import { DateTime } from 'luxon';
+'use client';
+import { useQuery } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
-import { ROOT_URL } from '../../util/constants';
+import {
+  DEFAULT_CACHE_TIME,
+  DEFAULT_STALE_TIME,
+  ROOT_URL,
+} from '../../util/constants';
 import { listPageTags } from '../../util/tags';
 import { zodFetch } from '../../util/zod';
 import { ListCard } from '../(components)/list-card';
 import { listPageReturnSchema } from '../api/list-page/types';
 
-export const revalidate = 60;
-
-export default async function ListPage(): Promise<JSX.Element> {
-  const data = await zodFetch(
-    listPageReturnSchema,
-    `${ROOT_URL}/api/list-page`,
-    {
-      credentials: 'same-origin',
-      next: { tags: listPageTags() },
+export default function ListPage(): JSX.Element {
+  const { data } = useQuery({
+    cacheTime: DEFAULT_CACHE_TIME,
+    queryFn() {
+      return zodFetch(listPageReturnSchema, `${ROOT_URL}/api/list-page`, {
+        credentials: 'same-origin',
+      });
     },
-  );
+    queryKey: listPageTags(),
+    staleTime: DEFAULT_STALE_TIME,
+    suspense: true,
+  });
 
   return (
     <>
@@ -25,18 +31,8 @@ export default async function ListPage(): Promise<JSX.Element> {
         Top Lists
       </h1>
       <div className="grid place-items-center gap-2">
-        {data.map(async list => {
-          return (
-            <ListCard
-              creatorProfileImage={list.creator.profileImageUrl}
-              creatorUsername={list.creator.username}
-              key={list.id}
-              listCreatedAt={DateTime.fromISO(list.createdAt).toRelative()}
-              listId={list.id}
-              listName={list.name}
-              listUpdatedAt={DateTime.fromISO(list.updatedAt).toRelative()}
-            />
-          );
+        {data?.map(async list => {
+          return <ListCard key={list.id} listId={list.id} />;
         })}
       </div>
     </>

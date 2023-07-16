@@ -1,9 +1,8 @@
-import { DateTime } from 'luxon';
+'use client';
 import type { JSX } from 'react';
 
 import { ListCard } from '../../../(components)/list-card';
 import { CardList } from './(components)/card-list';
-import { getListData } from './data';
 
 type ListPageProperties = {
   params: {
@@ -11,38 +10,13 @@ type ListPageProperties = {
   };
 };
 
-export const revalidate = 60;
-
-export default async function ListPage({
+export default function ListPage({
   params,
-}: ListPageProperties): Promise<JSX.Element | null> {
-  const { user, data } = await getListData(params.id);
-
-  if (!data) {
-    return null;
-  }
-
-  const isOwnedByCurrent = user?.id === data.creator.clerkId;
-
+}: ListPageProperties): JSX.Element | null {
   return (
     <div className="grid place-items-center">
-      <ListCard
-        creatorProfileImage={data.creator.profileImageUrl}
-        creatorUsername={data.creator.username}
-        listCreatedAt={DateTime.fromISO(data.createdAt).toRelative()}
-        listId={data.id}
-        listName={data.name}
-        listUpdatedAt={DateTime.fromISO(data.updatedAt).toRelative()}
-      />
-      <CardList
-        isOwnedByCurrent={isOwnedByCurrent}
-        list={data}
-        user={{
-          id: user?.id,
-          imageUrl: user?.imageUrl,
-          username: user?.username,
-        }}
-      />
+      <ListCard listId={params.id} />
+      <CardList listId={params.id} />
     </div>
   );
 }

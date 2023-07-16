@@ -1,49 +1,73 @@
 'use client';
+import { useUser } from '@clerk/nextjs';
 import { useToggle } from '@ethang/hooks/use-toggle';
+import { useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { ROOT_URL } from '../../../../../util/constants';
+import {
+  DEFAULT_CACHE_TIME,
+  DEFAULT_STALE_TIME,
+  ROOT_URL,
+} from '../../../../../util/constants';
+import { learningListTags } from '../../../../../util/tags';
 import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Toggle } from '../../../../(components)/(elements)/toggle';
+import {
+  LearningListMaterialsFromQuery,
+  learningListReturnSchema,
+} from '../../../../api/learning-list/types';
 import { updateListOrderReturnSchema } from '../../../../api/update-list-order/types';
-import type { getListData } from '../data';
 import { CreateModal } from './create-modal';
 import { MaterialCard } from './material-card';
 
 type CardListProperties = {
-  isOwnedByCurrent: boolean;
-  list: Awaited<ReturnType<typeof getListData>>['data'];
-  user: {
-    id?: string;
-    imageUrl?: string;
-    username?: string | null;
-  } | null;
+  listId: string;
 };
 
-export function CardList({
-  isOwnedByCurrent,
-  list,
-  user,
-}: CardListProperties): JSX.Element | null {
+export function CardList({ listId }: CardListProperties): JSX.Element | null {
+  const { user } = useUser();
   const [isEditing, toggleEditing] = useToggle(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, toggleLoading] = useToggle(false);
-  const [cards, setCards] = useState(list?.learningListMaterial ?? []);
+  const [cards, setCards] = useState<LearningListMaterialsFromQuery>([]);
 
-  useEffect(() => {
-    if (list?.learningListMaterial) {
-      setCards(list.learningListMaterial);
-    }
-  }, [list]);
+  const { data } = useQuery({
+    cacheTime: DEFAULT_CACHE_TIME,
+    async queryFn() {
+      const parameters = new URLSearchParams({
+        listId,
+      });
 
-  if (isNil(list)) {
+      if (user?.id) {
+        parameters.append('clerkId', user.id);
+      }
+
+      const data = await zodFetch(
+        learningListReturnSchema,
+        `${ROOT_URL}/api/learning-list?${parameters.toString()}`,
+        {
+          credentials: 'same-origin',
+        },
+      );
+
+      setCards(data?.learningListMaterial ?? []);
+      return data;
+    },
+    queryKey: learningListTags(listId),
+    staleTime: DEFAULT_STALE_TIME,
+    suspense: true,
+  });
+
+  if (isNil(data)) {
     return null;
   }
+
+  const isOwnedByCurrent = user?.id === data?.creator.clerkId;
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const findCard = (order: string) => {
@@ -68,14 +92,14 @@ export function CardList({
 
   const handleUpdateListOrder = async (): Promise<void> => {
     toggleLoading();
-    if (list.id) {
+    if (data?.id) {
       await zodFetch(
         updateListOrderReturnSchema,
         `${ROOT_URL}/api/update-list-order`,
         {
           body: JSON.stringify({
             list: cards,
-            listId: list.id,
+            listId: data?.id,
           }),
           credentials: 'same-origin',
           method: 'POST',
@@ -117,7 +141,7 @@ export function CardList({
                 isEditing={isEditing}
                 isOwnedByCurrent={isOwnedByCurrent}
                 key={learningMaterial.id}
-                listId={list.id}
+                listId={listId}
                 listIndex={index}
                 material={learningMaterial}
                 moveCard={moveCard}
@@ -139,8 +163,8 @@ export function CardList({
       <div className="mx-auto my-4 max-w-5xl">
         {isOwnedByCurrent && isEditing && (
           <CreateModal
-            listId={list.id}
-            listLength={list.learningListMaterial.length}
+            listId={listId}
+            listLength={data?.learningListMaterial.length ?? 0}
             user={{
               id: user?.id,
               profileImageUrl: user?.imageUrl,
