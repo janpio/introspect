@@ -53,6 +53,7 @@ export function CreateSearchBox({
       setSearchResults(data.hits);
     },
     queryKey: [searchTerm],
+    suspense: true,
   });
 
   const handleSearchMaterials = debounce(

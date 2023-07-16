@@ -55,6 +55,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
     },
     queryKey: learningListTags(listId),
     staleTime: DEFAULT_STALE_TIME,
+    suspense: true,
   });
 
   const { isLoading, mutate } = useMutation({
