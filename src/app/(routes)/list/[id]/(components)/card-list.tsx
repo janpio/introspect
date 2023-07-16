@@ -2,9 +2,9 @@
 import { useUser } from '@clerk/nextjs';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { useQuery } from '@tanstack/react-query';
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import type { JSX } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -47,21 +47,24 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
         parameters.append('clerkId', user.id);
       }
 
-      const data = await zodFetch(
+      return zodFetch(
         learningListReturnSchema,
         `${ROOT_URL}/api/learning-list?${parameters.toString()}`,
         {
           credentials: 'same-origin',
         },
       );
-
-      setCards(data?.learningListMaterial ?? []);
-      return data;
     },
     queryKey: learningListTags(listId),
     staleTime: DEFAULT_STALE_TIME,
     suspense: true,
   });
+
+  useEffect(() => {
+    if (isEmpty(cards)) {
+      setCards(data?.learningListMaterial ?? []);
+    }
+  }, [cards, data?.learningListMaterial]);
 
   if (isNil(data)) {
     return null;
