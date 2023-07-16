@@ -10,16 +10,7 @@ export async function GET(): Promise<NextResponse> {
       },
     },
     select: {
-      createdAt: true,
-      creator: {
-        select: {
-          profileImageUrl: true,
-          username: true,
-        },
-      },
       id: true,
-      name: true,
-      updatedAt: true,
     },
   });
 
