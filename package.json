@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.22.0",
-    "@ethang/hooks": "^1.1.13",
+    "@ethang/hooks": "^1.1.14",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.1.1",
@@ -30,7 +30,7 @@
     "autoprefixer": "10.4.14",
     "encoding": "^0.1.13",
     "eslint": "8.45.0",
-    "eslint-config-ethang": "^6.6.0",
+    "eslint-config-ethang": "^6.6.1",
     "eslint-config-next": "13.4.10",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "jsonwebtoken": "^9.0.1",
