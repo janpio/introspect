@@ -18,8 +18,8 @@ import type { ListCardReturn } from '../api/list-card/types';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
-  containerClassname?: string;
-  listId: string;
+  readonly containerClassname?: string;
+  readonly listId: string;
 };
 
 export function ListCard({

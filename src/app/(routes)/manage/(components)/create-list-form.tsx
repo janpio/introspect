@@ -14,7 +14,7 @@ import { queryClient } from '../../../(components)/providers';
 import { createListReturnSchema } from '../../../api/create-list/types';
 
 type CreateListFormProperties = {
-  clerkId: string;
+  readonly clerkId: string;
 };
 
 const formSchema = z.object({

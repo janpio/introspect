@@ -2,7 +2,7 @@ import type { JSX, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type ButtonProperties = JSX.IntrinsicElements['button'] & {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 export function Button({ children, ...rest }: ButtonProperties): JSX.Element {

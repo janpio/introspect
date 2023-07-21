@@ -2,16 +2,16 @@ import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type InputProperties = {
-  error?: string | null;
-  isLabelHidden?: boolean;
-  label: string;
-  name: string;
-  properties?: {
+  readonly error?: string | null;
+  readonly isLabelHidden?: boolean;
+  readonly label: string;
+  readonly name: string;
+  readonly properties?: {
     container?: JSX.IntrinsicElements['div'];
     input?: JSX.IntrinsicElements['input'];
     label?: JSX.IntrinsicElements['label'];
   };
-  type?: string;
+  readonly type?: string;
 };
 
 export function Input({

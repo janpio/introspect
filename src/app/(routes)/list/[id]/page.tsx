@@ -5,7 +5,7 @@ import { ListCard } from '../../../(components)/list-card';
 import { CardList } from './(components)/card-list';
 
 type ListPageProperties = {
-  params: {
+  readonly params: {
     id: string;
   };
 };

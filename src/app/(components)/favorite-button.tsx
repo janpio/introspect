@@ -11,10 +11,10 @@ import { listCardTags } from '../../util/tags';
 import { queryClient } from './providers';
 
 type FavoriteButtonProperties = {
-  clerkId?: string | null;
-  favoritedCount?: number;
-  hasUserFavorited: boolean;
-  listId: string;
+  readonly clerkId?: string | null;
+  readonly favoritedCount?: number;
+  readonly hasUserFavorited: boolean;
+  readonly listId: string;
 };
 
 export function FavoriteButton({

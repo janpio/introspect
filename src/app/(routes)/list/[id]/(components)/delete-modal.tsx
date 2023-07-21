@@ -12,10 +12,10 @@ import { queryClient } from '../../../../(components)/providers';
 import { removeMaterialFromListReturnSchema } from '../../../../api/remove-material-from-list/types';
 
 type DeleteModalProperties = {
-  listId: string;
-  materialId: string;
-  materialTitle: string;
-  order: number;
+  readonly listId: string;
+  readonly materialId: string;
+  readonly materialTitle: string;
+  readonly order: number;
 };
 
 export function DeleteModal({

@@ -17,15 +17,15 @@ import { queryClient } from '../../../../(components)/providers';
 import { updateMaterialReturnSchema } from '../../../../api/update-material/types';
 
 type EditModalProperties = {
-  listId: string;
-  material: {
+  readonly listId: string;
+  readonly material: {
     id: string;
     instructors: string[];
     links: string[];
     name: string;
     publisherName: string;
   };
-  userId?: string;
+  readonly userId?: string;
 };
 
 export function EditModal({

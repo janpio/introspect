@@ -13,8 +13,8 @@ import { queryClient } from '../../../(components)/providers';
 import { deleteListReturnSchema } from '../../../api/delete-list/types';
 
 type DeleteListModalProperties = {
-  listId: string;
-  listTitle: string;
+  readonly listId: string;
+  readonly listTitle: string;
 };
 
 export function DeleteListModal({

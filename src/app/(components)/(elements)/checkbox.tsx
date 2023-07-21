@@ -2,10 +2,10 @@ import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type CheckboxProperties = {
-  error?: string | null;
-  label: string;
-  name: string;
-  properties?: {
+  readonly error?: string | null;
+  readonly label: string;
+  readonly name: string;
+  readonly properties?: {
     container?: JSX.IntrinsicElements['div'];
     input?: JSX.IntrinsicElements['input'];
     label?: JSX.IntrinsicElements['label'];

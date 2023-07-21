@@ -26,7 +26,7 @@ import { CreateModal } from './create-modal';
 import { MaterialCard } from './material-card';
 
 type CardListProperties = {
-  listId: string;
+  readonly listId: string;
 };
 
 export function CardList({ listId }: CardListProperties): JSX.Element | null {

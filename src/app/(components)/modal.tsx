@@ -4,9 +4,9 @@ import type { JSX, ReactNode } from 'react';
 import { Fragment } from 'react';
 
 type ModalProperties = {
-  children: ReactNode;
-  isOpen: boolean;
-  toggleOpen: () => void;
+  readonly children: ReactNode;
+  readonly isOpen: boolean;
+  readonly toggleOpen: () => void;
 };
 
 export function Modal({

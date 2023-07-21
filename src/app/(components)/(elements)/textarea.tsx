@@ -3,10 +3,10 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type TextareaProperties = {
-  error?: string | null;
-  label: string;
-  name: string;
-  properties?: {
+  readonly error?: string | null;
+  readonly label: string;
+  readonly name: string;
+  readonly properties?: {
     container?: JSX.IntrinsicElements['div'];
     input?: JSX.IntrinsicElements['textarea'];
     label?: JSX.IntrinsicElements['label'];

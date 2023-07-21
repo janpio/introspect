@@ -13,21 +13,21 @@ import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
 type MaterialCardProperties = {
-  findCard: (id: string) => { index: number };
-  isComplete: boolean;
-  isEditing: boolean;
-  isOwnedByCurrent: boolean;
-  listId: string;
-  listIndex: number;
-  material: {
+  readonly findCard: (id: string) => { index: number };
+  readonly isComplete: boolean;
+  readonly isEditing: boolean;
+  readonly isOwnedByCurrent: boolean;
+  readonly listId: string;
+  readonly listIndex: number;
+  readonly material: {
     id: string;
     instructors: string[];
     links: Array<{ id: string; url: string }>;
     name: string;
     publisherName: string;
   };
-  moveCard: (id: string, to: number) => void;
-  order: number;
+  readonly moveCard: (id: string, to: number) => void;
+  readonly order: number;
 };
 
 export function MaterialCard({

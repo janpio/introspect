@@ -3,9 +3,9 @@ import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type ToggleProperties = {
-  isChecked: boolean;
-  label: string;
-  toggleChecked: () => void;
+  readonly isChecked: boolean;
+  readonly label: string;
+  readonly toggleChecked: () => void;
 };
 
 export function Toggle({

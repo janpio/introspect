@@ -10,7 +10,7 @@ import { Providers } from './(components)/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 type RootLayoutProperties = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 export const metadata = {

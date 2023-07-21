@@ -24,9 +24,9 @@ export type FormInputs = {
 };
 
 type CreateModalProperties = {
-  listId: string;
-  listLength: number;
-  user: {
+  readonly listId: string;
+  readonly listLength: number;
+  readonly user: {
     id: string | undefined;
     profileImageUrl: string | undefined;
     username: string | null | undefined;
