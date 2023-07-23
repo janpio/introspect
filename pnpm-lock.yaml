@@ -9,8 +9,8 @@ dependencies:
     specifier: ^4.23.0
     version: 4.23.0(next@13.4.12)(react-dom@18.2.0)(react@18.2.0)
   '@ethang/hooks':
-    specifier: ^1.1.17
-    version: 1.1.17(react@18.2.0)
+    specifier: ^1.1.18
+    version: 1.1.18(react@18.2.0)
   '@headlessui/react':
     specifier: ^1.7.15
     version: 1.7.15(react-dom@18.2.0)(react@18.2.0)
@@ -288,8 +288,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@ethang/hooks@1.1.17(react@18.2.0):
-    resolution: {integrity: sha512-KRepSqirDwrMQ1lqXr6sq6lYiMRY/JnK0XRqbuV8TsKHQmlc3tzBHFf27Sa8ObPJMfGiFYyINpWk8tHw3uyq7g==}
+  /@ethang/hooks@1.1.18(react@18.2.0):
+    resolution: {integrity: sha512-KsVzeAsR4l8SxfKAjXGHU7ALNwvmW1l8am+XwXIgNMCJgF7DVKnmsV3NSV3iJdjoW6ZRzVceLWzdBVsnjhZpvw==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
