@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -40,13 +41,15 @@ export function Checkbox({
             className={twMerge(
               'cursor-pointer h-4 w-4 rounded border-gray-300 text-blue-700 focus:ring-blue-700',
               properties?.input?.className,
-              error && 'border-red-500',
+              !isEmpty(error) && 'border-red-500',
             )}
           />
         </div>
         <div>
           <p className="h-5">{label}</p>
-          <p>{error && <span className="text-red-500">{error}</span>}</p>
+          <p>
+            {!isEmpty(error) && <span className="text-red-500">{error}</span>}
+          </p>
         </div>
       </label>
     </div>

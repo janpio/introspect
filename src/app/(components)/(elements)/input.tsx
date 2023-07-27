@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -37,7 +38,9 @@ export function Input({
           )}
         >
           {label}
-          <p>{error && <span className="text-red-500">{error}</span>}</p>
+          <p>
+            {!isEmpty(error) && <span className="text-red-500">{error}</span>}
+          </p>
         </label>
       )}
       <div className="mt-2">
@@ -49,7 +52,7 @@ export function Input({
           className={twMerge(
             'block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6',
             properties?.input?.className,
-            error && 'border-red-500 border-2',
+            !isEmpty(error) && 'border-red-500 border-2',
           )}
         />
       </div>

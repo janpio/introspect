@@ -2,6 +2,7 @@
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { isEmpty } from 'lodash';
 import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -79,7 +80,7 @@ export function EditModal({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: z.input<typeof formSchema>) {
-      if (userId) {
+      if (!isEmpty(userId)) {
         await zodFetch(
           updateMaterialReturnSchema,
           `${ROOT_URL}/api/update-material`,

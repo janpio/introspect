@@ -2,6 +2,7 @@
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -82,7 +83,7 @@ export function CreateModal({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: z.output<typeof formSchema>) {
-      if (user?.id) {
+      if (!isNil(user)) {
         await zodFetch(
           addMaterialToListReturnSchema,
           `${ROOT_URL}/api/add-material-to-list`,

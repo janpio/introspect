@@ -1,5 +1,6 @@
 import { constants } from 'node:http2';
 
+import { isNil } from 'lodash';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!error.message.startsWith('Hydration failed')) {
     const createdError = await prisma.error.create({
       data: {
-        cause: error.cause ? JSON.stringify(error.cause) : undefined,
+        cause: isNil(error.cause) ? undefined : JSON.stringify(error.cause),
         message: error.message,
         name: error.name,
         stack: error.stack,

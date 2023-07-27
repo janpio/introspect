@@ -1,5 +1,6 @@
 import { useUser } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
+import { isNil } from 'lodash';
 import Link from 'next/link';
 import type { JSX } from 'react';
 import { useState } from 'react';
@@ -93,7 +94,7 @@ export function MaterialCard({
   const { isLoading, mutate } = useMutation({
     async mutationFn(complete: boolean) {
       setIsDone(complete);
-      if (user?.id) {
+      if (!isNil(user)) {
         await zodFetch(
           updateMaterialCompletionReturn,
           `${ROOT_URL}/api/update-material-completion`,
@@ -172,7 +173,7 @@ export function MaterialCard({
         </div>
       </div>
       <div>
-        {user?.id && (
+        {!isNil(user) && (
           <input
             aria-label="Mark material as complete"
             checked={isDone}

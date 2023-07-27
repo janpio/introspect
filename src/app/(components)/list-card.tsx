@@ -1,5 +1,6 @@
 import { useUser } from '@clerk/nextjs';
 import { useQuery } from '@tanstack/react-query';
+import { isEmpty, isNil } from 'lodash';
 import { DateTime } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,7 +32,7 @@ export function ListCard({
   const searchParameters = new URLSearchParams({
     listId,
   });
-  if (user?.id) {
+  if (!isNil(user)) {
     searchParameters.append('clerkId', user.id);
   }
 
@@ -42,7 +43,7 @@ export function ListCard({
         listId,
       });
 
-      if (user?.id) {
+      if (!isNil(user)) {
         parameters.append('clerkId', user.id);
       }
 
@@ -95,12 +96,12 @@ export function ListCard({
             {listData?.name}
           </Link>
         </p>
-        {listData?.updatedAt && (
+        {!isNil(listData) && !isEmpty(listData.updatedAt) && (
           <time>
             Updated: {DateTime.fromISO(listData.updatedAt).toRelative()}
           </time>
         )}
-        {listData?.createdAt && (
+        {!isNil(listData) && !isEmpty(listData.createdAt) && (
           <time>
             Created: {DateTime.fromISO(listData.createdAt).toRelative()}
           </time>
@@ -108,7 +109,7 @@ export function ListCard({
       </div>
       <div className="grid grid-cols-[55px] gap-4 md:grid-cols-55px-55px">
         <div>
-          {listData?.creator.profileImageUrl && (
+          {!isNil(listData) && !isEmpty(listData.creator.profileImageUrl) && (
             <Image
               alt={`${listData?.creator.username ?? ''} profile`}
               className="rounded-full"

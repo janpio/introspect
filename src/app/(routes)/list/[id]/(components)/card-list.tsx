@@ -41,7 +41,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
         listId,
       });
 
-      if (user?.id) {
+      if (!isNil(user)) {
         parameters.append('clerkId', user.id);
       }
 
@@ -60,7 +60,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
 
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
-      if (data?.id) {
+      if (!isNil(data)) {
         await zodFetch(
           updateListOrderReturnSchema,
           `${ROOT_URL}/api/update-list-order`,
