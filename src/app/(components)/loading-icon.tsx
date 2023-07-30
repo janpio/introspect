@@ -1,6 +1,21 @@
-import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { JSX } from 'react';
+import 'react-loading-skeleton/dist/skeleton.css';
 
-export function LoadingIcon(): JSX.Element {
-  return <ArrowPathIcon className="mx-auto h-36 w-36 animate-spin" />;
+import { JSX } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import { twMerge } from 'tailwind-merge';
+
+type LoadingIconProperties = {
+  readonly className?: string;
+  readonly count: number;
+};
+
+export function LoadingIcon({
+  count,
+  className,
+}: LoadingIconProperties): JSX.Element {
+  return (
+    <div className={twMerge('w-full max-w-5xl mx-auto my-2 h-96', className)}>
+      <Skeleton count={count} />
+    </div>
+  );
 }

@@ -4,14 +4,14 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Skeleton from 'react-loading-skeleton';
 
 import { useFetch } from '../../../../../util/use-fetch';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Toggle } from '../../../../(components)/(elements)/toggle';
+import { LoadingIcon } from '../../../../(components)/loading-icon';
 import {
   LearningListMaterialsFromQuery,
   learningListReturnSchema,
@@ -47,14 +47,6 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
     setCards(data?.learningListMaterial ?? []);
   }, [cards, data?.learningListMaterial]);
 
-  if (isNil(data)) {
-    return (
-      <div className="my-2 w-full">
-        <Skeleton count={30} />
-      </div>
-    );
-  }
-
   const isOwnedByCurrent = user?.id === data?.creator.clerkId;
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -78,7 +70,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
   };
 
   return (
-    <>
+    <Suspense fallback={<LoadingIcon count={30} />}>
       <DndProvider backend={HTML5Backend}>
         {isOwnedByCurrent && (
           <Toggle
@@ -137,6 +129,6 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
           />
         )}
       </div>
-    </>
+    </Suspense>
   );
 }

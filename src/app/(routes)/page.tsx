@@ -1,11 +1,11 @@
 'use client';
-import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import Skeleton from 'react-loading-skeleton';
+import { Suspense } from 'react';
 
 import { DEFAULT_CACHE_TIME } from '../../util/constants';
 import { useFetch } from '../../util/use-fetch';
 import { ListCard } from '../(components)/list-card';
+import { LoadingIcon } from '../(components)/loading-icon';
 import { listPageReturnSchema } from '../api/list-page/types';
 import { apiRequests } from '../data/api-requests';
 
@@ -21,14 +21,11 @@ export default function ListPage(): JSX.Element {
         Top Lists
       </h1>
       <div className="grid place-items-center gap-2">
-        {isNil(data) && (
-          <div className="w-full max-w-5xl">
-            <Skeleton count={30} />
-          </div>
-        )}
-        {data?.map(async list => {
-          return <ListCard key={list.id} listId={list.id} />;
-        })}
+        <Suspense fallback={<LoadingIcon count={30} />}>
+          {data?.map(async list => {
+            return <ListCard key={list.id} listId={list.id} />;
+          })}
+        </Suspense>
       </div>
     </>
   );
