@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { z, ZodSchema } from 'zod';
 
-import { zodFetcher } from './zod';
+import { zodGet } from './zod';
 
 type FetcherOptions = {
   cacheInterval?: number;
@@ -27,7 +27,7 @@ export const useFetch = <SchemaType extends ZodSchema>(
 
   useEffect(() => {
     setIsLoading(true);
-    zodFetcher(schema, options)
+    zodGet(schema, options)
       .then(data => {
         setData(data);
       })

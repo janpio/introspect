@@ -16,7 +16,7 @@ export async function zodFetch<SchemaType extends ZodSchema>(
   return schema.parse(await response.json());
 }
 
-export async function zodFetcher<SchemaType extends ZodSchema>(
+export async function zodGet<SchemaType extends ZodSchema>(
   schema: SchemaType,
   options: FetcherOptions,
 ): Promise<z.output<SchemaType>> {
