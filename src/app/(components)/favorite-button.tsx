@@ -1,4 +1,5 @@
 'use client';
+import { cacheBust } from '@ethang/fetch';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
@@ -8,8 +9,7 @@ import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { api } from '../data/api';
-import { listCardTags } from '../data/tags';
-import { queryClient } from './providers';
+import { apiRequests } from '../data/api-requests';
 
 type FavoriteButtonProperties = {
   readonly clerkId?: string | null;
@@ -41,7 +41,7 @@ export function FavoriteButton({
       await api.favoriteLIst(clerkId, !isFavorite, listId);
     },
     async onSuccess() {
-      await queryClient.invalidateQueries(listCardTags(listId));
+      await cacheBust(apiRequests.getListCard(listId, clerkId));
     },
   });
 

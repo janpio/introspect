@@ -1,4 +1,5 @@
 'use client';
+import { cacheBust } from '@ethang/fetch';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -11,9 +12,8 @@ import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
-import { queryClient } from '../../../../(components)/providers';
 import { api } from '../../../../data/api';
-import { learningListTags } from '../../../../data/tags';
+import { apiRequests } from '../../../../data/api-requests';
 
 export type FormInputs = {
   instructors: string;
@@ -85,7 +85,7 @@ export function CreateModal({
         await api.addMaterialToList(data);
       }
 
-      await queryClient.invalidateQueries(learningListTags(listId));
+      await cacheBust(apiRequests.getLearningList(listId, user?.id));
       toggleOpen();
       reset();
     },

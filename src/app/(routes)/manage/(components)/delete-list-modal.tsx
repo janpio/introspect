@@ -1,14 +1,14 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
+import { cacheBust } from '@ethang/fetch';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
 import { Button } from '../../../(components)/(elements)/button';
 import { Modal } from '../../../(components)/modal';
-import { queryClient } from '../../../(components)/providers';
 import { api } from '../../../data/api';
-import { listPageTags, manageListsTags } from '../../../data/tags';
+import { apiRequests } from '../../../data/api-requests';
 
 type DeleteListModalProperties = {
   readonly listId: string;
@@ -27,8 +27,8 @@ export function DeleteListModal({
       await api.deleteList(listId);
 
       await Promise.all([
-        queryClient.invalidateQueries(manageListsTags(user?.id ?? '')),
-        queryClient.invalidateQueries(listPageTags()),
+        cacheBust(apiRequests.getManageLists(user?.id ?? '')),
+        cacheBust(apiRequests.getListPage()),
       ]);
 
       toggleOpen();

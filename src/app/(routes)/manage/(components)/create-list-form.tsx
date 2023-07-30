@@ -1,4 +1,5 @@
 'use client';
+import { cacheBust } from '@ethang/fetch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
@@ -7,9 +8,8 @@ import { z } from 'zod';
 
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
-import { queryClient } from '../../../(components)/providers';
 import { api } from '../../../data/api';
-import { listPageTags, manageListsTags } from '../../../data/tags';
+import { apiRequests } from '../../../data/api-requests';
 
 type CreateListFormProperties = {
   readonly clerkId: string;
@@ -35,8 +35,8 @@ export function CreateListForm({
       });
 
       await Promise.all([
-        queryClient.invalidateQueries(manageListsTags(clerkId)),
-        queryClient.invalidateQueries(listPageTags()),
+        cacheBust(apiRequests.getManageLists(clerkId)),
+        cacheBust(apiRequests.getListPage()),
       ]);
 
       reset();

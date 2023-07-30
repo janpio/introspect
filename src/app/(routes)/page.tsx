@@ -1,19 +1,16 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
-import { DEFAULT_CACHE_TIME, DEFAULT_STALE_TIME } from '../../util/constants';
+import { DEFAULT_CACHE_TIME } from '../../util/constants';
+import { useFetch } from '../../util/use-fetch';
 import { ListCard } from '../(components)/list-card';
-import { api } from '../data/api';
-import { listPageTags } from '../data/tags';
+import { listPageReturnSchema } from '../api/list-page/types';
+import { apiRequests } from '../data/api-requests';
 
 export default function ListPage(): JSX.Element {
-  const { data } = useQuery({
-    cacheTime: DEFAULT_CACHE_TIME,
-    queryFn: api.listPage,
-    queryKey: listPageTags(),
-    staleTime: DEFAULT_STALE_TIME,
-    suspense: true,
+  const { data } = useFetch(listPageReturnSchema, {
+    cacheInterval: DEFAULT_CACHE_TIME,
+    request: apiRequests.getListPage(),
   });
 
   return (

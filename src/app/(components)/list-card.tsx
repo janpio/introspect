@@ -1,5 +1,4 @@
 import { useUser } from '@clerk/nextjs';
-import { useQuery } from '@tanstack/react-query';
 import { isEmpty, isNil } from 'lodash';
 import { DateTime } from 'luxon';
 import Image from 'next/image';
@@ -7,9 +6,11 @@ import Link from 'next/link';
 import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { DEFAULT_CACHE_TIME, DEFAULT_STALE_TIME } from '../../util/constants';
-import { api } from '../data/api';
-import { learningListTags, listCardTags } from '../data/tags';
+import { DEFAULT_CACHE_TIME } from '../../util/constants';
+import { useFetch } from '../../util/use-fetch';
+import { learningListReturnSchema } from '../api/learning-list/types';
+import { listCardReturnSchema } from '../api/list-card/types';
+import { apiRequests } from '../data/api-requests';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -23,28 +24,17 @@ export function ListCard({
 }: ListCardProperties): JSX.Element {
   const { user } = useUser();
 
-  const { data: listData } = useQuery({
-    cacheTime: DEFAULT_CACHE_TIME,
-    async queryFn() {
-      return api.getLearningList(listId, user?.id);
-    },
-    queryKey: learningListTags(listId),
-    staleTime: DEFAULT_STALE_TIME,
-    suspense: true,
+  const { data: listData } = useFetch(learningListReturnSchema, {
+    cacheInterval: DEFAULT_CACHE_TIME,
+    request: apiRequests.getLearningList(listId, user?.id),
   });
 
-  const { data } = useQuery({
-    cacheTime: DEFAULT_CACHE_TIME,
-    enabled: typeof user?.id === 'string',
-    async queryFn() {
-      return api.getListCard(listId, user?.id);
-    },
-    queryKey: listCardTags(listId),
-    staleTime: DEFAULT_STALE_TIME,
-    suspense: true,
+  const { data } = useFetch(listCardReturnSchema, {
+    cacheInterval: DEFAULT_CACHE_TIME,
+    request: apiRequests.getListCard(listId, user?.id),
   });
 
-  const currentUserHasFavorited = data?.[1]
+  const currentUserHasFavorited = data?.[1].favoriteLists
     ? data?.[1].favoriteLists.length > 0
     : false;
 
@@ -87,7 +77,7 @@ export function ListCard({
         </div>
         <FavoriteButton
           clerkId={user?.id}
-          favoritedCount={data?.[0]?._count.favoritedBy ?? 0}
+          favoritedCount={data?.[0]?._count?.favoritedBy ?? 0}
           hasUserFavorited={currentUserHasFavorited}
           listId={listId}
         />

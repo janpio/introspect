@@ -8,6 +8,9 @@ dependencies:
   '@clerk/nextjs':
     specifier: ^4.23.1
     version: 4.23.1(next@13.4.12)(react-dom@18.2.0)(react@18.2.0)
+  '@ethang/fetch':
+    specifier: ^0.2.3
+    version: 0.2.3(idb@7.1.1)
   '@ethang/hooks':
     specifier: ^1.2.3
     version: 1.2.3(react@18.2.0)
@@ -286,6 +289,14 @@ packages:
   /@eslint/js@8.46.0:
     resolution: {integrity: sha512-a8TLtmPi8xzPkCbp/OGFUo5yhRkHM2Ko9kOWP4znJr0WAhWyThaw3PnwX4vOTWOAMsV2uRt32PPDcEz63esSaA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: false
+
+  /@ethang/fetch@0.2.3(idb@7.1.1):
+    resolution: {integrity: sha512-A8gO8GF1HXgrpvUvgDXm/bg4g98VMNp0z3FsEf9ISZVczk9wbdk5fAGUlI9rTuJwb4JA/07+tVt4dmoTz4hbAQ==}
+    peerDependencies:
+      idb: ^7.1.1
+    dependencies:
+      idb: 7.1.1
     dev: false
 
   /@ethang/hooks@1.2.3(react@18.2.0):
@@ -2659,6 +2670,10 @@ packages:
       postcss: ^8.1.0
     dependencies:
       postcss: 8.4.27
+    dev: false
+
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
     dev: false
 
   /ignore@5.2.4:

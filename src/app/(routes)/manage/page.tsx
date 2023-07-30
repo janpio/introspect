@@ -1,31 +1,22 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
-import { useQuery } from '@tanstack/react-query';
 import type { JSX } from 'react';
 import { Fragment } from 'react';
 
-import {
-  DEFAULT_CACHE_TIME,
-  DEFAULT_STALE_TIME,
-} from '../../../util/constants';
+import { DEFAULT_CACHE_TIME } from '../../../util/constants';
+import { useFetch } from '../../../util/use-fetch';
 import { ListCard } from '../../(components)/list-card';
-import { api } from '../../data/api';
-import { manageListsTags } from '../../data/tags';
+import { manageListsReturnSchema } from '../../api/manage-lists/types';
+import { apiRequests } from '../../data/api-requests';
 import { CreateListForm } from './(components)/create-list-form';
 import { DeleteListModal } from './(components)/delete-list-modal';
 
 export default function Manage(): JSX.Element | null {
   const { user } = useUser();
 
-  const { data } = useQuery({
-    cacheTime: DEFAULT_CACHE_TIME,
-    enabled: Boolean(user),
-    queryFn() {
-      return api.manageLists(user?.id ?? '');
-    },
-    queryKey: manageListsTags(user?.id ?? ''),
-    staleTime: DEFAULT_STALE_TIME,
-    suspense: true,
+  const { data } = useFetch(manageListsReturnSchema, {
+    cacheInterval: DEFAULT_CACHE_TIME,
+    request: apiRequests.getManageLists(user?.id ?? ''),
   });
 
   if (!user) {
