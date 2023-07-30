@@ -25,6 +25,9 @@ export default function RootLayout({
     <Providers>
       <ClerkProvider>
         <html className="bg-indigo-950" lang="en-US">
+          <head>
+            <link href="https://clerk.introspect.dev" rel="preconnect" />
+          </head>
           <body className={inter.className}>{children}</body>
         </html>
         <Analytics />
