@@ -7,15 +7,13 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { ROOT_URL } from '../../../../../util/constants';
-import { learningListTags } from '../../../../../util/tags';
-import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
-import { updateMaterialReturnSchema } from '../../../../api/update-material/types';
+import { api } from '../../../../data/api';
+import { learningListTags } from '../../../../data/tags';
 
 type EditModalProperties = {
   readonly listId: string;
@@ -81,14 +79,8 @@ export function EditModal({
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: z.input<typeof formSchema>) {
       if (!isEmpty(userId)) {
-        await zodFetch(
-          updateMaterialReturnSchema,
-          `${ROOT_URL}/api/update-material`,
-          {
-            body: JSON.stringify(data),
-            credentials: 'same-origin',
-            method: 'POST',
-          },
+        await api.updateMaterial(
+          data as unknown as z.output<typeof formSchema>,
         );
       }
 

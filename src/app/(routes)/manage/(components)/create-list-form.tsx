@@ -5,13 +5,11 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { ROOT_URL } from '../../../../util/constants';
-import { listPageTags, manageListsTags } from '../../../../util/tags';
-import { zodFetch } from '../../../../util/zod';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
 import { queryClient } from '../../../(components)/providers';
-import { createListReturnSchema } from '../../../api/create-list/types';
+import { api } from '../../../data/api';
+import { listPageTags, manageListsTags } from '../../../data/tags';
 
 type CreateListFormProperties = {
   readonly clerkId: string;
@@ -31,13 +29,9 @@ export function CreateListForm({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: { name: string }) {
-      await zodFetch(createListReturnSchema, `${ROOT_URL}/api/create-list`, {
-        body: JSON.stringify({
-          ...data,
-          clerkId,
-        }),
-        credentials: 'same-origin',
-        method: 'POST',
+      await api.createList({
+        ...data,
+        clerkId,
       });
 
       await Promise.all([

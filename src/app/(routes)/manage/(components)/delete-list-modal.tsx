@@ -4,13 +4,11 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
-import { ROOT_URL } from '../../../../util/constants';
-import { listPageTags, manageListsTags } from '../../../../util/tags';
-import { zodFetch } from '../../../../util/zod';
 import { Button } from '../../../(components)/(elements)/button';
 import { Modal } from '../../../(components)/modal';
 import { queryClient } from '../../../(components)/providers';
-import { deleteListReturnSchema } from '../../../api/delete-list/types';
+import { api } from '../../../data/api';
+import { listPageTags, manageListsTags } from '../../../data/tags';
 
 type DeleteListModalProperties = {
   readonly listId: string;
@@ -26,11 +24,7 @@ export function DeleteListModal({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
-      await zodFetch(deleteListReturnSchema, `${ROOT_URL}/api/delete-list`, {
-        body: JSON.stringify({ listId }),
-        credentials: 'same-origin',
-        method: 'POST',
-      });
+      await api.deleteList(listId);
 
       await Promise.all([
         queryClient.invalidateQueries(manageListsTags(user?.id ?? '')),

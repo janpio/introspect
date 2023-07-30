@@ -3,13 +3,11 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
-import { ROOT_URL } from '../../../../../util/constants';
-import { learningListTags } from '../../../../../util/tags';
-import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
-import { removeMaterialFromListReturnSchema } from '../../../../api/remove-material-from-list/types';
+import { api } from '../../../../data/api';
+import { learningListTags } from '../../../../data/tags';
 
 type DeleteModalProperties = {
   readonly listId: string;
@@ -28,15 +26,7 @@ export function DeleteModal({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
-      await zodFetch(
-        removeMaterialFromListReturnSchema,
-        `${ROOT_URL}/api/remove-material-from-list`,
-        {
-          body: JSON.stringify({ listId, materialId, order }),
-          credentials: 'same-origin',
-          method: 'POST',
-        },
-      );
+      await api.removeMaterialFromList(listId, materialId, order);
       await queryClient.invalidateQueries(learningListTags(listId));
       toggleOpen();
     },

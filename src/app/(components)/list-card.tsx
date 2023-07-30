@@ -7,15 +7,9 @@ import Link from 'next/link';
 import type { JSX } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import {
-  DEFAULT_CACHE_TIME,
-  DEFAULT_STALE_TIME,
-  ROOT_URL,
-} from '../../util/constants';
-import { learningListTags, listCardTags } from '../../util/tags';
-import { zodFetch } from '../../util/zod';
-import { learningListReturnSchema } from '../api/learning-list/types';
-import type { ListCardReturn } from '../api/list-card/types';
+import { DEFAULT_CACHE_TIME, DEFAULT_STALE_TIME } from '../../util/constants';
+import { api } from '../data/api';
+import { learningListTags, listCardTags } from '../data/tags';
 import { FavoriteButton } from './favorite-button';
 
 type ListCardProperties = {
@@ -29,31 +23,10 @@ export function ListCard({
 }: ListCardProperties): JSX.Element {
   const { user } = useUser();
 
-  const searchParameters = new URLSearchParams({
-    listId,
-  });
-  if (!isNil(user)) {
-    searchParameters.append('clerkId', user.id);
-  }
-
   const { data: listData } = useQuery({
     cacheTime: DEFAULT_CACHE_TIME,
     async queryFn() {
-      const parameters = new URLSearchParams({
-        listId,
-      });
-
-      if (!isNil(user)) {
-        parameters.append('clerkId', user.id);
-      }
-
-      return zodFetch(
-        learningListReturnSchema,
-        `${ROOT_URL}/api/learning-list?${parameters.toString()}`,
-        {
-          credentials: 'same-origin',
-        },
-      );
+      return api.getLearningList(listId, user?.id);
     },
     queryKey: learningListTags(listId),
     staleTime: DEFAULT_STALE_TIME,
@@ -64,15 +37,7 @@ export function ListCard({
     cacheTime: DEFAULT_CACHE_TIME,
     enabled: typeof user?.id === 'string',
     async queryFn() {
-      const response = await fetch(
-        `${ROOT_URL}/api/list-card?${searchParameters.toString()}`,
-        {
-          credentials: 'same-origin',
-          method: 'GET',
-        },
-      );
-
-      return response.json() as unknown as ListCardReturn;
+      return api.getListCard(listId, user?.id);
     },
     queryKey: listCardTags(listId),
     staleTime: DEFAULT_STALE_TIME,

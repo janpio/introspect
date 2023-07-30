@@ -7,32 +7,21 @@ import { Fragment } from 'react';
 import {
   DEFAULT_CACHE_TIME,
   DEFAULT_STALE_TIME,
-  ROOT_URL,
 } from '../../../util/constants';
-import { manageListsTags } from '../../../util/tags';
-import { zodFetch } from '../../../util/zod';
 import { ListCard } from '../../(components)/list-card';
-import { manageListsReturnSchema } from '../../api/manage-lists/types';
+import { api } from '../../data/api';
+import { manageListsTags } from '../../data/tags';
 import { CreateListForm } from './(components)/create-list-form';
 import { DeleteListModal } from './(components)/delete-list-modal';
 
 export default function Manage(): JSX.Element | null {
   const { user } = useUser();
 
-  const searchParameters = new URLSearchParams({
-    clerkId: user ? user.id : '',
-  });
   const { data } = useQuery({
     cacheTime: DEFAULT_CACHE_TIME,
     enabled: Boolean(user),
     queryFn() {
-      return zodFetch(
-        manageListsReturnSchema,
-        `${ROOT_URL}/api/manage-lists?${searchParameters.toString()}`,
-        {
-          credentials: 'same-origin',
-        },
-      );
+      return api.manageLists(user?.id ?? '');
     },
     queryKey: manageListsTags(user?.id ?? ''),
     staleTime: DEFAULT_STALE_TIME,

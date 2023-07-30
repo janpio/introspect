@@ -7,15 +7,13 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { ROOT_URL } from '../../../../../util/constants';
-import { learningListTags } from '../../../../../util/tags';
-import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
-import { addMaterialToListReturnSchema } from '../../../../api/add-material-to-list/types';
+import { api } from '../../../../data/api';
+import { learningListTags } from '../../../../data/tags';
 
 export type FormInputs = {
   instructors: string;
@@ -84,15 +82,7 @@ export function CreateModal({
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: z.output<typeof formSchema>) {
       if (!isNil(user)) {
-        await zodFetch(
-          addMaterialToListReturnSchema,
-          `${ROOT_URL}/api/add-material-to-list`,
-          {
-            body: JSON.stringify(data),
-            credentials: 'same-origin',
-            method: 'POST',
-          },
-        );
+        await api.addMaterialToList(data);
       }
 
       await queryClient.invalidateQueries(learningListTags(listId));

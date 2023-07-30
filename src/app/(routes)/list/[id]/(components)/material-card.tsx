@@ -7,9 +7,7 @@ import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { twMerge } from 'tailwind-merge';
 
-import { ROOT_URL } from '../../../../../util/constants';
-import { zodFetch } from '../../../../../util/zod';
-import { updateMaterialCompletionReturn } from '../../../../api/update-material-completion/types';
+import { api } from '../../../../data/api';
 import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
@@ -95,19 +93,7 @@ export function MaterialCard({
     async mutationFn(complete: boolean) {
       setIsDone(complete);
       if (!isNil(user)) {
-        await zodFetch(
-          updateMaterialCompletionReturn,
-          `${ROOT_URL}/api/update-material-completion`,
-          {
-            body: JSON.stringify({
-              clerkId: user.id,
-              complete,
-              materialId: material.id,
-            }),
-            credentials: 'same-origin',
-            method: 'POST',
-          },
-        );
+        await api.updateMaterialCompletion(user.id, complete, material.id);
       }
     },
   });

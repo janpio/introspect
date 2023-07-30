@@ -11,17 +11,12 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   DEFAULT_CACHE_TIME,
   DEFAULT_STALE_TIME,
-  ROOT_URL,
 } from '../../../../../util/constants';
-import { learningListTags } from '../../../../../util/tags';
-import { zodFetch } from '../../../../../util/zod';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Toggle } from '../../../../(components)/(elements)/toggle';
-import {
-  LearningListMaterialsFromQuery,
-  learningListReturnSchema,
-} from '../../../../api/learning-list/types';
-import { updateListOrderReturnSchema } from '../../../../api/update-list-order/types';
+import { LearningListMaterialsFromQuery } from '../../../../api/learning-list/types';
+import { api } from '../../../../data/api';
+import { learningListTags } from '../../../../data/tags';
 import { CreateModal } from './create-modal';
 import { MaterialCard } from './material-card';
 
@@ -37,21 +32,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
   const { data } = useQuery({
     cacheTime: DEFAULT_CACHE_TIME,
     async queryFn() {
-      const parameters = new URLSearchParams({
-        listId,
-      });
-
-      if (!isNil(user)) {
-        parameters.append('clerkId', user.id);
-      }
-
-      return zodFetch(
-        learningListReturnSchema,
-        `${ROOT_URL}/api/learning-list?${parameters.toString()}`,
-        {
-          credentials: 'same-origin',
-        },
-      );
+      return api.getLearningList(listId, user?.id);
     },
     queryKey: learningListTags(listId),
     staleTime: DEFAULT_STALE_TIME,
@@ -61,18 +42,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
       if (!isNil(data)) {
-        await zodFetch(
-          updateListOrderReturnSchema,
-          `${ROOT_URL}/api/update-list-order`,
-          {
-            body: JSON.stringify({
-              list: cards,
-              listId: data?.id,
-            }),
-            credentials: 'same-origin',
-            method: 'POST',
-          },
-        );
+        await api.updateListOrder(cards, data.id);
       }
     },
   });

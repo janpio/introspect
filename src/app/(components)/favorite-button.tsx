@@ -7,8 +7,8 @@ import type { JSX } from 'react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { ROOT_URL } from '../../util/constants';
-import { listCardTags } from '../../util/tags';
+import { api } from '../data/api';
+import { listCardTags } from '../data/tags';
 import { queryClient } from './providers';
 
 type FavoriteButtonProperties = {
@@ -37,15 +37,8 @@ export function FavoriteButton({
       setClientCount(clientCount_ => {
         return isFavorite ? clientCount_ - 1 : clientCount_ + 1;
       });
-      await fetch(`${ROOT_URL}/api/favorite-list`, {
-        body: JSON.stringify({
-          clerkId,
-          isAdding: !isFavorite,
-          listId,
-        }),
-        credentials: 'same-origin',
-        method: 'POST',
-      });
+
+      await api.favoriteLIst(clerkId, !isFavorite, listId);
     },
     async onSuccess() {
       await queryClient.invalidateQueries(listCardTags(listId));
