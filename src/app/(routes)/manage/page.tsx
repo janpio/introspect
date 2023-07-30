@@ -2,7 +2,7 @@
 import { useUser } from '@clerk/nextjs';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { Fragment, Suspense } from 'react';
+import { Fragment } from 'react';
 
 import { DEFAULT_CACHE_TIME } from '../../../util/constants';
 import { useFetch } from '../../../util/use-fetch';
@@ -22,11 +22,15 @@ export default function Manage(): JSX.Element | null {
   });
 
   return (
-    <Suspense fallback={<LoadingIcon count={30} />}>
-      <div className="grid place-items-center">
-        <div className="grid w-full max-w-5xl gap-2">
-          {!isNil(user) && <CreateListForm clerkId={user.id} />}
-          {data?.map(list => {
+    <div className="grid place-items-center">
+      <div className="grid w-full max-w-5xl gap-2">
+        {isNil(user) ? (
+          <LoadingIcon count={3} />
+        ) : (
+          <CreateListForm clerkId={user.id} />
+        )}
+        {!isNil(data) &&
+          data?.map(list => {
             return (
               <Fragment key={list.id}>
                 <ListCard listId={list.id} />
@@ -34,8 +38,7 @@ export default function Manage(): JSX.Element | null {
               </Fragment>
             );
           })}
-        </div>
       </div>
-    </Suspense>
+    </div>
   );
 }

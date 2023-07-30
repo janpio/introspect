@@ -1,4 +1,5 @@
 'use client';
+import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { Suspense } from 'react';
 
@@ -22,9 +23,10 @@ export default function ListPage(): JSX.Element {
       </h1>
       <div className="grid place-items-center gap-2">
         <Suspense fallback={<LoadingIcon count={5} />}>
-          {data?.map(async list => {
-            return <ListCard key={list.id} listId={list.id} />;
-          })}
+          {!isNil(data) &&
+            data?.map(async list => {
+              return <ListCard key={list.id} listId={list.id} />;
+            })}
         </Suspense>
       </div>
     </>

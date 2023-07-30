@@ -4,7 +4,7 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -69,8 +69,12 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
     );
   };
 
+  if (isNil(data)) {
+    return <LoadingIcon count={5} />;
+  }
+
   return (
-    <Suspense fallback={<LoadingIcon count={30} />}>
+    <>
       <DndProvider backend={HTML5Backend}>
         {isOwnedByCurrent && (
           <Toggle
@@ -129,6 +133,6 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
           />
         )}
       </div>
-    </Suspense>
+    </>
   );
 }
