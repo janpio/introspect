@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { JSX } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { twMerge } from 'tailwind-merge';
 
 import { DEFAULT_CACHE_TIME } from '../../util/constants';
@@ -37,6 +38,14 @@ export function ListCard({
   const currentUserHasFavorited = data?.[1].favoriteLists
     ? data?.[1].favoriteLists.length > 0
     : false;
+
+  if (isNil(listData) && isNil(data)) {
+    return (
+      <div className="w-full max-w-5xl">
+        <Skeleton count={5} />{' '}
+      </div>
+    );
+  }
 
   return (
     <div

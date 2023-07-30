@@ -1,7 +1,9 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
+import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { Fragment } from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 import { DEFAULT_CACHE_TIME } from '../../../util/constants';
 import { useFetch } from '../../../util/use-fetch';
@@ -19,8 +21,12 @@ export default function Manage(): JSX.Element | null {
     request: apiRequests.getManageLists(user?.id ?? ''),
   });
 
-  if (!user) {
-    return null;
+  if (isNil(user) || isNil(data)) {
+    return (
+      <div className="mx-auto w-full max-w-5xl">
+        <Skeleton count={30} />
+      </div>
+    );
   }
 
   return (

@@ -7,8 +7,8 @@ import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import Skeleton from 'react-loading-skeleton';
 
-import { DEFAULT_CACHE_TIME } from '../../../../../util/constants';
 import { useFetch } from '../../../../../util/use-fetch';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Toggle } from '../../../../(components)/(elements)/toggle';
@@ -31,11 +31,11 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
   const [cards, setCards] = useState<LearningListMaterialsFromQuery>([]);
 
   const { data } = useFetch(learningListReturnSchema, {
-    cacheInterval: DEFAULT_CACHE_TIME,
+    cacheInterval: 0,
     request: apiRequests.getLearningList(listId, user?.id),
   });
 
-  const { isLoading, mutate } = useMutation({
+  const { isLoading: isMutationLoading, mutate } = useMutation({
     async mutationFn() {
       if (!isNil(data)) {
         await api.updateListOrder(cards, data.id);
@@ -48,7 +48,11 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
   }, [cards, data?.learningListMaterial]);
 
   if (isNil(data)) {
-    return null;
+    return (
+      <div className="my-2 w-full">
+        <Skeleton count={30} />
+      </div>
+    );
   }
 
   const isOwnedByCurrent = user?.id === data?.creator.clerkId;
@@ -88,7 +92,7 @@ export function CardList({ listId }: CardListProperties): JSX.Element | null {
         {isOwnedByCurrent && isEditing && (
           <Button
             className="my-2"
-            disabled={isLoading}
+            disabled={isMutationLoading}
             onClick={(): void => {
               return mutate();
             }}

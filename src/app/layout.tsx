@@ -1,4 +1,5 @@
 import './globals.css';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
