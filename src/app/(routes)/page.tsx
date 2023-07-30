@@ -21,7 +21,7 @@ export default function ListPage(): JSX.Element {
         Top Lists
       </h1>
       <div className="grid place-items-center gap-2">
-        <Suspense fallback={<LoadingIcon count={30} />}>
+        <Suspense fallback={<LoadingIcon count={5} />}>
           {data?.map(async list => {
             return <ListCard key={list.id} listId={list.id} />;
           })}

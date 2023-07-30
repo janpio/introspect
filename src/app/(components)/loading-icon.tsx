@@ -14,7 +14,7 @@ export function LoadingIcon({
   className,
 }: LoadingIconProperties): JSX.Element {
   return (
-    <div className={twMerge('w-full max-w-5xl mx-auto my-2 h-96', className)}>
+    <div className={twMerge('w-full max-w-5xl mx-auto my-2 h-32', className)}>
       <Skeleton count={count} />
     </div>
   );
