@@ -2,6 +2,7 @@
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
+import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -28,6 +29,10 @@ export function FavoriteButton({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
+      if (isNil(clerkId)) {
+        return;
+      }
+
       toggleFavorite();
       setClientCount(clientCount_ => {
         return isFavorite ? clientCount_ - 1 : clientCount_ + 1;
@@ -50,7 +55,7 @@ export function FavoriteButton({
   return (
     <button
       className="grid place-items-center"
-      disabled={isLoading}
+      disabled={isLoading || isNil(clerkId)}
       type="button"
       onClick={(): void => {
         return mutate();
