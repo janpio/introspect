@@ -1,8 +1,7 @@
-'use client';
 import type { JSX } from 'react';
 
-import { ListCard } from '../../../(components)/list-card';
-import { CardList } from './(components)/card-list';
+import { ListCard } from '../../../(components)/(list-card)/list-card';
+import { ListDetails } from '../../../(components)/(list-details)/list-details';
 
 type ListPageProperties = {
   readonly params: {
@@ -16,7 +15,7 @@ export default function ListPage({
   return (
     <div className="grid place-items-center">
       <ListCard listId={params.id} />
-      <CardList listId={params.id} />
+      <ListDetails listId={params.id} />
     </div>
   );
 }

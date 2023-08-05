@@ -22,8 +22,8 @@ export default function RootLayout({
   children,
 }: RootLayoutProperties): JSX.Element {
   return (
-    <Providers>
-      <ClerkProvider>
+    <ClerkProvider>
+      <Providers>
         <html className="bg-indigo-950" lang="en-US">
           <head>
             <link href="https://clerk.introspect.dev" rel="preconnect" />
@@ -31,7 +31,7 @@ export default function RootLayout({
           <body className={inter.className}>{children}</body>
         </html>
         <Analytics />
-      </ClerkProvider>
-    </Providers>
+      </Providers>
+    </ClerkProvider>
   );
 }

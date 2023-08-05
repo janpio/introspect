@@ -1,38 +1,50 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
 import { useToggle } from '@ethang/hooks/use-toggle';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { useFetch } from '../../../../../util/use-fetch';
-import { Button } from '../../../../(components)/(elements)/button';
-import { Toggle } from '../../../../(components)/(elements)/toggle';
-import { LoadingIcon } from '../../../../(components)/loading-icon';
+import { CreateModal } from '../../(routes)/list/[id]/(components)/create-modal';
+import { MaterialCard } from '../../(routes)/list/[id]/(components)/material-card';
 import {
   LearningListMaterialsFromQuery,
   learningListReturnSchema,
-} from '../../../../api/learning-list/types';
-import { api } from '../../../../data/api';
-import { apiRequests } from '../../../../data/api-requests';
-import { CreateModal } from './create-modal';
-import { MaterialCard } from './material-card';
+} from '../../api/learning-list/types';
+import { api } from '../../data/api';
+import {
+  apiRequests,
+  DEFAULT_RQ_OPTIONS,
+  getRequestKey,
+} from '../../data/api-requests';
+import { Button } from '../(elements)/button';
+import { Toggle } from '../(elements)/toggle';
+import { LoadingIcon } from '../loading-icon';
 
 type CardListProperties = {
   readonly listId: string;
 };
 
-export function CardList({ listId }: CardListProperties): JSX.Element | null {
+export function ListDetailsData({
+  listId,
+}: CardListProperties): JSX.Element | null {
   const { user } = useUser();
   const [isEditing, toggleEditing] = useToggle(false);
   const [cards, setCards] = useState<LearningListMaterialsFromQuery>([]);
 
-  const { data } = useFetch(learningListReturnSchema, {
-    cacheInterval: 0,
-    request: apiRequests.getLearningList(listId, user?.id),
+  const { data } = useQuery({
+    ...DEFAULT_RQ_OPTIONS,
+    async queryFn() {
+      const response = await fetch(
+        apiRequests.getLearningList(listId, user?.id),
+      );
+
+      return learningListReturnSchema.parse(await response.json());
+    },
+    queryKey: getRequestKey(apiRequests.getLearningList(listId, user?.id)),
   });
 
   const { isLoading: isMutationLoading, mutate } = useMutation({

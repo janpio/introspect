@@ -1,14 +1,14 @@
 'use client';
 import { useUser } from '@clerk/nextjs';
-import { cacheBust } from '@ethang/fetch';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
 import { Button } from '../../../../(components)/(elements)/button';
 import { Modal } from '../../../../(components)/modal';
+import { queryClient } from '../../../../(components)/providers';
 import { api } from '../../../../data/api';
-import { apiRequests } from '../../../../data/api-requests';
+import { apiRequests, getRequestKey } from '../../../../data/api-requests';
 
 type DeleteModalProperties = {
   readonly listId: string;
@@ -29,7 +29,10 @@ export function DeleteModal({
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
       await api.removeMaterialFromList(listId, materialId, order);
-      await cacheBust(apiRequests.getLearningList(listId, user?.id));
+
+      await queryClient.invalidateQueries(
+        getRequestKey(apiRequests.getLearningList(listId, user?.id)),
+      );
       toggleOpen();
     },
   });

@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.23.2",
-    "@ethang/fetch": "^1.1.4",
     "@ethang/hooks": "^1.2.6",
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
