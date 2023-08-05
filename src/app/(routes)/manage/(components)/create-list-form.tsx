@@ -5,23 +5,18 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { createList } from '../../../../actions/create-list/create-list';
+import { getListPageQueryKeys } from '../../../../actions/get-list-page/types';
+import { getManageListsKeys } from '../../../../actions/get-manage-lists/types';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
 import { queryClient } from '../../../(components)/providers';
-import { api } from '../../../data/api';
-import { apiRequests, getRequestKey } from '../../../data/api-requests';
-
-type CreateListFormProperties = {
-  readonly clerkId: string;
-};
 
 const formSchema = z.object({
   name: z.string().trim().min(1),
 });
 
-export function CreateListForm({
-  clerkId,
-}: CreateListFormProperties): JSX.Element {
+export function CreateListForm(): JSX.Element {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { name: '' },
     resolver: zodResolver(formSchema),
@@ -29,16 +24,11 @@ export function CreateListForm({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: { name: string }) {
-      await api.createList({
-        ...data,
-        clerkId,
-      });
+      await createList(data.name);
 
       await Promise.all([
-        queryClient.invalidateQueries(
-          getRequestKey(apiRequests.getManageLists(clerkId)),
-        ),
-        queryClient.invalidateQueries(getRequestKey(apiRequests.getListPage())),
+        queryClient.invalidateQueries(getManageListsKeys),
+        queryClient.invalidateQueries(getListPageQueryKeys),
       ]);
 
       reset();

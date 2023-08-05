@@ -7,13 +7,13 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { getLearningListKeys } from '../../../../../actions/get-learning-list/types';
+import { updateMaterial } from '../../../../../actions/update-material/update-material';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
-import { api } from '../../../../data/api';
-import { apiRequests, getRequestKey } from '../../../../data/api-requests';
 
 type EditModalProperties = {
   readonly listId: string;
@@ -79,14 +79,10 @@ export function EditModal({
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: z.input<typeof formSchema>) {
       if (!isEmpty(userId)) {
-        await api.updateMaterial(
-          data as unknown as z.output<typeof formSchema>,
-        );
+        await updateMaterial(data as unknown as z.output<typeof formSchema>);
       }
 
-      await queryClient.invalidateQueries(
-        getRequestKey(apiRequests.getLearningList(listId, userId)),
-      );
+      await queryClient.invalidateQueries(getLearningListKeys(listId));
 
       toggleOpen();
     },

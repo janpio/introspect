@@ -4,7 +4,7 @@ import { isNil } from 'lodash';
 
 import { environment } from './environment';
 
-export const isAuthenticated = async (): Promise<
+export const getIsAuthenticated = async (): Promise<
   string | JwtPayload | null
 > => {
   const userAuth = auth();

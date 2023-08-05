@@ -1,14 +1,13 @@
 'use client';
-import { useUser } from '@clerk/nextjs';
 import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
+import { getLearningListKeys } from '../../../../../actions/get-learning-list/types';
+import { removeMaterialFromList } from '../../../../../actions/remove-material-from-list/remove-material-from-list';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
-import { api } from '../../../../data/api';
-import { apiRequests, getRequestKey } from '../../../../data/api-requests';
 
 type DeleteModalProperties = {
   readonly listId: string;
@@ -24,15 +23,12 @@ export function DeleteModal({
   order,
 }: DeleteModalProperties): JSX.Element {
   const [isOpen, toggleOpen] = useToggle(false);
-  const { user } = useUser();
 
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
-      await api.removeMaterialFromList(listId, materialId, order);
+      await removeMaterialFromList(listId, materialId, order);
 
-      await queryClient.invalidateQueries(
-        getRequestKey(apiRequests.getLearningList(listId, user?.id)),
-      );
+      await queryClient.invalidateQueries(getLearningListKeys(listId));
       toggleOpen();
     },
   });

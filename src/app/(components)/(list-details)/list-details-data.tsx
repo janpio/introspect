@@ -8,18 +8,15 @@ import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import { DEFAULT_RQ_OPTIONS } from '../../../actions/constants';
+import { getLearningList } from '../../../actions/get-learning-list/get-learning-list';
+import {
+  getLearningListKeys,
+  LearningListMaterialsFromQuery,
+} from '../../../actions/get-learning-list/types';
+import { updateListOrder } from '../../../actions/update-list-order/update-list-order';
 import { CreateModal } from '../../(routes)/list/[id]/(components)/create-modal';
 import { MaterialCard } from '../../(routes)/list/[id]/(components)/material-card';
-import {
-  LearningListMaterialsFromQuery,
-  learningListReturnSchema,
-} from '../../api/learning-list/types';
-import { api } from '../../data/api';
-import {
-  apiRequests,
-  DEFAULT_RQ_OPTIONS,
-  getRequestKey,
-} from '../../data/api-requests';
 import { Button } from '../(elements)/button';
 import { Toggle } from '../(elements)/toggle';
 import { LoadingIcon } from '../loading-icon';
@@ -38,19 +35,15 @@ export function ListDetailsData({
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      const response = await fetch(
-        apiRequests.getLearningList(listId, user?.id),
-      );
-
-      return learningListReturnSchema.parse(await response.json());
+      return getLearningList(listId);
     },
-    queryKey: getRequestKey(apiRequests.getLearningList(listId, user?.id)),
+    queryKey: getLearningListKeys(listId),
   });
 
   const { isLoading: isMutationLoading, mutate } = useMutation({
     async mutationFn() {
       if (!isNil(data)) {
-        await api.updateListOrder(cards, data.id);
+        await updateListOrder({ list: cards, listId });
       }
     },
   });

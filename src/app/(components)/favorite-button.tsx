@@ -7,8 +7,8 @@ import type { JSX } from 'react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { api } from '../data/api';
-import { apiRequests, getRequestKey } from '../data/api-requests';
+import { favoriteList } from '../../actions/favorite-list/favorite-list';
+import { getListCardKeys } from '../../actions/get-list-card/types';
 import { queryClient } from './providers';
 
 type FavoriteButtonProperties = {
@@ -38,12 +38,10 @@ export function FavoriteButton({
         return isFavorite ? clientCount_ - 1 : clientCount_ + 1;
       });
 
-      await api.favoriteLIst(clerkId, !isFavorite, listId);
+      await favoriteList(listId, !isFavorite);
     },
     async onSuccess() {
-      await queryClient.invalidateQueries(
-        getRequestKey(apiRequests.getListCard(listId, clerkId)),
-      );
+      await queryClient.invalidateQueries(getListCardKeys(listId));
     },
   });
 

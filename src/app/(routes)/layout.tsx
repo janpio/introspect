@@ -3,7 +3,7 @@ import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import type { JSX, ReactNode } from 'react';
 
-import { syncCurrentUser } from '../(actions)/sync-user';
+import { syncCurrentUser } from '../../actions/sync-user';
 import { Button } from '../(components)/(elements)/button';
 
 type LayoutProperties = {

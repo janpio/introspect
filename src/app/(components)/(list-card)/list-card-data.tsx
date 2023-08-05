@@ -3,15 +3,12 @@ import { useUser } from '@clerk/nextjs';
 import { useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { z } from 'zod';
 
-import { learningListReturnSchema } from '../../api/learning-list/types';
-import { listCardReturnSchema } from '../../api/list-card/types';
-import {
-  apiRequests,
-  DEFAULT_RQ_OPTIONS,
-  getRequestKey,
-} from '../../data/api-requests';
+import { DEFAULT_RQ_OPTIONS } from '../../../actions/constants';
+import { getLearningList } from '../../../actions/get-learning-list/get-learning-list';
+import { getLearningListKeys } from '../../../actions/get-learning-list/types';
+import { getListCard } from '../../../actions/get-list-card/get-list-card';
+import { getListCardKeys } from '../../../actions/get-list-card/types';
 import { ListCardView } from './list-card-view';
 
 type ListCardProperties = {
@@ -26,23 +23,17 @@ export function ListCardData({
   const { data: listData } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      const response = await fetch(
-        apiRequests.getLearningList(listId, user?.id),
-      );
-
-      return learningListReturnSchema.parse(await response.json());
+      return getLearningList(listId);
     },
-    queryKey: getRequestKey(apiRequests.getLearningList(listId, user?.id)),
+    queryKey: getLearningListKeys(listId),
   });
 
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      const response = await fetch(apiRequests.getListCard(listId, user?.id));
-
-      return (await response.json()) as z.output<typeof listCardReturnSchema>;
+      return getListCard(listId);
     },
-    queryKey: getRequestKey(apiRequests.getListCard(listId, user?.id)),
+    queryKey: getListCardKeys(listId),
   });
 
   const hasCurrentUserFavorited = data?.[1]?.favoriteLists

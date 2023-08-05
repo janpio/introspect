@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { twMerge } from 'tailwind-merge';
 
-import { api } from '../../../../data/api';
+import { updateMaterialCompletion } from '../../../../../actions/update-material-completion/update-material-completion';
 import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
@@ -93,7 +93,7 @@ export function MaterialCard({
     async mutationFn(complete: boolean) {
       setIsDone(complete);
       if (!isNil(user)) {
-        await api.updateMaterialCompletion(user.id, complete, material.id);
+        await updateMaterialCompletion({ complete, materialId: material.id });
       }
     },
   });

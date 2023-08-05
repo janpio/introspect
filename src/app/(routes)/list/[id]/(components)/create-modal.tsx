@@ -7,13 +7,13 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { addMaterialToList } from '../../../../../actions/add-material-to-list/add-material-to-list';
+import { getLearningListKeys } from '../../../../../actions/get-learning-list/types';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Input } from '../../../../(components)/(elements)/input';
 import { Textarea } from '../../../../(components)/(elements)/textarea';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
-import { api } from '../../../../data/api';
-import { apiRequests, getRequestKey } from '../../../../data/api-requests';
 
 export type FormInputs = {
   instructors: string;
@@ -82,12 +82,10 @@ export function CreateModal({
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: z.output<typeof formSchema>) {
       if (!isNil(user)) {
-        await api.addMaterialToList(data);
+        await addMaterialToList(data);
       }
 
-      await queryClient.invalidateQueries(
-        getRequestKey(apiRequests.getLearningList(listId, user?.id)),
-      );
+      await queryClient.invalidateQueries(getLearningListKeys(listId));
       toggleOpen();
       reset();
     },
