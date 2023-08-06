@@ -21,7 +21,7 @@ export function ListCardData({
   const { data: listData } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      const data = await fetch(api.getList(listId));
+      const data = await fetch(api.getList(listId, user?.id));
 
       return learningListReturnSchema.parse(await data.json());
     },

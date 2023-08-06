@@ -52,8 +52,12 @@ export const api = {
       method: 'POST',
     });
   },
-  getList(listId: string): Request {
+  getList(listId: string, userId?: string): Request {
     const searchParameters = new URLSearchParams({ listId });
+
+    if (userId !== undefined) {
+      searchParameters.append('userId', userId);
+    }
 
     return new Request(
       `${ROOT_URL}/api/learning-list?${searchParameters.toString()}`,

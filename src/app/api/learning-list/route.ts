@@ -22,12 +22,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const getCompletedBy = isNil(user?.id)
+  const userId = user?.id ?? url.searchParams.get('userId');
+
+  const getCompletedBy = isNil(userId)
     ? false
     : {
         select: { id: true },
         where: {
-          clerkId: user?.id,
+          clerkId: userId,
         },
       };
 

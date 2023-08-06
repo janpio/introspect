@@ -26,7 +26,7 @@ export function ListDetailsData({
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      const data = await fetch(api.getList(listId));
+      const data = await fetch(api.getList(listId, user?.id));
 
       return learningListReturnSchema.parse(await data.json());
     },
@@ -64,7 +64,9 @@ export function ListDetailsData({
         }),
       );
 
-      await queryClient.invalidateQueries(getRequestKey(api.getList(listId)));
+      await queryClient.invalidateQueries(
+        getRequestKey(api.getList(listId, user?.id)),
+      );
     },
   });
 
