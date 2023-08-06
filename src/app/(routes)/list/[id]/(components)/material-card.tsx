@@ -1,23 +1,25 @@
 import { useUser } from '@clerk/nextjs';
-import { useMutation } from '@tanstack/react-query';
+import { UseMutateFunction, useMutation } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import Link from 'next/link';
 import type { JSX } from 'react';
 import { useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
 import { twMerge } from 'tailwind-merge';
 
-import { api } from '../../../../api/api';
+import { Button } from '../../../../(components)/(elements)/button';
+import { queryClient } from '../../../../(components)/providers';
+import { api, getRequestKey } from '../../../../api/api';
 import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
 type MaterialCardProperties = {
-  readonly findCard: (id: string) => { index: number };
   readonly isComplete: boolean;
   readonly isEditing: boolean;
   readonly isOwnedByCurrent: boolean;
+  readonly isUpdateOrderLoading: boolean;
   readonly listId: string;
   readonly listIndex: number;
+  readonly listLength: number;
   readonly material: {
     id: string;
     instructors: string[];
@@ -25,59 +27,29 @@ type MaterialCardProperties = {
     name: string;
     publisherName: string;
   };
-  readonly moveCard: (id: string, to: number) => void;
   readonly order: number;
+  readonly updateOrder: UseMutateFunction<
+    void,
+    unknown,
+    { currentOrder: number; direction: 'up' | 'down' },
+    unknown
+  >;
 };
 
 export function MaterialCard({
-  findCard,
   isEditing,
-  moveCard,
   order,
   isComplete,
   isOwnedByCurrent,
+  isUpdateOrderLoading,
   listId,
   listIndex,
+  listLength,
   material,
+  updateOrder,
 }: MaterialCardProperties): JSX.Element {
   const { user } = useUser();
   const [isDone, setIsDone] = useState(isComplete);
-
-  const originalIndex = findCard(String(order)).index;
-
-  const [{ isDragging }, drag] = useDrag(() => {
-    return {
-      collect(monitor): { isDragging: boolean } {
-        return {
-          isDragging: monitor.isDragging(),
-        };
-      },
-      end(item, monitor): void {
-        const { order, originalIndex } = item as {
-          order: string;
-          originalIndex: number;
-        };
-        const didDrop = monitor.didDrop();
-        if (!didDrop) {
-          moveCard(order, originalIndex);
-        }
-      },
-      item: { order: String(order), originalIndex },
-      type: 'card',
-    };
-  });
-
-  const [, drop] = useDrop(() => {
-    return {
-      accept: 'card',
-      hover({ order: order_ }: { order: string }): void {
-        if (order_ !== String(order)) {
-          const { index } = findCard(String(order));
-          moveCard(order_, index);
-        }
-      },
-    };
-  });
 
   const urlObjects = material.links.map(link => {
     const url = new URL(link.url);
@@ -94,6 +66,8 @@ export function MaterialCard({
       setIsDone(complete);
       if (!isNil(user)) {
         await fetch(api.updateMaterialCompletion(material.id, complete));
+
+        await queryClient.invalidateQueries(getRequestKey(api.getList(listId)));
       }
     },
   });
@@ -102,14 +76,7 @@ export function MaterialCard({
     <div
       className={twMerge(
         'mx-auto my-2 flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm',
-        isOwnedByCurrent && isEditing && 'cursor-move',
-        isDragging && 'opacity-0',
       )}
-      ref={(node): ReturnType<typeof drag> | undefined => {
-        if (isOwnedByCurrent && isEditing) {
-          return drag(drop(node));
-        }
-      }}
     >
       <div>
         <p>
@@ -154,6 +121,26 @@ export function MaterialCard({
                 materialTitle={material.name}
                 order={order}
               />
+              {order !== 0 && (
+                <Button
+                  disabled={isLoading || isUpdateOrderLoading}
+                  onClick={(): void => {
+                    updateOrder({ currentOrder: order, direction: 'down' });
+                  }}
+                >
+                  {'<-'}
+                </Button>
+              )}
+              {order !== listLength - 1 && (
+                <Button
+                  disabled={isLoading || isUpdateOrderLoading}
+                  onClick={(): void => {
+                    updateOrder({ currentOrder: order, direction: 'up' });
+                  }}
+                >
+                  {'->'}
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -170,7 +157,9 @@ export function MaterialCard({
             value={String(isDone)}
             className={twMerge(
               'mb-4 h-6 w-6 rounded text-green-500',
-              isLoading ? 'bg-gray-200 opacity-50' : 'cursor-pointer',
+              isLoading || isUpdateOrderLoading
+                ? 'bg-gray-200 opacity-50'
+                : 'cursor-pointer',
             )}
             onChange={(): void => {
               mutate(!isDone);

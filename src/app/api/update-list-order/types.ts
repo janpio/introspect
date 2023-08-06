@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
 export const updateListOrderBodySchema = z.object({
-  list: z.array(z.object({ id: z.string() })),
   listId: z.string(),
+  materialACurrentOrder: z.number(),
+  materialAId: z.string(),
+  materialBCurrentOrder: z.number(),
+  materialBId: z.string(),
 });
+
+export type UpdateListOrderBody = z.output<typeof updateListOrderBodySchema>;

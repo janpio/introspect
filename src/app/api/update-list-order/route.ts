@@ -1,6 +1,5 @@
 import { constants } from 'node:http2';
 
-import { PrismaPromise } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
@@ -19,42 +18,70 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { listId, list } = updateListOrderBodySchema.parse(
-    await request.json(),
-  );
+  const {
+    listId,
+    materialAId,
+    materialBId,
+    materialACurrentOrder,
+    materialBCurrentOrder,
+  } = updateListOrderBodySchema.parse(await request.json());
 
-  let promises: Array<PrismaPromise<{ id: string }>> = [];
-  let newOrder = 0;
-
-  for (const item of list) {
-    promises = [
-      ...promises,
-      prisma.learningListMaterial.update({
-        data: {
-          order: newOrder,
-        },
-        select: { id: true },
-        where: {
-          id: item.id,
-        },
-      }),
-    ];
-    newOrder += 1;
-  }
-
-  promises = [
-    ...promises,
-    prisma.learningList.update({
-      data: {
-        updatedAt: new Date(),
-      },
+  const results = await prisma.$transaction([
+    prisma.learningListMaterial.findUnique({
+      select: { id: true },
       where: {
-        id: listId,
+        order_learningListId_learningMaterialId: {
+          learningListId: listId,
+          learningMaterialId: materialAId,
+          order: materialACurrentOrder,
+        },
       },
     }),
-  ];
+    prisma.learningListMaterial.findUnique({
+      select: { id: true },
+      where: {
+        order_learningListId_learningMaterialId: {
+          learningListId: listId,
+          learningMaterialId: materialBId,
+          order: materialBCurrentOrder,
+        },
+      },
+    }),
+  ]);
 
-  const data = Promise.all(promises);
+  if (results[0] === null || results[1] === null) {
+    return NextResponse.json(
+      { error: 'Not Found' },
+      {
+        status: constants.HTTP_STATUS_NOT_FOUND,
+      },
+    );
+  }
 
-  return NextResponse.json(data);
+  await prisma.learningListMaterial.update({
+    data: {
+      order: -1,
+    },
+    where: {
+      id: results[0].id,
+    },
+  });
+  await prisma.learningListMaterial.update({
+    data: {
+      order: materialACurrentOrder,
+    },
+    where: {
+      id: results[1].id,
+    },
+  });
+  await prisma.learningListMaterial.update({
+    data: {
+      order: materialBCurrentOrder,
+    },
+    where: {
+      id: results[0].id,
+    },
+  });
+
+  return NextResponse.json({});
 }

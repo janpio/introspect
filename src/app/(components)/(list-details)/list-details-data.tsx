@@ -4,20 +4,14 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { CreateModal } from '../../(routes)/list/[id]/(components)/create-modal';
 import { MaterialCard } from '../../(routes)/list/[id]/(components)/material-card';
 import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
-import {
-  LearningListMaterialsFromQuery,
-  learningListReturnSchema,
-} from '../../api/learning-list/types';
-import { Button } from '../(elements)/button';
+import { learningListReturnSchema } from '../../api/learning-list/types';
 import { Toggle } from '../(elements)/toggle';
 import { LoadingIcon } from '../loading-icon';
+import { queryClient } from '../providers';
 
 type CardListProperties = {
   readonly listId: string;
@@ -28,7 +22,6 @@ export function ListDetailsData({
 }: CardListProperties): JSX.Element | null {
   const { user } = useUser();
   const [isEditing, toggleEditing] = useToggle(false);
-  const [cards, setCards] = useState<LearningListMaterialsFromQuery>([]);
 
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
@@ -40,39 +33,42 @@ export function ListDetailsData({
     queryKey: getRequestKey(api.getList(listId)),
   });
 
-  const { isLoading: isMutationLoading, mutate } = useMutation({
-    async mutationFn() {
-      if (!isNil(data)) {
-        await fetch(api.updateListOrder(listId, cards));
+  const { mutate: updateOrder, isLoading: isUpdateOrderLoading } = useMutation({
+    async mutationFn({
+      currentOrder,
+      direction,
+    }: {
+      currentOrder: number;
+      direction: 'up' | 'down';
+    }): Promise<void> {
+      const itemA = data?.learningListMaterial.find(item => {
+        return item.order === currentOrder;
+      });
+      const itemB = data?.learningListMaterial.find(item => {
+        const findOrder =
+          direction === 'up' ? currentOrder + 1 : currentOrder - 1;
+        return item.order === findOrder;
+      });
+
+      if (itemA === undefined || itemB === undefined) {
+        return;
       }
+
+      await fetch(
+        api.updateListOrder({
+          listId,
+          materialACurrentOrder: itemA.order,
+          materialAId: itemA.learningMaterial.id,
+          materialBCurrentOrder: itemB.order,
+          materialBId: itemB.learningMaterial.id,
+        }),
+      );
+
+      await queryClient.invalidateQueries(getRequestKey(api.getList(listId)));
     },
   });
 
-  useEffect(() => {
-    setCards(data?.learningListMaterial ?? []);
-  }, [cards, data?.learningListMaterial]);
-
   const isOwnedByCurrent = user?.id === data?.creator.clerkId;
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const findCard = (order: string) => {
-    const card = cards.find(item => {
-      return String(item.order) === order;
-    });
-
-    return { card, index: card ? cards.indexOf(card) : 0 };
-  };
-
-  const moveCard = (order: string, atIndex: number): void => {
-    const { card, index } = findCard(order);
-    const newCards = [...cards.slice(0, index), ...cards.slice(index + 1)];
-
-    setCards(
-      card
-        ? [...newCards.slice(0, atIndex), card, ...newCards.slice(atIndex)]
-        : [...newCards.slice(0, atIndex), ...newCards.slice(atIndex)],
-    );
-  };
 
   if (isNil(data)) {
     return <LoadingIcon count={5} />;
@@ -80,7 +76,7 @@ export function ListDetailsData({
 
   return (
     <>
-      <DndProvider backend={HTML5Backend}>
+      <div>
         {isOwnedByCurrent && (
           <Toggle
             isChecked={isEditing}
@@ -90,32 +86,22 @@ export function ListDetailsData({
             }}
           />
         )}
-        {isOwnedByCurrent && isEditing && (
-          <Button
-            className="my-2"
-            disabled={isMutationLoading}
-            onClick={(): void => {
-              return mutate();
-            }}
-          >
-            Save List Order
-          </Button>
-        )}
         <div className="grid w-full md:grid-cols-2 md:gap-2">
-          {cards.map((listMaterial, index) => {
+          {data.learningListMaterial.map((listMaterial, index) => {
             const { learningMaterial, order } = listMaterial;
 
             return (
               <MaterialCard
-                findCard={findCard}
                 isEditing={isEditing}
                 isOwnedByCurrent={isOwnedByCurrent}
+                isUpdateOrderLoading={isUpdateOrderLoading}
                 key={learningMaterial.id}
                 listId={listId}
                 listIndex={index}
+                listLength={data.learningListMaterial.length}
                 material={learningMaterial}
-                moveCard={moveCard}
                 order={order}
+                updateOrder={updateOrder}
                 isComplete={
                   learningMaterial.completedBy !== undefined &&
                   learningMaterial.completedBy.length > 0
@@ -124,7 +110,7 @@ export function ListDetailsData({
             );
           })}
         </div>
-      </DndProvider>
+      </div>
       <div className="mx-auto my-4 max-w-5xl">
         {isOwnedByCurrent && isEditing && (
           <CreateModal

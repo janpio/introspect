@@ -1,4 +1,5 @@
 import { AddMaterialToListBody } from './learning-list/types';
+import { UpdateListOrderBody } from './update-list-order/types';
 import { UpdateMaterialBody } from './update-material/types';
 
 const ROOT_URL =
@@ -85,12 +86,9 @@ export const api = {
       method: 'POST',
     });
   },
-  updateListOrder(listId: string, list: Array<{ id: string }>): Request {
+  updateListOrder(body: UpdateListOrderBody): Request {
     return new Request(`${ROOT_URL}/api/update-list-order`, {
-      body: JSON.stringify({
-        list,
-        listId,
-      }),
+      body: JSON.stringify(body),
       method: 'POST',
     });
   },
