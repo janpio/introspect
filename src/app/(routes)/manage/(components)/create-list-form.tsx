@@ -5,12 +5,11 @@ import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { createList } from '../../../../actions/create-list/create-list';
-import { getListPageQueryKeys } from '../../../../actions/get-list-page/types';
-import { getManageListsKeys } from '../../../../actions/get-manage-lists/types';
 import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
 import { queryClient } from '../../../(components)/providers';
+import { api, getRequestKey } from '../../../api/api';
+import { getManageListsKeys } from '../../../api/manage-lists/types';
 
 const formSchema = z.object({
   name: z.string().trim().min(1),
@@ -24,11 +23,11 @@ export function CreateListForm(): JSX.Element {
 
   const { isLoading, mutate } = useMutation({
     async mutationFn(data: { name: string }) {
-      await createList(data.name);
+      await fetch(api.createList(data.name));
 
       await Promise.all([
         queryClient.invalidateQueries(getManageListsKeys),
-        queryClient.invalidateQueries(getListPageQueryKeys),
+        queryClient.invalidateQueries(getRequestKey(api.getListPage())),
       ]);
 
       reset();

@@ -3,18 +3,19 @@ import { useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import React, { JSX } from 'react';
 
-import { DEFAULT_RQ_OPTIONS } from '../../../actions/constants';
-import { getListPage } from '../../../actions/get-list-page/get-list-page';
-import { getListPageQueryKeys } from '../../../actions/get-list-page/types';
+import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
+import { getListPageReturnSchema } from '../../api/list-page/types';
 import { ListCard } from '../(list-card)/list-card';
 
 export function ListCardsData(): JSX.Element | null {
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
-    queryFn() {
-      return getListPage();
+    async queryFn() {
+      const response = await fetch(api.getListPage());
+
+      return getListPageReturnSchema.parse(await response.json());
     },
-    queryKey: getListPageQueryKeys,
+    queryKey: getRequestKey(api.getListPage()),
   });
 
   if (isNil(data)) {

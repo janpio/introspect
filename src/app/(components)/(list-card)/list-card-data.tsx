@@ -4,11 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import type { JSX } from 'react';
 
-import { DEFAULT_RQ_OPTIONS } from '../../../actions/constants';
-import { getLearningList } from '../../../actions/get-learning-list/get-learning-list';
-import { getLearningListKeys } from '../../../actions/get-learning-list/types';
-import { getListCard } from '../../../actions/get-list-card/get-list-card';
-import { getListCardKeys } from '../../../actions/get-list-card/types';
+import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
+import { learningListReturnSchema } from '../../api/learning-list/types';
+import { GetListCardReturn } from '../../api/list-card/types';
 import { ListCardView } from './list-card-view';
 
 type ListCardProperties = {
@@ -23,17 +21,20 @@ export function ListCardData({
   const { data: listData } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      return getLearningList(listId);
+      const data = await fetch(api.getList(listId));
+
+      return learningListReturnSchema.parse(await data.json());
     },
-    queryKey: getLearningListKeys(listId),
+    queryKey: getRequestKey(api.getList(listId)),
   });
 
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      return getListCard(listId);
+      const response = await fetch(api.getListCard(listId));
+      return (await response.json()) as GetListCardReturn;
     },
-    queryKey: getListCardKeys(listId),
+    queryKey: getRequestKey(api.getListCard(listId)),
   });
 
   const hasCurrentUserFavorited = data?.[1]?.favoriteLists

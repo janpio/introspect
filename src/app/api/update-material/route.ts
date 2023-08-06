@@ -1,31 +1,25 @@
-'use server';
-import { prisma } from '../../prisma/database';
-import { getIsAuthenticated } from '../../util/clerk';
+import { constants } from 'node:http2';
 
-type UpdateMaterialProperties = {
-  courseName: string;
-  id: string;
-  instructors: string[];
-  links: string[];
-  publisherName: string;
-};
+import { NextRequest, NextResponse } from 'next/server';
 
-type UpdateMaterialReturn = {
-  id: string;
-};
+import { prisma } from '../../../prisma/database';
+import { getIsAuthenticated } from '../../../util/clerk';
+import { updateMaterialBodySchema } from './types';
 
-export async function updateMaterial({
-  id,
-  courseName,
-  publisherName,
-  instructors,
-  links,
-}: UpdateMaterialProperties): Promise<UpdateMaterialReturn | undefined> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const isAuthenticated = await getIsAuthenticated();
 
   if (isAuthenticated === null) {
-    return;
+    return NextResponse.json(
+      { error: 'Unauthenticated' },
+      {
+        status: constants.HTTP_STATUS_UNAUTHORIZED,
+      },
+    );
   }
+
+  const { instructors, id, publisherName, links, courseName } =
+    updateMaterialBodySchema.parse(await request.json());
 
   const learningMaterial = await prisma.learningMaterial.update({
     data: {
@@ -66,5 +60,5 @@ export async function updateMaterial({
     },
   });
 
-  return learningMaterial;
+  return NextResponse.json(learningMaterial);
 }

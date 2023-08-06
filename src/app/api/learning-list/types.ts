@@ -1,9 +1,5 @@
 import { z } from 'zod';
 
-export const getLearningListKeys = (listId: string): string[] => {
-  return ['get-learning-list', listId];
-};
-
 const learningListMaterialsSchema = z.array(
   z.object({
     id: z.string(),
@@ -40,3 +36,16 @@ export const learningListReturnSchema = z
     { invalid_type_error: 'learningListReturnSchema' },
   )
   .nullable();
+
+export const addMaterialToListBodySchema = z.object({
+  instructors: z.array(z.string()),
+  links: z.array(z.string()),
+  listId: z.string(),
+  listLength: z.number(),
+  name: z.string(),
+  publisherName: z.string(),
+});
+
+export type AddMaterialToListBody = z.output<
+  typeof addMaterialToListBodySchema
+>;

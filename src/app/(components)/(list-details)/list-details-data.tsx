@@ -8,15 +8,13 @@ import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { DEFAULT_RQ_OPTIONS } from '../../../actions/constants';
-import { getLearningList } from '../../../actions/get-learning-list/get-learning-list';
-import {
-  getLearningListKeys,
-  LearningListMaterialsFromQuery,
-} from '../../../actions/get-learning-list/types';
-import { updateListOrder } from '../../../actions/update-list-order/update-list-order';
 import { CreateModal } from '../../(routes)/list/[id]/(components)/create-modal';
 import { MaterialCard } from '../../(routes)/list/[id]/(components)/material-card';
+import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
+import {
+  LearningListMaterialsFromQuery,
+  learningListReturnSchema,
+} from '../../api/learning-list/types';
 import { Button } from '../(elements)/button';
 import { Toggle } from '../(elements)/toggle';
 import { LoadingIcon } from '../loading-icon';
@@ -35,15 +33,17 @@ export function ListDetailsData({
   const { data } = useQuery({
     ...DEFAULT_RQ_OPTIONS,
     async queryFn() {
-      return getLearningList(listId);
+      const data = await fetch(api.getList(listId));
+
+      return learningListReturnSchema.parse(await data.json());
     },
-    queryKey: getLearningListKeys(listId),
+    queryKey: getRequestKey(api.getList(listId)),
   });
 
   const { isLoading: isMutationLoading, mutate } = useMutation({
     async mutationFn() {
       if (!isNil(data)) {
-        await updateListOrder({ list: cards, listId });
+        await fetch(api.updateListOrder(listId, cards));
       }
     },
   });

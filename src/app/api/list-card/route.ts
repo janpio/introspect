@@ -1,27 +1,24 @@
-'use server';
+import { constants } from 'node:http2';
 
 import { currentUser } from '@clerk/nextjs';
 import { PrismaPromise } from '@prisma/client';
 import { isNil } from 'lodash';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { prisma } from '../../prisma/database';
+import { prisma } from '../../../prisma/database';
 
-type GetListCardReturn = [
-  (
-    | {
-        _count: {
-          favoritedBy: number;
-        };
-      }
-    | undefined
-  ),
-  {
-    favoriteLists?: Array<{ id: string }>;
-  },
-];
-
-export async function getListCard(listId: string): Promise<GetListCardReturn> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const user = await currentUser();
+  const listId = request.nextUrl.searchParams.get('listId');
+
+  if (listId === null) {
+    return NextResponse.json(
+      { error: 'Invalid params' },
+      {
+        status: constants.HTTP_STATUS_BAD_REQUEST,
+      },
+    );
+  }
 
   let promises: Array<PrismaPromise<unknown>> = [
     prisma.learningList.findUnique({
@@ -53,6 +50,7 @@ export async function getListCard(listId: string): Promise<GetListCardReturn> {
     ];
   }
 
-  // @ts-expect-error use manual typing
-  return prisma.$transaction(promises);
+  const data = await prisma.$transaction(promises);
+
+  return NextResponse.json(data);
 }

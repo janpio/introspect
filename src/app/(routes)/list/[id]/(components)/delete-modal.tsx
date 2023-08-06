@@ -3,11 +3,10 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
-import { getLearningListKeys } from '../../../../../actions/get-learning-list/types';
-import { removeMaterialFromList } from '../../../../../actions/remove-material-from-list/remove-material-from-list';
 import { Button } from '../../../../(components)/(elements)/button';
 import { Modal } from '../../../../(components)/modal';
 import { queryClient } from '../../../../(components)/providers';
+import { api, getRequestKey } from '../../../../api/api';
 
 type DeleteModalProperties = {
   readonly listId: string;
@@ -26,9 +25,9 @@ export function DeleteModal({
 
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
-      await removeMaterialFromList(listId, materialId, order);
+      await fetch(api.removeMaterialFromList(listId, materialId, order));
 
-      await queryClient.invalidateQueries(getLearningListKeys(listId));
+      await queryClient.invalidateQueries(getRequestKey(api.getList(listId)));
       toggleOpen();
     },
   });

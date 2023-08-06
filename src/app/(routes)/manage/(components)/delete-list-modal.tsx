@@ -4,12 +4,11 @@ import { useToggle } from '@ethang/hooks/use-toggle';
 import { useMutation } from '@tanstack/react-query';
 import type { JSX } from 'react';
 
-import { deleteList } from '../../../../actions/delete-list/delete-list';
-import { getListPageQueryKeys } from '../../../../actions/get-list-page/types';
-import { getManageListsKeys } from '../../../../actions/get-manage-lists/types';
 import { Button } from '../../../(components)/(elements)/button';
 import { Modal } from '../../../(components)/modal';
 import { queryClient } from '../../../(components)/providers';
+import { api, getRequestKey } from '../../../api/api';
+import { getManageListsKeys } from '../../../api/manage-lists/types';
 
 type DeleteListModalProperties = {
   readonly listId: string;
@@ -26,11 +25,11 @@ export function DeleteListModal({
   const { isLoading, mutate } = useMutation({
     async mutationFn() {
       if (user?.id !== undefined) {
-        await deleteList(listId);
+        await fetch(api.deleteList(listId));
 
         await Promise.all([
           queryClient.invalidateQueries(getManageListsKeys),
-          queryClient.invalidateQueries(getListPageQueryKeys),
+          queryClient.invalidateQueries(getRequestKey(api.getListPage())),
         ]);
       }
 

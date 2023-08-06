@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { twMerge } from 'tailwind-merge';
 
-import { updateMaterialCompletion } from '../../../../../actions/update-material-completion/update-material-completion';
+import { api } from '../../../../api/api';
 import { DeleteModal } from './delete-modal';
 import { EditModal } from './edit-modal';
 
@@ -93,7 +93,7 @@ export function MaterialCard({
     async mutationFn(complete: boolean) {
       setIsDone(complete);
       if (!isNil(user)) {
-        await updateMaterialCompletion({ complete, materialId: material.id });
+        await fetch(api.updateMaterialCompletion(material.id, complete));
       }
     },
   });
@@ -101,7 +101,7 @@ export function MaterialCard({
   return (
     <div
       className={twMerge(
-        'm-2 mx-auto flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm',
+        'mx-auto my-2 flex w-full max-w-5xl justify-between gap-2 border-2 p-4 shadow-sm',
         isOwnedByCurrent && isEditing && 'cursor-move',
         isDragging && 'opacity-0',
       )}
