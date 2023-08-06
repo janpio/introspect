@@ -20,6 +20,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     );
   }
 
+  const userId = user?.id ?? request.nextUrl.searchParams.get('userId');
+
   let promises: Array<PrismaPromise<unknown>> = [
     prisma.learningList.findUnique({
       select: {
@@ -35,7 +37,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }),
   ];
 
-  if (!isNil(user?.id)) {
+  if (!isNil(userId)) {
     promises = [
       ...promises,
       prisma.person.findUnique({
@@ -45,7 +47,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             where: { id: listId },
           },
         },
-        where: { clerkId: user?.id },
+        where: { clerkId: userId },
       }),
     ];
   }
