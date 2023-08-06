@@ -13,7 +13,7 @@
     "@ethang/hooks": "^1.2.6",
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
-    "@hookform/resolvers": "^3.1.1",
+    "@hookform/resolvers": "^3.2.0",
     "@prisma/client": "^5.1.1",
     "@tailwindcss/forms": "^0.5.4",
     "@tanstack/react-query": "^4.32.6",
