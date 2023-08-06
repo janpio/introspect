@@ -9,7 +9,6 @@ import { Button } from '../../../(components)/(elements)/button';
 import { Input } from '../../../(components)/(elements)/input';
 import { queryClient } from '../../../(components)/providers';
 import { api, getRequestKey } from '../../../api/api';
-import { getManageListsKeys } from '../../../api/manage-lists/types';
 
 const formSchema = z.object({
   name: z.string().trim().min(1),
@@ -26,7 +25,7 @@ export function CreateListForm(): JSX.Element {
       await fetch(api.createList(data.name));
 
       await Promise.all([
-        queryClient.invalidateQueries(getManageListsKeys),
+        queryClient.invalidateQueries(getRequestKey(api.getManageLists())),
         queryClient.invalidateQueries(getRequestKey(api.getListPage())),
       ]);
 

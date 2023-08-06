@@ -8,7 +8,6 @@ import { Button } from '../../../(components)/(elements)/button';
 import { Modal } from '../../../(components)/modal';
 import { queryClient } from '../../../(components)/providers';
 import { api, getRequestKey } from '../../../api/api';
-import { getManageListsKeys } from '../../../api/manage-lists/types';
 
 type DeleteListModalProperties = {
   readonly listId: string;
@@ -28,7 +27,7 @@ export function DeleteListModal({
         await fetch(api.deleteList(listId));
 
         await Promise.all([
-          queryClient.invalidateQueries(getManageListsKeys),
+          queryClient.invalidateQueries(getRequestKey(api.getManageLists())),
           queryClient.invalidateQueries(getRequestKey(api.getListPage())),
         ]);
       }

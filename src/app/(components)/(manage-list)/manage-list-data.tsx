@@ -6,11 +6,8 @@ import { Fragment, JSX } from 'react';
 
 import { CreateListForm } from '../../(routes)/manage/(components)/create-list-form';
 import { DeleteListModal } from '../../(routes)/manage/(components)/delete-list-modal';
-import { api, DEFAULT_RQ_OPTIONS } from '../../api/api';
-import {
-  getManageListsKeys,
-  getManageListsReturnSchema,
-} from '../../api/manage-lists/types';
+import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
+import { getManageListsReturnSchema } from '../../api/manage-lists/types';
 import { ListCard } from '../(list-card)/list-card';
 
 export function ManageListData(): JSX.Element {
@@ -24,7 +21,7 @@ export function ManageListData(): JSX.Element {
 
       return getManageListsReturnSchema.parse(await response.json());
     },
-    queryKey: getManageListsKeys,
+    queryKey: getRequestKey(api.getManageLists()),
   });
 
   return (
