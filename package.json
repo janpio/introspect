@@ -35,7 +35,7 @@
     "eslint-plugin-tailwindcss": "^3.13.0",
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
-    "luxon": "^3.4.1",
+    "luxon": "^3.4.2",
     "meilisearch": "^0.34.1",
     "next": "13.4.19",
     "postcss": "8.4.28",
