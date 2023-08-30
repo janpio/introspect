@@ -1,4 +1,5 @@
-import { JSX, Suspense } from 'react';
+import type { JSX } from 'react';
+import { Suspense } from 'react';
 
 import { LoadingIcon } from '../loading-icon';
 import { ListDetailsData } from './list-details-data';

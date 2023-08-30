@@ -2,7 +2,8 @@
 import { useUser } from '@clerk/nextjs';
 import { useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
-import { Fragment, JSX } from 'react';
+import type { JSX } from 'react';
+import { Fragment } from 'react';
 
 import { CreateListForm } from '../../(routes)/manage/(components)/create-list-form';
 import { DeleteListModal } from '../../(routes)/manage/(components)/delete-list-modal';

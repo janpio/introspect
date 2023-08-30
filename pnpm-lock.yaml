@@ -9,8 +9,8 @@ dependencies:
     specifier: ^4.23.3
     version: 4.23.3(next@13.4.19)(react-dom@18.2.0)(react@18.2.0)
   '@ethang/hooks':
-    specifier: ^1.2.25
-    version: 1.2.25(react@18.2.0)
+    specifier: ^1.2.26
+    version: 1.2.26(react@18.2.0)
   '@headlessui/react':
     specifier: ^1.7.17
     version: 1.7.17(react-dom@18.2.0)(react@18.2.0)
@@ -39,8 +39,8 @@ dependencies:
     specifier: ^4.14.197
     version: 4.14.197
   '@types/luxon':
-    specifier: ^3.3.1
-    version: 3.3.1
+    specifier: ^3.3.2
+    version: 3.3.2
   '@types/node':
     specifier: 20.5.7
     version: 20.5.7
@@ -51,8 +51,8 @@ dependencies:
     specifier: 18.2.7
     version: 18.2.7
   '@types/uuid':
-    specifier: ^9.0.2
-    version: 9.0.2
+    specifier: ^9.0.3
+    version: 9.0.3
   '@vercel/analytics':
     specifier: ^1.0.2
     version: 1.0.2
@@ -69,8 +69,8 @@ dependencies:
     specifier: 8.48.0
     version: 8.48.0
   eslint-config-ethang:
-    specifier: ^9.0.0
-    version: 9.0.0(eslint@8.48.0)(prettier@3.0.3)(tailwindcss@3.3.3)(typescript@5.2.2)
+    specifier: ^10.0.1
+    version: 10.0.1(eslint@8.48.0)(prettier@3.0.3)(tailwindcss@3.3.3)(typescript@5.2.2)
   eslint-config-next:
     specifier: 13.4.19
     version: 13.4.19(eslint@8.48.0)(typescript@5.2.2)
@@ -281,8 +281,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@ethang/hooks@1.2.25(react@18.2.0):
-    resolution: {integrity: sha512-t+H2yvreXdRCg0wQviRMdfTImNdm4YR2odJcTrTlooeHBPjXSKjgmt4KJHgdEcayx+TfdRBOQsM34RtFzxx9uQ==}
+  /@ethang/hooks@1.2.26(react@18.2.0):
+    resolution: {integrity: sha512-v4YiXpJwMY08c6ko681ibAUeDKcPGhjC53jaKJq3OB10LOA8y14OIe0AQWpcHJBgoJMKFgh6etkIsKy1qckGMQ==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
@@ -671,8 +671,8 @@ packages:
     resolution: {integrity: sha512-BMVOiWs0uNxHVlHBgzTIqJYmj+PgCo4euloGF+5m4okL3rEYzM2EEv78mw8zWSMM57dM7kVIgJ2QDvwHSoCI5g==}
     dev: false
 
-  /@types/luxon@3.3.1:
-    resolution: {integrity: sha512-XOS5nBcgEeP2PpcqJHjCWhUCAzGfXIU8ILOSLpx2FhxqMW9KdxgCGXNOEKGVBfveKtIpztHzKK5vSRVLyW/NqA==}
+  /@types/luxon@3.3.2:
+    resolution: {integrity: sha512-l5cpE57br4BIjK+9BSkFBOsWtwv6J9bJpC7gdXIzZyI0vuKvNTk0wZZrkQxMGsUAuGW9+WMNWF2IJMD7br2yeQ==}
     dev: false
 
   /@types/mime@1.3.2:
@@ -759,8 +759,8 @@ packages:
       '@types/node': 20.5.7
     dev: false
 
-  /@types/uuid@9.0.2:
-    resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+  /@types/uuid@9.0.3:
+    resolution: {integrity: sha512-taHQQH/3ZyI3zP8M/puluDEIEvtQHVYcC6y3N8ijFtAd28+Ey/G4sg1u2gB01S8MwybLOKAp9/yCMu/uR5l3Ug==}
     dev: false
 
   /@typescript-eslint/eslint-plugin@6.5.0(@typescript-eslint/parser@6.5.0)(eslint@8.48.0)(typescript@5.2.2):
@@ -1645,7 +1645,7 @@ packages:
       has-proto: 1.0.1
       has-symbols: 1.0.3
       internal-slot: 1.0.5
-      iterator.prototype: 1.1.0
+      iterator.prototype: 1.1.1
       safe-array-concat: 1.0.0
     dev: false
 
@@ -1688,8 +1688,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /eslint-config-ethang@9.0.0(eslint@8.48.0)(prettier@3.0.3)(tailwindcss@3.3.3)(typescript@5.2.2):
-    resolution: {integrity: sha512-ZqO1s55dkvzrepotnP38fj/XBkiV96vSkjdrrmQt+djdalf7y7R6YuC71H8anyPm0ku+mxPJi+xruSSz9HXXWA==}
+  /eslint-config-ethang@10.0.1(eslint@8.48.0)(prettier@3.0.3)(tailwindcss@3.3.3)(typescript@5.2.2):
+    resolution: {integrity: sha512-VZ4YbK0zb78STfcMbR7xD/6F7Cxa8Rs95pMLlHix5JFYitrPUoTu+LYqz85iTEC7DxXLgVaq2okl9StLGAqzmg==}
     peerDependencies:
       eslint: ^8.44.0
       prettier: ^3.0.0
@@ -1705,6 +1705,7 @@ packages:
       eslint-config-xo-space: 0.34.0(eslint@8.48.0)
       eslint-config-xo-typescript: 1.0.1(@typescript-eslint/eslint-plugin@6.5.0)(@typescript-eslint/parser@6.5.0)(eslint@8.48.0)(typescript@5.2.2)
       eslint-plugin-functional: 6.0.0(eslint@8.48.0)(typescript@5.2.2)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.48.0)
       eslint-plugin-prettier: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.48.0)(prettier@3.0.3)
       eslint-plugin-react: 7.33.2(eslint@8.48.0)
@@ -1719,6 +1720,8 @@ packages:
       typescript: 5.2.2
     transitivePeerDependencies:
       - '@types/eslint'
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
       - supports-color
       - tailwindcss
     dev: false
@@ -2827,13 +2830,12 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: false
 
-  /iterator.prototype@1.1.0:
-    resolution: {integrity: sha512-rjuhAk1AJ1fssphHD0IFV6TWL40CwRZ53FrztKx43yk2v6rguBYsY4Bj1VU4HmoMmKwZUlx7mfnhDf9cOp4YTw==}
+  /iterator.prototype@1.1.1:
+    resolution: {integrity: sha512-9E+nePc8C9cnQldmNl6bgpTY6zI4OPRZd97fhJ/iVZ1GifIUDVV5F6x1nEDqpe8KaMEZGT4xgrwKQDxXnjOIZQ==}
     dependencies:
       define-properties: 1.2.0
       get-intrinsic: 1.2.1
       has-symbols: 1.0.3
-      has-tostringtag: 1.0.0
       reflect.getprototypeof: 1.0.3
     dev: false
 

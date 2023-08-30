@@ -2,7 +2,8 @@ import { constants } from 'node:http2';
 
 import { currentUser } from '@clerk/nextjs';
 import { isNil } from 'lodash';
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { prisma } from '../../../prisma/database';
 import { getIsAuthenticated } from '../../../util/clerk';

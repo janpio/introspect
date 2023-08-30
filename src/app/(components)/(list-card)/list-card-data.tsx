@@ -6,7 +6,7 @@ import type { JSX } from 'react';
 
 import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
 import { learningListReturnSchema } from '../../api/learning-list/types';
-import { GetListCardReturn } from '../../api/list-card/types';
+import type { GetListCardReturn } from '../../api/list-card/types';
 import { ListCardView } from './list-card-view';
 
 type ListCardProperties = {

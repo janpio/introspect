@@ -1,7 +1,8 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { isNil } from 'lodash';
-import React, { JSX } from 'react';
+import type { JSX } from 'react';
+import React from 'react';
 
 import { api, DEFAULT_RQ_OPTIONS, getRequestKey } from '../../api/api';
 import { getListPageReturnSchema } from '../../api/list-page/types';

@@ -1,5 +1,6 @@
 import { useUser } from '@clerk/nextjs';
-import { UseMutateFunction, useMutation } from '@tanstack/react-query';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { isNil } from 'lodash';
 import Link from 'next/link';
 import type { JSX } from 'react';

@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import { DateTime } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
-import { JSX } from 'react';
+import type { JSX } from 'react';
 
 import { FavoriteButton } from '../favorite-button';
 

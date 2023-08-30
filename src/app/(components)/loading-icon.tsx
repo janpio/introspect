@@ -1,6 +1,6 @@
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import { JSX } from 'react';
+import type { JSX } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { twMerge } from 'tailwind-merge';
 

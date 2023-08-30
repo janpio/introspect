@@ -1,6 +1,6 @@
-import { AddMaterialToListBody } from './learning-list/types';
-import { UpdateListOrderBody } from './update-list-order/types';
-import { UpdateMaterialBody } from './update-material/types';
+import type { AddMaterialToListBody } from './learning-list/types';
+import type { UpdateListOrderBody } from './update-list-order/types';
+import type { UpdateMaterialBody } from './update-material/types';
 
 const ROOT_URL =
   process.env.NODE_ENV === 'development'
