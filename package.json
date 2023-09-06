@@ -9,7 +9,7 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.23.4",
+    "@clerk/nextjs": "^4.23.5",
     "@ethang/hooks": "^1.2.29",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
@@ -19,7 +19,7 @@
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-query-next-experimental": "5.0.0-alpha.80",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/lodash": "^4.14.197",
+    "@types/lodash": "^4.14.198",
     "@types/luxon": "^3.3.2",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
@@ -35,8 +35,8 @@
     "eslint-plugin-tailwindcss": "^3.13.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "luxon": "^3.4.2",
-    "meilisearch": "^0.34.1",
+    "luxon": "^3.4.3",
+    "meilisearch": "^0.34.2",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "prisma": "^5.2.0",
